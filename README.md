@@ -121,5 +121,4 @@ All inputs go in `data/raw/`, which is not tracked:
   - cross-species varimax/CCA (`crossspecies.py`);
   - regulon enrichment (`regulon.py`, `regulon_plot.py`).
 - `scripts/<k>_<result>/NN.*.py`: analysis scripts, numbered in run order.
-- `plan/`: the release plan.
 - `results/`, `figures/`: outputs (not tracked).
