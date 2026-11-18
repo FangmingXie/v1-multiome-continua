@@ -1,0 +1,15 @@
+[project]
+name = "l23"
+version = "0.1.0"
+description = "L2/3 archetype continua in mouse V1: development, dark rearing, regulons, projections, and mouse vs human"
+authors = [
+    {name = "Fangming Xie", email = "fmxie1993@gmail.com"}
+]
+requires-python = ">=3.10"
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
