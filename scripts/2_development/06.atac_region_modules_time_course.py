@@ -18,7 +18,7 @@ side by side). Figures: 2_development/07.
 
 Reads:
   data/raw/atac/pmat_l23concensus_{Age}.h5ad
-  data/atac_modules/L23{A,B,C}_regions_M{1-5}.bed
+  data/raw/atac_modules/L23{A,B,C}_regions_M{1-5}.bed
   results/2_development/02.yoo25_l23_cell_groups.tsv
 Outputs:
   results/2_development/06.yoo25_l23_atac_region_modules_regions.tsv   (region -> module, pass filter per cell group)
@@ -40,7 +40,7 @@ AGES         = ['P6', 'P8', 'P10', 'P12', 'P14', 'P17', 'P21', 'P12DR', 'P14DR',
 ARCHETYPES   = ['A', 'B', 'C']
 MODULES      = ['M1', 'M2', 'M3', 'M4', 'M5']
 INPUT_PMAT   = {a: os.path.join(REPO_ROOT, 'data', 'raw', 'atac', f'pmat_l23concensus_{a}.h5ad') for a in AGES}
-INPUT_BED    = {(k, m): os.path.join(REPO_ROOT, 'data', 'atac_modules', f'L23{k}_regions_{m}.bed')
+INPUT_BED    = {(k, m): os.path.join(REPO_ROOT, 'data', 'raw', 'atac_modules', f'L23{k}_regions_{m}.bed')
                 for k in ARCHETYPES for m in MODULES}
 INPUT_CELLS  = os.path.join(REPO_ROOT, 'results', '2_development', '02.yoo25_l23_cell_groups.tsv')
 OUT_REGIONS  = os.path.join(REPO_ROOT, 'results', '2_development', '06.yoo25_l23_atac_region_modules_regions.tsv')

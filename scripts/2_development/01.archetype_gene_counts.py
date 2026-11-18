@@ -2,7 +2,7 @@
 
 Reads:
   results/0_prep/02.yoo25_l23_abc_genes.tsv
-  data/TableS4_L23_archetypal_genes.tsv              (published Table S4; exact-match check only)
+  data/raw/TableS4_L23_archetypal_genes.tsv              (published Table S4; exact-match check only)
 Outputs:
   figures/2_development/01.yoo25_l23_abc_gene_counts.pdf
 """
@@ -17,7 +17,7 @@ matplotlib.rcParams['pdf.fonttype'] = 42
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 INPUT_GENES = os.path.join(REPO_ROOT, 'results', '0_prep', '02.yoo25_l23_abc_genes.tsv')
-INPUT_S4    = os.path.join(REPO_ROOT, 'data', 'TableS4_L23_archetypal_genes.tsv')
+INPUT_S4    = os.path.join(REPO_ROOT, 'data', 'raw', 'TableS4_L23_archetypal_genes.tsv')
 OUT_PDF     = os.path.join(REPO_ROOT, 'figures', '2_development', '01.yoo25_l23_abc_gene_counts.pdf')
 
 NR = {'P6': 6, 'P8': 8, 'P10': 10, 'P12': 12, 'P14': 14, 'P17': 17, 'P21': 21}

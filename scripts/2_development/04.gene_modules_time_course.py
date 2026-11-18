@@ -19,7 +19,7 @@ Reads:
   results/2_development/02.yoo25_l23_pseudobulk_counts.tsv
   results/2_development/02.yoo25_l23_pseudobulk_samples.tsv
   results/2_development/03.yoo25_l23_time_course_dr_by_day_slope_deseq2.tsv
-  data/gene_sets_l23{a,b,c}_250423.csv
+  data/raw/gene_sets_l23{a,b,c}_250423.csv
   results/0_prep/02.yoo25_l23_abc_genes.tsv
 Outputs:
   results/2_development/04.yoo25_l23_gene_modules_genes.tsv     (gene -> module, pass filter per cell group)
@@ -38,7 +38,7 @@ REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fi
 INPUT_PB         = os.path.join(REPO_ROOT, 'results', '2_development', '02.yoo25_l23_pseudobulk_counts.tsv')
 INPUT_PB_SAMPLES = os.path.join(REPO_ROOT, 'results', '2_development', '02.yoo25_l23_pseudobulk_samples.tsv')
 INPUT_STATS      = os.path.join(REPO_ROOT, 'results', '2_development', '03.yoo25_l23_time_course_dr_by_day_slope_deseq2.tsv')
-INPUT_SETS       = {k: os.path.join(REPO_ROOT, 'data', f'gene_sets_l23{k.lower()}_250423.csv')
+INPUT_SETS       = {k: os.path.join(REPO_ROOT, 'data', 'raw', f'gene_sets_l23{k.lower()}_250423.csv')
                     for k in ['A', 'B', 'C']}
 INPUT_MARKERS    = os.path.join(REPO_ROOT, 'results', '0_prep', '02.yoo25_l23_abc_genes.tsv')
 OUT_GENES        = os.path.join(REPO_ROOT, 'results', '2_development', '04.yoo25_l23_gene_modules_genes.tsv')

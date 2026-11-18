@@ -10,7 +10,7 @@ PCHA subspace of script 03.
 Reads:
   results/1_mouse_human/02.human_l23_varimax_loadings.tsv
   results/1_mouse_human/01.mouse_l23_varimax_loadings.tsv
-  data/human_mouse_orthologs.tsv
+  data/raw/human_mouse_orthologs.tsv
 Outputs:
   results/1_mouse_human/05.l23_axis_cca_spectrum.tsv
   results/1_mouse_human/05.l23_axis_cca_weights_human.tsv
@@ -27,7 +27,7 @@ REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fi
 RES_DIR       = os.path.join(REPO_ROOT, 'results', '1_mouse_human')
 IN_H_LOADINGS = os.path.join(RES_DIR, '02.human_l23_varimax_loadings.tsv')
 IN_M_LOADINGS = os.path.join(RES_DIR, '01.mouse_l23_varimax_loadings.tsv')
-IN_ORTHOLOGS  = os.path.join(REPO_ROOT, 'data', 'human_mouse_orthologs.tsv')
+IN_ORTHOLOGS  = os.path.join(REPO_ROOT, 'data', 'raw', 'human_mouse_orthologs.tsv')
 OUT_SPECTRUM  = os.path.join(RES_DIR, '05.l23_axis_cca_spectrum.tsv')
 OUT_W_HUMAN   = os.path.join(RES_DIR, '05.l23_axis_cca_weights_human.tsv')
 OUT_W_MOUSE   = os.path.join(RES_DIR, '05.l23_axis_cca_weights_mouse.tsv')

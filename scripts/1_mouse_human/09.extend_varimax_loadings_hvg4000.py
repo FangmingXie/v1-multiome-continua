@@ -19,7 +19,7 @@ Reads:
   data/raw/superdupermegaRNA_cheng22_IT_P28NR.h5ad
   results/1_mouse_human/07.human_l23_varimax_{coords,loadings}_hvg4000.tsv
   results/1_mouse_human/08.mouse_l23_varimax_{coords,loadings}_hvg4000.tsv
-  data/human_mouse_orthologs.tsv
+  data/raw/human_mouse_orthologs.tsv
 Outputs:
   results/1_mouse_human/09.human_l23_varimax_loadings_full_hvg4000.tsv   all expressed human genes x VX1..VX10
   results/1_mouse_human/09.mouse_l23_varimax_loadings_full_hvg4000.tsv   all expressed mouse genes x VX1..VX10
@@ -34,7 +34,7 @@ import scipy.sparse as sp
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 RES_DIR        = os.path.join(REPO_ROOT, 'results', '1_mouse_human')
-IN_ORTHOLOGS   = os.path.join(REPO_ROOT, 'data', 'human_mouse_orthologs.tsv')
+IN_ORTHOLOGS   = os.path.join(REPO_ROOT, 'data', 'raw', 'human_mouse_orthologs.tsv')
 IN_HUMAN_H5AD  = os.path.join(REPO_ROOT, 'data', 'raw', 'jorstad23_human_WithinArea_L23IT.h5ad')
 IN_MOUSE_H5AD  = os.path.join(REPO_ROOT, 'data', 'raw', 'superdupermegaRNA_cheng22_IT_P28NR.h5ad')
 IN_H_COORDS    = os.path.join(RES_DIR, '07.human_l23_varimax_coords_hvg4000.tsv')

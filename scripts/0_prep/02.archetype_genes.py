@@ -15,7 +15,7 @@ Steps (per condition unless noted):
 
 Reads:
   data/raw/superdupermegaRNA_hasraw.h5ad        (Yoo25 counts in .raw)
-  data/Cheng22_Xie25_L23_ABC_genes_n286.csv     (Cheng22 adult L2/3 A/B/C genes)
+  data/raw/Cheng22_Xie25_L23_ABC_genes_n286.csv     (Cheng22 adult L2/3 A/B/C genes)
 Outputs:
   results/0_prep/02.yoo25_l23_abc_scores.tsv    (step 1; cell, cond, score_a, score_b, score_c)
   results/0_prep/02.yoo25_l23_abc_cells.tsv     (step 2; cell, cond, archetype: A/B/C, '' = none)
@@ -35,7 +35,7 @@ from statsmodels.stats.multitest import multipletests
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 INPUT_H5AD  = os.path.join(REPO_ROOT, 'data', 'raw', 'superdupermegaRNA_hasraw.h5ad')
-INPUT_GENES = os.path.join(REPO_ROOT, 'data', 'Cheng22_Xie25_L23_ABC_genes_n286.csv')
+INPUT_GENES = os.path.join(REPO_ROOT, 'data', 'raw', 'Cheng22_Xie25_L23_ABC_genes_n286.csv')
 OUT_SCORES  = os.path.join(REPO_ROOT, 'results', '0_prep', '02.yoo25_l23_abc_scores.tsv')
 OUT_CELLS   = os.path.join(REPO_ROOT, 'results', '0_prep', '02.yoo25_l23_abc_cells.tsv')
 OUT_GENES   = os.path.join(REPO_ROOT, 'results', '0_prep', '02.yoo25_l23_abc_genes.tsv')

@@ -16,7 +16,7 @@ counts (`0_prep/02`, identical to Table S4). Five results build on them:
 ```
 conda env create -f environment.yml
 conda activate v1-multiome-continua
-# put the raw inputs in data/raw/ (see "Inputs")
+# put the inputs in data/raw/ (see "Inputs")
 bash run_all.sh
 ```
 `run_all.sh` runs every script in dependency order: 0_prep, 3_regulon, 1_mouse_human,
@@ -79,14 +79,7 @@ Results 2's `03`, `05` and `07` also show NR vs DR.
 | `03` | Archetype scores along the A'-C' axis (snRNA) and depth (P21 MERFISH) next to the EASI-FISH profiles | `03.*.pdf` |
 
 ## Inputs
-Small inputs are tracked in `data/`:
-- `Cheng22_Xie25_L23_ABC_genes_n286.csv`: adult L2/3 archetype genes, the seed of `0_prep/02`.
-- `gene_sets_l23{a,b,c}_250423.csv`: the M1-M5 module of each archetype gene.
-- `atac_modules/L23{A,B,C}_regions_M{1-5}.bed`: archetype chromatin region modules.
-- `human_mouse_orthologs.tsv`.
-- `TableS4_L23_archetypal_genes.tsv`: the published table, used only for the check in `2_development/01`.
-
-Large inputs go in `data/raw/` (not tracked):
+All inputs go in `data/raw/`, which is not tracked:
 
 | File in `data/raw/` | Content | Used by | Source |
 |---|---|---|---|
@@ -103,6 +96,11 @@ Large inputs go in `data/raw/` (not tracked):
 | `fang22_human_merfish/*.csv` | Human cortex MERFISH, 9 sections (Fang et al. 2022) | 1/11 | TBD |
 | `P8P14P21NR_v1l23glut_rna_merfish_250411.h5ad` | Mouse P8/P14/P21 NR V1 L2/3 MERFISH | 5/03 | TBD |
 | `easifish/easifish_sample{1,2,3}_res.csv` | EASI-FISH retrograde labels (LM, RL), 3 samples | 5/01, 5/03 | TBD |
+| `Cheng22_Xie25_L23_ABC_genes_n286.csv` | Adult L2/3 archetype genes, the seed of the archetype genes | 0_prep/02 | TBD |
+| `gene_sets_l23{a,b,c}_250423.csv` | Module (M1-M5) of each archetype gene | 2/04 | TBD |
+| `atac_modules/L23{A,B,C}_regions_M{1-5}.bed` | Archetype chromatin region modules | 2/06 | TBD |
+| `human_mouse_orthologs.tsv` | Human-mouse ortholog pairs | 1/04, 1/05, 1/09-11 | TBD |
+| `TableS4_L23_archetypal_genes.tsv` | Published Table S4, used only for the exact-match check | 2/01 | TBD |
 
 ## Environment and numerical notes
 - **numpy:** the pipeline runs on numpy 1.26.4 (`environment.yml`). The archetype fit (`py_pcha`)
@@ -117,7 +115,7 @@ Large inputs go in `data/raw/` (not tracked):
   agree to 4 decimals, and the genes and stars shown in `4_dr/01` don't change.
 
 ## Layout
-- `data/`: small inputs (tracked). `data/raw/`: large inputs (not tracked).
+- `data/raw/`: inputs (not tracked).
 - `src/l23/`: shared code:
   - archetype analysis (`archetype.py`, `utils.py`, `hvg.py`);
   - cross-species varimax/CCA (`crossspecies.py`);

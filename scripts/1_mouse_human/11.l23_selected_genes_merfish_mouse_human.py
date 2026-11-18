@@ -1,7 +1,7 @@
 """Hand-picked conserved L2/3 A/C genes in situ: A vs C score, per-gene maps and depth profiles, mouse vs human MERFISH.
 
 Genes: SELECTED (mouse symbol -> side; A = superficial, C = deep), mapped to human by 1-to-1 orthologs
-(data/human_mouse_orthologs.tsv). Every gene must be on both MERFISH panels (checked). The CCA1 z per
+(data/raw/human_mouse_orthologs.tsv). Every gene must be on both MERFISH panels (checked). The CCA1 z per
 species (09 loadings x 10 CCA1 weights, z over all CCA ortholog pairs; CCA1 oriented so mouse A'
 markers load positive and C' markers negative, checked) is carried only as a label; genes outside the
 CCA universe get NaN. The summary-score figure uses mouse MOUSE_SECTION; the per-gene figure shows every NR mouse section (MOUSE_SECTIONS) plus the human section in
@@ -45,7 +45,7 @@ Reads:
   results/1_mouse_human/09.{human,mouse}_l23_varimax_loadings_full_hvg4000.tsv
   results/1_mouse_human/10.l23_axis_cca_weights_{human,mouse}_hvg4000_union.tsv
   results/3_regulon/03.l23_adult_archetype_markers.tsv                         (orientation check)
-  data/human_mouse_orthologs.tsv
+  data/raw/human_mouse_orthologs.tsv
   data/raw/P28NRDR_v1glut_rna_merfish_240729.h5ad                               (L2/3 cells, depth)
   data/raw/{P28NRa_ant,P28NRa_pos,P28NRb_ant,P28NRb_pos}_l2_v1_240723.h5ad      (section expression)
   data/raw/fang22_human_merfish/{SECTION}.{features,genes,matrix}.csv          (every PROFILE_HUMAN_SECTIONS)
@@ -85,7 +85,7 @@ IN_M_FULL  = os.path.join(RES_DIR, '09.mouse_l23_varimax_loadings_full_hvg4000.t
 IN_W_HUMAN = os.path.join(RES_DIR, '10.l23_axis_cca_weights_human_hvg4000_union.tsv')
 IN_W_MOUSE = os.path.join(RES_DIR, '10.l23_axis_cca_weights_mouse_hvg4000_union.tsv')
 IN_MOUSE_MARKERS = os.path.join(REPO_ROOT, 'results', '3_regulon', '03.l23_adult_archetype_markers.tsv')
-IN_ORTHO   = os.path.join(REPO_ROOT, 'data', 'human_mouse_orthologs.tsv')
+IN_ORTHO   = os.path.join(REPO_ROOT, 'data', 'raw', 'human_mouse_orthologs.tsv')
 IN_MERFISH = os.path.join(REPO_ROOT, 'data', 'raw', 'P28NRDR_v1glut_rna_merfish_240729.h5ad')
 MOUSE_SECTION  = 'P28NRb_pos'                          # summary-score figure
 MOUSE_SECTIONS = ['P28NRb_pos']   # gene figure

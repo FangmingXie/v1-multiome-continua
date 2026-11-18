@@ -7,7 +7,7 @@ Human .X is already log-normalized (ln(CPM+1)).
 
 Reads:
   results/1_mouse_human/03.mouse_l23_archetype_markers.tsv
-  data/human_mouse_orthologs.tsv
+  data/raw/human_mouse_orthologs.tsv
   data/raw/jorstad23_human_WithinArea_L23IT.h5ad
 Outputs:
   results/1_mouse_human/04.mouse_l23_archetype_scores_on_human_cells.tsv
@@ -24,7 +24,7 @@ REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fi
 
 RES_DIR       = os.path.join(REPO_ROOT, 'results', '1_mouse_human')
 IN_MARKERS    = os.path.join(RES_DIR, '03.mouse_l23_archetype_markers.tsv')
-IN_ORTHOLOGS  = os.path.join(REPO_ROOT, 'data', 'human_mouse_orthologs.tsv')
+IN_ORTHOLOGS  = os.path.join(REPO_ROOT, 'data', 'raw', 'human_mouse_orthologs.tsv')
 INPUT_HUMAN   = os.path.join(REPO_ROOT, 'data', 'raw', 'jorstad23_human_WithinArea_L23IT.h5ad')
 OUT_SCORES    = os.path.join(RES_DIR, '04.mouse_l23_archetype_scores_on_human_cells.tsv')
 

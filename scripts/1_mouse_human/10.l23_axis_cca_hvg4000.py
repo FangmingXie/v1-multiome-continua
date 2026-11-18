@@ -14,7 +14,7 @@ Reads:
   results/1_mouse_human/07.human_l23_varimax_loadings_hvg4000.tsv       (HVG membership)
   results/1_mouse_human/08.mouse_l23_varimax_loadings_hvg4000.tsv       (HVG membership)
   results/1_mouse_human/09.{human,mouse}_l23_varimax_loadings_full_hvg4000.tsv
-  data/human_mouse_orthologs.tsv
+  data/raw/human_mouse_orthologs.tsv
 Outputs:
   results/1_mouse_human/10.l23_axis_cca_spectrum_hvg4000_union.tsv
   results/1_mouse_human/10.l23_axis_cca_weights_human_hvg4000_union.tsv
@@ -33,7 +33,7 @@ IN_H_HVG     = os.path.join(RES_DIR, '07.human_l23_varimax_loadings_hvg4000.tsv'
 IN_M_HVG     = os.path.join(RES_DIR, '08.mouse_l23_varimax_loadings_hvg4000.tsv')
 IN_H_FULL    = os.path.join(RES_DIR, '09.human_l23_varimax_loadings_full_hvg4000.tsv')
 IN_M_FULL    = os.path.join(RES_DIR, '09.mouse_l23_varimax_loadings_full_hvg4000.tsv')
-IN_ORTHOLOGS = os.path.join(REPO_ROOT, 'data', 'human_mouse_orthologs.tsv')
+IN_ORTHOLOGS = os.path.join(REPO_ROOT, 'data', 'raw', 'human_mouse_orthologs.tsv')
 OUT_SPECTRUM = os.path.join(RES_DIR, '10.l23_axis_cca_spectrum_hvg4000_union.tsv')
 OUT_W_HUMAN  = os.path.join(RES_DIR, '10.l23_axis_cca_weights_human_hvg4000_union.tsv')
 OUT_W_MOUSE  = os.path.join(RES_DIR, '10.l23_axis_cca_weights_mouse_hvg4000_union.tsv')
