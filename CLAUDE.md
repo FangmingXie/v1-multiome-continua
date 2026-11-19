@@ -2,10 +2,6 @@
 
 Repository layout, inputs and the script index are in README.md.
 
-## Git Branches
-
-- `main`: active development branch
-
 ## Environment
 
 - Use this conda env to run this project: `v1-multiome-continua`, that means to run any python script with `conda run -n v1-multiome-continua`
