@@ -36,7 +36,7 @@ Reads:
   results/5_easifish/01.yoo25_p21nr_ac_axis.tsv
   results/0_prep/01.yoo25_l23.h5ad
   results/0_prep/02.yoo25_l23_abc_genes.tsv
-  data/raw/P8P14P21NR_v1l23glut_rna_merfish_250411.h5ad
+  results/0_prep/03.merfish_p21nr_l23.h5ad
   data/raw/easifish/easifish_sample{1,2,3}_res.csv
 Outputs:
   results/5_easifish/02.l23_archetype_scores_and_easifish_proj_depth_bins.tsv            (snRNA and MERFISH)
@@ -59,8 +59,8 @@ REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fi
 INPUT_AXIS    = os.path.join(REPO_ROOT, 'results', '5_easifish', '01.yoo25_p21nr_ac_axis.tsv')
 INPUT_YOO25   = os.path.join(REPO_ROOT, 'results', '0_prep', '01.yoo25_l23.h5ad')
 INPUT_MARKERS = os.path.join(REPO_ROOT, 'results', '0_prep', '02.yoo25_l23_abc_genes.tsv')
-INPUT_MERFISH = {   # panel label -> (h5ad, sample-name prefix of the NR sections)
-    'P21 NR': (os.path.join(REPO_ROOT, 'data', 'raw', 'P8P14P21NR_v1l23glut_rna_merfish_250411.h5ad'), 'P21NR'),
+INPUT_MERFISH = {   # panel label -> L2/3 MERFISH cells (0_prep/03)
+    'P21 NR': os.path.join(REPO_ROOT, 'results', '0_prep', '03.merfish_p21nr_l23.h5ad'),
 }
 INPUT_EASIFISH = [os.path.join(REPO_ROOT, 'data', 'raw', 'easifish', f'easifish_sample{i}_res.csv') for i in (1, 2, 3)]
 OUT_PREFIX    = os.path.join(REPO_ROOT, 'results', '5_easifish', '02.l23_archetype_scores_and_easifish_proj_depth')
@@ -137,16 +137,12 @@ print(f'Yoo25 P21 NR: {len(cells)} cells; genes per score: { {k: len(v) for k, v
 
 # --- MERFISH NR: scores along depth, one panel per dataset ---
 mer, mer_n, mer_sets = {}, {}, {}
-for label, (path, prefix) in INPUT_MERFISH.items():
-    mf = ad.read_h5ad(path, backed='r')
+for label, path in INPUT_MERFISH.items():
+    mf = ad.read_h5ad(path)
     o = mf.obs
-    sel = ((o['modality'] == 'merfish') & o['sample'].astype(str).str.startswith(prefix)
-           & (o['gated_pred_subclass'] == 'L2/3')).to_numpy()
-    if not sel.any():
-        raise ValueError(f'no MERFISH L2/3 cells with sample prefix {prefix} in {path}')
-    depth = o.loc[sel, 'depth'].to_numpy()
+    depth = o['depth'].to_numpy()
     in_range = (depth >= DEPTH_RANGE[0]) & (depth <= DEPTH_RANGE[1])
-    lay = mf.layers[MERFISH_LAYER][np.where(sel)[0]]
+    lay = mf.layers[MERFISH_LAYER]
     mer_sets[label] = {k: [g for g in gs if g in mf.var_names] for k, gs in sets.items()}
     mer[label] = {}
     for k, gs in mer_sets[label].items():
@@ -158,8 +154,8 @@ for label, (path, prefix) in INPUT_MERFISH.items():
     y_bounds[label] = unit_bounds(depth[in_range])
     for t in mer[label].values():
         t['y_norm'] = to_unit(t['pos_median'], y_bounds[label])
-    print(f'MERFISH {label} L2/3: {sel.sum()} cells; {in_range.sum()} in depth {DEPTH_RANGE} um; samples '
-          f'{sorted(o.loc[sel, "sample"].astype(str).unique())}; panel genes per score: '
+    print(f'MERFISH {label} L2/3: {mf.n_obs} cells; {in_range.sum()} in depth {DEPTH_RANGE} um; samples '
+          f'{sorted(o["sample"].astype(str).unique())}; panel genes per score: '
           f'{ {k: f"{len(mer_sets[label][k])}/{len(sets[k])}" for k in sets} }')
 
 # --- EASI-FISH: LM / RL depth distributions, each normalized to sum 1 per sample ---

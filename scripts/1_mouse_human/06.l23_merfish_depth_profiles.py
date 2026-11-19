@@ -9,9 +9,9 @@ eL2/3.IT cells in which every INSITU_GENES gene is detected in > H_MIN_DETECT of
 KCNH5 (< 7% of L2/3 cells) and are not used: H18.06.006.MTG.4000.expand.rep3, H22.26.401.MTG.4000.expand.rep1,
 H20.30.001.STG.4000.expand.rep1.
 Cells and expression:
-  mouse  P28 NR sections: MERFISH cells (modality == 'merfish') with gated_pred_subclass == 'L2/3' and depth
-         from pia in MOUSE_DEPTH_RANGE (um; drops label-transfer outliers), from the P28 NR/DR MERFISH object;
-         expression log2(jnorm + 1) from the section's 500-gene file; position = width x depth from pia (um).
+  mouse  P28 NR sections: the L2/3 MERFISH cells of the 0_prep/03 extract with depth from pia in
+         MOUSE_DEPTH_RANGE (um; drops label-transfer outliers); expression log2(jnorm + 1) (the section's
+         500-gene panel); position = width x depth from pia (um).
   human  Fang22 section (250 or 4000 genes): eL2/3.IT cells; counts scaled to the median total per cell, log1p;
          position = pre-expansion adjusted.x/y (um), rotated so pia is up (superficial eL2/3.IT above deep cells).
 Every section: depth is re-measured from a 2nd-order polynomial fit to the top of L2/3 (CURVE_PCTILE depth
@@ -26,8 +26,7 @@ of different sensitivity (250 vs 4000 genes), whereas per-section peak normaliza
 
 Reads:
   data/raw/human_mouse_orthologs.tsv
-  data/raw/P28NRDR_v1glut_rna_merfish_240729.h5ad                               (L2/3 cells, depth)
-  data/raw/{P28NRa_ant,P28NRa_pos,P28NRb_ant,P28NRb_pos}_l2_v1_240723.h5ad      (section expression)
+  results/0_prep/03.merfish_p28nr_l23.h5ad                                     (L2/3 cells, depth, expression)
   data/raw/fang22_human_merfish/{section}.{features,genes,matrix}.csv          (every PROFILE_HUMAN_SECTIONS)
 Outputs:
   results/1_mouse_human/06.l23_merfish_genes.tsv              (side, human_symbol, mouse_symbol, insitu)
@@ -49,8 +48,7 @@ REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fi
 
 RES_DIR    = os.path.join(REPO_ROOT, 'results', '1_mouse_human')
 IN_ORTHO   = os.path.join(REPO_ROOT, 'data', 'raw', 'human_mouse_orthologs.tsv')
-IN_MERFISH = os.path.join(REPO_ROOT, 'data', 'raw', 'P28NRDR_v1glut_rna_merfish_240729.h5ad')
-MOUSE_SECTION_FILE = os.path.join(REPO_ROOT, 'data', 'raw', '{}_l2_v1_240723.h5ad')
+IN_MOUSE   = os.path.join(REPO_ROOT, 'results', '0_prep', '03.merfish_p28nr_l23.h5ad')
 HUMAN_DIR  = os.path.join(REPO_ROOT, 'data', 'raw', 'fang22_human_merfish')
 OUT_GENES    = os.path.join(RES_DIR, '06.l23_merfish_genes.tsv')
 OUT_SECTIONS = os.path.join(RES_DIR, '06.l23_merfish_sections.tsv')
@@ -65,9 +63,6 @@ PROFILE_GENES = {   # mouse symbol, by side (A = superficial, C = deep); all on 
 INSITU_GENES = ['Cdh13', 'Kcnh5']   # drawn in situ (10); the human-section detection filter uses them
 H_MIN_DETECT = 0.10   # every human section must detect every INSITU_GENES gene in > this fraction of its
                       # L2/3 cells (checked)
-MOUSE_SUBCLASS = 'L2/3'
-MOUSE_SUBCLASS_COL = 'gated_pred_subclass'
-MOUSE_CONDITION = 'P28NR'           # sample-name prefix of the NR sections
 MOUSE_DEPTH_RANGE = (50, 450)      # um from pia; ~ the 5-95% depth range of L2/3 MERFISH cells
 MOUSE_LAYER    = 'jnorm'
 H_SUBCLASS, H_SUBCLASS_COL = 'eL2/3.IT', 'cluster_L2'
@@ -140,35 +135,26 @@ def finish(species, section, pos, ex):
     return cells, pts.assign(species=species, section=section), info
 
 
-# --- mouse: L2/3 NR cells and their depth from pia ---
-mobs = ad.read_h5ad(IN_MERFISH, backed='r').obs
-depth = mobs['depth'].to_numpy()
-keep_m = ((mobs['modality'] == 'merfish') & (mobs[MOUSE_SUBCLASS_COL] == MOUSE_SUBCLASS)
-          & mobs['sample'].astype(str).str.startswith(MOUSE_CONDITION)).to_numpy() \
-    & (depth >= MOUSE_DEPTH_RANGE[0]) & (depth <= MOUSE_DEPTH_RANGE[1])
-mc_all = pd.DataFrame({'sample': mobs['sample'].astype(str).to_numpy()[keep_m], 'depth': depth[keep_m]},
-                      index=pd.Index(mobs.index[keep_m], name='cell'))
-print(f'mouse {MOUSE_CONDITION} {MOUSE_SUBCLASS} MERFISH cells in {MOUSE_DEPTH_RANGE} um: {len(mc_all)}')
+# --- mouse: L2/3 NR cells (0_prep/03, in section-file order) in the depth range ---
+mad = ad.read_h5ad(IN_MOUSE)
+absent = [g for g in genes['mouse_symbol'] if g not in mad.var_names]
+if absent:
+    raise ValueError(f'{absent} not on the panel of {IN_MOUSE}')
+depth = mad.obs['depth'].to_numpy()
+mad = mad[(depth >= MOUSE_DEPTH_RANGE[0]) & (depth <= MOUSE_DEPTH_RANGE[1])].copy()
+mad.obs_names.name = 'cell'
+print(f'mouse P28 NR L2/3 MERFISH cells in {MOUSE_DEPTH_RANGE} um: {mad.n_obs}')
 
 
 def load_mouse(section):
     """L2/3 cells of one NR section: (positions, log2(jnorm+1) of the genes)."""
-    path = MOUSE_SECTION_FILE.format(section)
-    sd = ad.read_h5ad(path, backed='r')
-    absent = [g for g in genes['mouse_symbol'] if g not in sd.var_names]
-    if absent:
-        raise ValueError(f'{absent} not on the panel of {path}')
-    mc = mc_all[mc_all['sample'] == section]
-    rows = sd.obs_names.get_indexer(mc.index.str.slice(len(section)))
-    if (rows < 0).any():
-        raise ValueError(f'{(rows < 0).sum()} {section} L2/3 cells not in {path}')
-    order = np.argsort(rows)
-    rows, mc = rows[order], mc.iloc[order]
-    lay = sd.layers[MOUSE_LAYER][rows]
-    lay = lay.toarray() if hasattr(lay, 'toarray') else np.asarray(lay)
+    sd = mad[mad.obs['sample'] == section]
+    if sd.n_obs == 0:
+        raise ValueError(f'no {section} cells in {IN_MOUSE}')
+    lay = np.asarray(sd.layers[MOUSE_LAYER])
     ex = pd.DataFrame(np.log2(lay[:, [sd.var_names.get_loc(g) for g in genes['mouse_symbol']]] + 1),
-                      index=mc.index, columns=genes['mouse_symbol'])
-    pos = pd.DataFrame({'x': sd.obs['width'].to_numpy()[rows], 'depth': mc['depth'].to_numpy()}, index=mc.index)
+                      index=sd.obs_names, columns=genes['mouse_symbol'])
+    pos = pd.DataFrame({'x': sd.obs['width'].to_numpy(), 'depth': sd.obs['depth'].to_numpy()}, index=sd.obs_names)
     return pos, ex
 
 

@@ -35,6 +35,7 @@ environment (numpy, OpenBLAS, DESeq2) are in [REPRODUCIBILITY.md](REPRODUCIBILIT
 |---|---|
 | `0_prep/01.extract_l23.py` | L2/3 neurons with raw counts: Yoo25 of every age (NR P6-P21, DR P12-P21) and Cheng22 P28 NR; every later step reads these extracts |
 | `0_prep/02.archetype_genes.py` | Per-cell A/B/C scores, archetype cells and archetype genes per condition; checks the exact match to Table S4 |
+| `0_prep/03.extract_merfish_l23.py` | L2/3 MERFISH cells, P28 NR (for 1/06) and P21 NR (for 5/02); later steps read these extracts |
 
 ### 1. Mouse vs human L2/3
 | Script | What it does | Figures |
@@ -103,10 +104,10 @@ All inputs go in `data/raw/`, which is not tracked:
 | `regulons/yoo25_L2_3/L2_3_{direct,extended}_e_regulon_metadata.csv` | Yoo25 L2/3 SCENIC+ eRegulon metadata | 3/01 | TBD |
 | `regulons/human_regulons_SuppTable13.xlsx` | Wang25 human eRegulons (Supp. Table 13) | 1/07 | TBD |
 | `atac/pmat_l23concensus_{age}.h5ad` | Yoo25 L2/3 ATAC peak matrices, 11 conditions | 2/04 | TBD |
-| `P28NRDR_v1glut_rna_merfish_240729.h5ad` | Mouse P28 NR/DR V1 MERFISH; only the NR sections' L2/3 labels and depth are used | 1/06 | TBD |
-| `P28NR{a,b}_{ant,pos}_l2_v1_240723.h5ad` | Mouse P28 NR MERFISH sections | 1/06 | TBD |
+| `P28NRDR_v1glut_rna_merfish_240729.h5ad` | Mouse P28 NR/DR V1 MERFISH; only the NR sections' L2/3 labels are used | 0_prep/03 | TBD |
+| `P28NR{a,b}_{ant,pos}_l2_v1_240723.h5ad` | Mouse P28 NR MERFISH sections (500 genes) | 0_prep/03 | TBD |
 | `fang22_human_merfish/*.csv` | Human cortex MERFISH, 6 sections (Fang et al. 2022) | 1/06 | TBD |
-| `P8P14P21NR_v1l23glut_rna_merfish_250411.h5ad` | Mouse P8/P14/P21 NR V1 L2/3 MERFISH; only the P21 NR sections are used | 5/02 | TBD |
+| `P8P14P21NR_v1l23glut_rna_merfish_250411.h5ad` | Mouse P8/P14/P21 NR V1 L2/3 MERFISH; only the P21 NR sections are used | 0_prep/03 | TBD |
 | `easifish/easifish_sample{1,2,3}_res.csv` | EASI-FISH retrograde labels (LM, RL), 3 samples | 5/02, 5/04, 5/05 | TBD |
 | `Cheng22_Xie25_L23_ABC_genes_n286.csv` | Adult L2/3 archetype genes, the seed of the archetype genes | 0_prep/02 | TBD |
 | `gene_sets_l23{a,b,c}_250423.csv` | Module (M1-M5) of each archetype gene | 2/03 | TBD |
