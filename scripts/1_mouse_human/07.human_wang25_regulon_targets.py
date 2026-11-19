@@ -1,6 +1,7 @@
 """Clean regulon -> target-gene table from Wang25 human SCENIC+ eRegulons.
 
-Human analog of 3_regulon/01 (mouse Yoo25 L2/3). The input here is a single Excel
+Human analog of 3_regulon/01 (mouse Yoo25 L2/3); the merge is l23.regulon.merge_direct_extended.
+The input here is a single Excel
 supplementary table (Wang25, human cortex multiome) rather than the SCENIC+ CSVs used
 for the mouse data, so the parsing differs:
 
@@ -27,7 +28,7 @@ Same regulon model and dedup rule as the mouse script:
 Reads:
   data/raw/regulons/human_regulons_SuppTable13.xlsx
 Outputs:
-  results/1_mouse_human/12.human_wang25_regulon_targets.tsv
+  results/1_mouse_human/07.human_wang25_regulon_targets.tsv
 """
 
 import os
@@ -36,15 +37,16 @@ from xml.etree import ElementTree as ET
 
 import pandas as pd
 
+from l23.regulon import REGULON_COLS, merge_direct_extended
+
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 XLSX = os.path.join(REPO_ROOT, "data", "raw", "regulons", "human_regulons_SuppTable13.xlsx")
-OUT_TSV = os.path.join(REPO_ROOT, "results", "1_mouse_human", "12.human_wang25_regulon_targets.tsv")
+OUT_TSV = os.path.join(REPO_ROOT, "results", "1_mouse_human", "07.human_wang25_regulon_targets.tsv")
 
 GENE_SHEET = "xl/worksheets/sheet2.xml"  # "Supplementary Table 13b" — target genes
 
 NS = "{http://schemas.openxmlformats.org/spreadsheetml/2006/main}"
-OUT_COLS = ["regulon", "TF", "regulation_direction", "source", "Gene"]
 
 # keep only regulons with a positive R2G (second) sign; drop +/- and -/-
 KEEP_DIRECTIONS = {"+/+", "-/+"}
@@ -101,26 +103,13 @@ def main():
             if gene:
                 records.append((regulon, tf, direction, source, gene))
 
-    df = pd.DataFrame.from_records(records, columns=OUT_COLS)
-
-    direct_keys = set(df.loc[df["source"] == "direct", "regulon"].unique())
-
-    # keep all direct regulons; from extended keep only regulons absent from direct
-    keep = (df["source"] == "direct") | (~df["regulon"].isin(direct_keys))
-    table = (
-        df[keep]
-        .drop_duplicates(subset=["regulon", "Gene"])
-        .sort_values(["regulon", "Gene"])
-        .reset_index(drop=True)
-    )
+    table = merge_direct_extended(pd.DataFrame.from_records(records, columns=REGULON_COLS))
 
     # sanity checks
     n_direct = table.loc[table["source"] == "direct", "regulon"].nunique()
     n_extended = table.loc[table["source"] == "extended", "regulon"].nunique()
     n_pos = table.loc[table["regulation_direction"] == "+/+", "regulon"].nunique()
     n_neg = table.loc[table["regulation_direction"] == "-/+", "regulon"].nunique()
-    assert table.duplicated(subset=["regulon", "Gene"]).sum() == 0, "duplicate (regulon, Gene) pairs remain"
-    assert n_direct == len(direct_keys), f"direct regulon count mismatch: {n_direct} != {len(direct_keys)}"
 
     os.makedirs(os.path.dirname(OUT_TSV), exist_ok=True)
     table.to_csv(OUT_TSV, sep="\t", index=False)

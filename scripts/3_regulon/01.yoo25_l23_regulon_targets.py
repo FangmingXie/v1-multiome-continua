@@ -25,13 +25,14 @@ Outputs:
 import os
 import pandas as pd
 
+from l23.regulon import merge_direct_extended
+
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 INPUT_DIRECT   = os.path.join(REPO_ROOT, 'data', 'raw', 'regulons', 'yoo25_L2_3', 'L2_3_direct_e_regulon_metadata.csv')
 INPUT_EXTENDED = os.path.join(REPO_ROOT, 'data', 'raw', 'regulons', 'yoo25_L2_3', 'L2_3_extended_e_regulon_metadata.csv')
 OUT_TSV        = os.path.join(REPO_ROOT, 'results', '3_regulon', '01.yoo25_l23_regulon_targets.tsv')
 
-OUT_COLS = ['regulon', 'TF', 'regulation_direction', 'source', 'Gene']
 KEEP_DIRECTIONS = {'+/+', '-/+'}   # positive R2G (second) sign
 
 
@@ -50,21 +51,10 @@ def load_and_annotate(csv_path, source):
     return df[df['regulation_direction'].isin(KEEP_DIRECTIONS)].copy()
 
 
-direct = load_and_annotate(INPUT_DIRECT, 'direct')
-extended = load_and_annotate(INPUT_EXTENDED, 'extended')
-direct_keys = set(direct['regulon'].unique())
-
-# keep all direct regulons; from extended keep only regulons absent from direct
-combined = pd.concat([direct, extended[~extended['regulon'].isin(direct_keys)]], ignore_index=True)
-# collapse multiple-region rows -> unique (regulon, target gene) pairs
-table = (combined[OUT_COLS]
-         .drop_duplicates(subset=['regulon', 'Gene'])
-         .sort_values(['regulon', 'Gene'])
-         .reset_index(drop=True))
-
+# multiple-region rows collapse to unique (regulon, target gene) pairs
+table = merge_direct_extended(pd.concat([load_and_annotate(INPUT_DIRECT, 'direct'),
+                                         load_and_annotate(INPUT_EXTENDED, 'extended')], ignore_index=True))
 n_direct = table.loc[table['source'] == 'direct', 'regulon'].nunique()
-if n_direct != len(direct_keys):
-    raise ValueError(f'direct regulon count mismatch: {n_direct} != {len(direct_keys)}')
 
 os.makedirs(os.path.dirname(OUT_TSV), exist_ok=True)
 table.to_csv(OUT_TSV, sep='\t', index=False)

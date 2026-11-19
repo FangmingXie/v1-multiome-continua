@@ -1,15 +1,15 @@
-"""GENES (rows) x cell groups (all L2/3, A', B', C' cells; columns) of 2_development/02 over postnatal day, NR vs DR,
-with the 2_development/03 statistics. A'/B'/C' cells = top 20% per Age by A/B/C scores from all
-Table S4 conditions' genes merged, cells in more than one group dropped (see 2_development/02).
-y = per-sample pseudobulk log2(CPM+1) = log2(counts / lib * 1e6 + 1) (2_development/02: counts and library sizes
+"""GENES (rows) x cell groups (all L2/3, A', B', C' cells; columns) of 2_development/01 over postnatal day, NR vs DR,
+with the 2_development/02 statistics. A'/B'/C' cells = top 20% per Age by A/B/C scores from all
+Table S4 conditions' genes merged, cells in more than one group dropped (see 2_development/01).
+y = per-sample pseudobulk log2(CPM+1) = log2(counts / lib * 1e6 + 1) (2_development/01: counts and library sizes
 summed over the cells) minus the gene's reference REF (mean over the P21 NR samples, all L2/3 cells;
 dashed line at 0), labeled 'log2(CPM+1) - P21 NR mean' (= a log2FC vs P21 NR L2/3 where CPM >> 1);
-the scale DESeq2 tests in 2_development/03, so NR-DR gaps match the log2FCs in the titles; archetype panels show
+the scale DESeq2 tests in 2_development/02, so NR-DR gaps match the log2FCs in the titles; archetype panels show
 enrichment relative to all L2/3. Row label = gene; one shared y-axis label on the left.
 Lines pass through the mean across samples per age x condition; dots are samples. y is shared within
 a row.
 
-Statistics (2_development/03: pseudobulk DESeq2 over P12-P21, 9 NR vs 8 DR samples, ~ age + condition + DR*(day - 16)):
+Statistics (2_development/02: pseudobulk DESeq2 over P12-P21, 9 NR vs 8 DR samples, ~ age + condition + DR*(day - 16)):
   DR     b_DR, the average DR vs NR log2FC over the DR samples (the DR effect at day 16)
   slope  b_int, change in the DR log2FC per day
 Each panel title gives both (estimate, padj; padj NA = removed by DESeq2 independent filtering).
@@ -18,11 +18,11 @@ test, a bracket right of P21 spans the NR and DR line ends, labeled 'DR' and / o
 * < 0.05, ** < 0.01, *** < 0.001 (padj).
 
 Reads:
-  results/2_development/02.yoo25_l23_pseudobulk_counts.tsv
-  results/2_development/02.yoo25_l23_pseudobulk_samples.tsv
-  results/2_development/03.yoo25_l23_time_course_dr_by_day_slope_deseq2.tsv
+  results/2_development/01.yoo25_l23_pseudobulk_counts.tsv
+  results/2_development/01.yoo25_l23_pseudobulk_samples.tsv
+  results/2_development/02.yoo25_l23_time_course_dr_by_day_slope_deseq2.tsv
 Outputs:
-  figures/4_dr/01.yoo25_l23_genes_time_course_pseudobulk_log2fc.pdf
+  figures/4_dr/02.yoo25_l23_genes_time_course_pseudobulk_log2fc.pdf
 """
 
 import os
@@ -31,22 +31,22 @@ import pandas as pd
 import matplotlib
 import matplotlib.pyplot as plt
 
+from l23.constants import FDR
+from l23.timecourse import stars, draw_nr_dr
+
 matplotlib.rcParams['pdf.fonttype'] = 42
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-INPUT_PB         = os.path.join(REPO_ROOT, 'results', '2_development', '02.yoo25_l23_pseudobulk_counts.tsv')
-INPUT_PB_SAMPLES = os.path.join(REPO_ROOT, 'results', '2_development', '02.yoo25_l23_pseudobulk_samples.tsv')
-INPUT_STATS      = os.path.join(REPO_ROOT, 'results', '2_development', '03.yoo25_l23_time_course_dr_by_day_slope_deseq2.tsv')
-OUT_FIG          = os.path.join(REPO_ROOT, 'figures', '4_dr', '01.yoo25_l23_genes_time_course_pseudobulk_log2fc.pdf')
+INPUT_PB         = os.path.join(REPO_ROOT, 'results', '2_development', '01.yoo25_l23_pseudobulk_counts.tsv')
+INPUT_PB_SAMPLES = os.path.join(REPO_ROOT, 'results', '2_development', '01.yoo25_l23_pseudobulk_samples.tsv')
+INPUT_STATS      = os.path.join(REPO_ROOT, 'results', '2_development', '02.yoo25_l23_time_course_dr_by_day_slope_deseq2.tsv')
+OUT_FIG          = os.path.join(REPO_ROOT, 'figures', '4_dr', '02.yoo25_l23_genes_time_course_pseudobulk_log2fc.pdf')
 
 GENES       = ['Cdh13', 'Robo1', 'Pcdh9', 'Baz1a']
 GROUPS      = ['all L2/3', "A' cells", "B' cells", "C' cells"]
-COND_COLORS = {'NR': 'C1', 'DR': 'black'}
 REF         = ('all L2/3', 'NR', 21)   # (cells, condition, day) of the pseudobulk log2FC reference
-FDR         = 0.05
 MIN_ABS_LOG2FC = 0.6   # DR effect also needs |log2FC| above this (~1.5-fold) to be marked
-STARS       = [(0.001, '***'), (0.01, '**'), (0.05, '*')]
 
 os.makedirs(os.path.dirname(OUT_FIG), exist_ok=True)
 
@@ -75,12 +75,8 @@ if absent:
     raise ValueError(f'{absent} not in {INPUT_STATS}')
 
 
-def stars(padj):
-    return next((s for cut, s in STARS if padj < cut), '')   # NaN padj -> ''
-
-
 def marks(k):
-    """Labels of the significant tests of one panel: DR and slope (2_development/03)."""
+    """Labels of the significant tests of one panel: DR and slope (2_development/02)."""
     out = []
     if abs(k['log2FC_DR_d16']) > MIN_ABS_LOG2FC and stars(k['padj_DR_d16']):
         out.append(f"DR {stars(k['padj_DR_d16'])}")
@@ -98,29 +94,13 @@ def draw(ycol, ylabel, out):
                              sharey='row', squeeze=False)
     for i, (row, gene) in enumerate(zip(axes, GENES)):
         for ax, grp in zip(row, GROUPS):
-            ax.axhline(0, color='gray', lw=0.8, ls='--')
-            ends = {}
-            for c, color in COND_COLORS.items():
-                s = samp[(samp['gene'] == gene) & (samp['cells'] == grp) & (samp['condition'] == c)]
-                t = s.groupby('day')[ycol].mean()
-                ax.plot(t.index, t.values, color=color, lw=1.5, label=c)
-                ax.scatter(s['day'], s[ycol], color=color, s=10, zorder=3)
-                ends[c] = t.loc[t.index.max()]
             k = st.loc[(gene, grp)]
-            m = marks(k)
-            if m:
-                # bracket: short ticks from each line end out to a vertical bar
-                ax.plot([21.8, 22.1, 22.1, 21.8], [ends['NR'], ends['NR'], ends['DR'], ends['DR']],
-                        color='black', lw=1)
-                ax.text(22.4, (ends['NR'] + ends['DR']) / 2, '\n'.join(m), fontsize=7, va='center', ha='left')
-            ax.set_xlim(5, 25.5)
-            ax.set_xticks(sorted(samp['day'].unique()))
-            ax.tick_params(axis='x', labelsize=6.5)
+            draw_nr_dr(ax, samp[(samp['gene'] == gene) & (samp['cells'] == grp)], ycol, sorted(samp['day'].unique()),
+                       marks(k))
             ax.set_title(f'DR {k["log2FC_DR_d16"]:.2f} ({fmt_p(k["padj_DR_d16"])})\n'
                          f'slope {k["slope_per_day"]:+.3f} ({fmt_p(k["padj_slope"])})', fontsize=6.5)
             if i == 0:
                 ax.text(0.5, 1.22, grp, transform=ax.transAxes, ha='center', va='bottom', fontsize=10)   # column header
-            ax.spines[['top', 'right']].set_visible(False)
         row[0].set_ylabel(gene, fontsize=11, fontstyle='italic')
     for ax in axes[-1]:
         ax.set_xlabel('postnatal day')

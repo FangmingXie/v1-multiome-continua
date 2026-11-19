@@ -1,4 +1,4 @@
-"""Per-cell L2/3 A'-C' axis for Yoo25 P21 NR (condition NR of the 0_prep/01 extract).
+"""Per-cell L2/3 A'-C' axis for Yoo25 P21 NR (Age P21 of the 0_prep/01 extract).
 
 Per-cell archetype score = mean over the MARKER_CONDITION A' or C' archetype genes (= Table S4;
 0_prep/02) of log2(CP10k+1) scaled per gene to [0, 1]: 0 = no expression, 1 = the gene's SCORE_MAX_PCTILE percentile across
@@ -8,10 +8,10 @@ define it.
 A'-C' axis = score_C' - score_A' (negative = A' end, positive = C' end).
 
 Reads:
-  results/0_prep/01.yoo25_l23_p21nrdr.h5ad
+  results/0_prep/01.yoo25_l23.h5ad
   results/0_prep/02.yoo25_l23_abc_genes.tsv
 Outputs:
-  results/5_easifish/02.yoo25_p21nr_ac_axis.tsv  (cell, replicate, Type, score_A, score_C, ac_axis)
+  results/5_easifish/01.yoo25_p21nr_ac_axis.tsv  (cell, replicate, Type, score_A, score_C, ac_axis)
 """
 
 import os
@@ -20,12 +20,15 @@ import pandas as pd
 import anndata as ad
 import scipy.sparse as sp
 
+from l23.expr import log2_cp10k, pctile_score
+
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-INPUT_YOO25   = os.path.join(REPO_ROOT, 'results', '0_prep', '01.yoo25_l23_p21nrdr.h5ad')
+INPUT_YOO25   = os.path.join(REPO_ROOT, 'results', '0_prep', '01.yoo25_l23.h5ad')
 INPUT_MARKERS = os.path.join(REPO_ROOT, 'results', '0_prep', '02.yoo25_l23_abc_genes.tsv')
-OUT_TSV       = os.path.join(REPO_ROOT, 'results', '5_easifish', '02.yoo25_p21nr_ac_axis.tsv')
+OUT_TSV       = os.path.join(REPO_ROOT, 'results', '5_easifish', '01.yoo25_p21nr_ac_axis.tsv')
 
+AGE              = 'P21'   # Yoo25 P21 NR
 MARKER_CONDITION = 'P21'
 EXCLUDE_GENES    = ['Cdh13', 'Trpc6', 'Chrm2']
 SCORE_MAX_PCTILE = 98    # per-gene scale: 0 = no expression, this percentile = 1
@@ -33,7 +36,7 @@ SCORE_MAX_PCTILE = 98    # per-gene scale: 0 = no expression, this percentile = 
 os.makedirs(os.path.dirname(OUT_TSV), exist_ok=True)
 
 a = ad.read_h5ad(INPUT_YOO25)
-a = a[a.obs['condition'] == 'NR'].copy()
+a = a[a.obs['Age'] == AGE].copy()
 mk = pd.read_csv(INPUT_MARKERS, sep='\t', usecols=['cond', 'archetype', 'gene'])
 mk = mk[mk['cond'] == MARKER_CONDITION]
 sets = {k: sorted(set(g['gene']) - set(EXCLUDE_GENES)) for k, g in mk.groupby('archetype')}
@@ -48,13 +51,10 @@ lib = np.asarray(counts.sum(axis=1)).ravel()
 
 def score(genes):
     idx = [a.var_names.get_loc(g) for g in genes]
-    l2 = np.log2(counts[:, idx].toarray() / lib[:, None] * 1e4 + 1)
-    hi = np.percentile(l2, SCORE_MAX_PCTILE, axis=0)
-    hi = np.where(hi > 0, hi, 1.0)   # gene zero in >= 98% of cells: raw value, capped at 1
-    return np.clip(l2 / hi, 0.0, 1.0).mean(axis=1)
+    return pctile_score(log2_cp10k(counts[:, idx].toarray(), lib), SCORE_MAX_PCTILE)
 
 
-out = pd.DataFrame({'replicate': a.obs['replicate'].astype(str).to_numpy(),
+out = pd.DataFrame({'replicate': a.obs['Sample'].astype(str).to_numpy(),
                     'Type': a.obs['Type'].astype(str).to_numpy(),
                     'score_A': score(sets['A']), 'score_C': score(sets['C'])},
                    index=pd.Index(a.obs_names, name='cell'))

@@ -1,14 +1,14 @@
 """Expression-stratified regulon x archetype enrichment, L2/3, on the developmental archetype genes.
 
 Test (src/l23/regulon.py): each Yoo25 L2/3 regulon's targets (01) against each archetype's marker
-set, over the adult L2/3 gene universe (the expressed genes of 02's embedding cells), with the
-closed-form null stratified by mean expression (20 strata) and BH over mid-p.
+set, over the adult L2/3 gene universe (02), with the closed-form null stratified by mean expression
+(20 strata) and BH over mid-p.
 
 Marker sets: the archetype genes of 0_prep/02 (= Table S4), union per archetype over the
 normally-reared timepoints P6..P21 (every DR condition excluded). A gene called for more than one
 archetype at different timepoints is dropped, so each marker belongs to exactly one archetype.
-Archetype letters are mapped onto the PCHA labels of 03 (A -> archetype_3, B -> archetype_2,
-C -> archetype_1), whose display labels are A'/B'/C'.
+Archetype letters are carried as the adult PCHA labels (A -> archetype_3, B -> archetype_2,
+C -> archetype_1; column archetype), whose display labels are A'/B'/C' (arch_letter).
 
 Selection: the star rule (fdr_strat < 0.05, log2_enr > 1, overlap >= 5) on the +/+ regulons;
 each TF is assigned to its max-log2_enr starred archetype.
@@ -16,38 +16,32 @@ each TF is assigned to its max-log2_enr starred archetype.
 Reads:
   results/0_prep/02.yoo25_l23_abc_genes.tsv
   results/3_regulon/01.yoo25_l23_regulon_targets.tsv
-  results/3_regulon/02.l23_harmony_coords.tsv              (universe cells)
-  data/raw/superdupermegaRNA_cheng22_IT_P28NR.h5ad
-  data/raw/superdupermegaRNA_yoo25_IT_P21.h5ad
+  results/3_regulon/02.l23_gene_universe_stats.tsv
 Outputs:
-  results/3_regulon/04.l23_nr_union_markers.tsv
-  results/3_regulon/04.l23_stratified_enrichment.tsv
-  results/3_regulon/04.enriched_regulon_selection.tsv
+  results/3_regulon/03.l23_nr_union_markers.tsv
+  results/3_regulon/03.l23_stratified_enrichment.tsv
+  results/3_regulon/03.enriched_regulon_selection.tsv
 """
 
 import os
 
 import numpy as np
 import pandas as pd
-import anndata as ad
 
-from l23.regulon import reconstruct_gene_universe, stratified_enrichment
+from l23.regulon import stratified_enrichment
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 INPUT_GENES    = os.path.join(REPO_ROOT, 'results', '0_prep', '02.yoo25_l23_abc_genes.tsv')
 INPUT_REGULONS = os.path.join(REPO_ROOT, 'results', '3_regulon', '01.yoo25_l23_regulon_targets.tsv')
-INPUT_COORDS   = os.path.join(REPO_ROOT, 'results', '3_regulon', '02.l23_harmony_coords.tsv')
-INPUT_H5AD     = {'cheng22': os.path.join(REPO_ROOT, 'data', 'raw', 'superdupermegaRNA_cheng22_IT_P28NR.h5ad'),
-                  'yoo25': os.path.join(REPO_ROOT, 'data', 'raw', 'superdupermegaRNA_yoo25_IT_P21.h5ad')}
-OUT_MARKERS    = os.path.join(REPO_ROOT, 'results', '3_regulon', '04.l23_nr_union_markers.tsv')
-OUT_ENRICHMENT = os.path.join(REPO_ROOT, 'results', '3_regulon', '04.l23_stratified_enrichment.tsv')
-OUT_SELECTION  = os.path.join(REPO_ROOT, 'results', '3_regulon', '04.enriched_regulon_selection.tsv')
+INPUT_UNIVERSE = os.path.join(REPO_ROOT, 'results', '3_regulon', '02.l23_gene_universe_stats.tsv')
+OUT_MARKERS    = os.path.join(REPO_ROOT, 'results', '3_regulon', '03.l23_nr_union_markers.tsv')
+OUT_ENRICHMENT = os.path.join(REPO_ROOT, 'results', '3_regulon', '03.l23_stratified_enrichment.tsv')
+OUT_SELECTION  = os.path.join(REPO_ROOT, 'results', '3_regulon', '03.enriched_regulon_selection.tsv')
 
 LAYER = 'L2_3'
-SUBCLASS = 'L2/3'
 NR_CONDITIONS = {'P6', 'P8', 'P10', 'P12', 'P14', 'P17', 'P21'}
-# archetype letter -> PCHA label of 03; ARCH_RELABEL maps those to the display labels
+# archetype letter -> adult PCHA label; ARCH_RELABEL maps those to the display labels
 S4_TO_PCHA = {'A': 'archetype_3', 'B': 'archetype_2', 'C': 'archetype_1'}
 ARCH_LABELS = ['archetype_1', 'archetype_2', 'archetype_3']
 ARCH_RELABEL = {'archetype_1': "C'", 'archetype_2': "B'", 'archetype_3': "A'"}
@@ -103,10 +97,9 @@ def select(enr):
 
 mk = build_markers()
 
-print('Loading h5ad inputs...')
-adatas = {tag: ad.read_h5ad(p) for tag, p in INPUT_H5AD.items()}
-coords = pd.read_csv(INPUT_COORDS, sep='\t', index_col=0)
-universe, stats = reconstruct_gene_universe(coords.index.values, SUBCLASS, adatas)
+stats = pd.read_csv(INPUT_UNIVERSE, sep='\t', index_col='gene')
+universe = set(stats.index)
+print(f'gene universe: {len(universe)} genes')
 regulons = pd.read_csv(INPUT_REGULONS, sep='\t')
 
 enr, M_raw = stratified_enrichment(LAYER, universe, stats, mk, regulons, ARCH_LABELS, ARCH_RELABEL,

@@ -1,29 +1,29 @@
 """A/B/C archetype chromatin region modules (M1-M5) over postnatal day in Yoo25 L2/3 ATAC, NR vs DR, per
-cell group of 2_development/02 (all L2/3, A', B', C' cells). The ATAC counterpart of 2_development/04.
+cell group of 2_development/01 (all L2/3, A', B', C' cells). The ATAC counterpart of 2_development/03.
 
 Modules: L23{A,B,C}_regions_M{1-5}.bed; every region is one consensus peak of the peak matrices (checked).
 A region in modules of two archetypes is in each.
 Pseudobulk: peak counts summed per (cell group, Sample); cells, Sample, condition, day and A'/B'/C'
-group from the 2_development/02 cell table (barcodes are the same strings; every ATAC cell must be there).
+group from the 2_development/01 cell table (barcodes are the same strings; every ATAC cell must be there).
 lib = the unit's counts over all consensus peaks (CPM in peaks). Per region and sample:
 log2(counts / lib * 1e6 + 1) minus the region's reference REF (mean over the P21 NR samples, all L2/3
-cells), as in 2_development/04. Module score per sample = mean of that value over the module's regions that pass
+cells), as in 2_development/03. Module score per sample = mean of that value over the module's regions that pass
 the filter in the cell group (>= MIN_PB_COUNTS counts in >= MIN_PB_SAMPLES of the group's samples,
 all Ages).
-Statistics per module and cell group: OLS of the module score over the P12-P21 samples (9 NR, 8 DR),
+Statistics per module and cell group (l23.timecourse.dr_ols): OLS of the module score over the P12-P21 samples (9 NR, 8 DR),
 score ~ age (factor) + DR + DR*(day - D0), D0 = 16: b_DR = average DR effect (at day 16), b_int =
 change in the DR effect per day; t-test p-values, BH padj over the 15 modules of the cell group.
 Sensitivity: the same scores and OLS with lib = summed obs n_fragment (*_nfrag columns; printed
-side by side). Figures: 2_development/07.
+side by side). Figures: 2_development/06.
 
 Reads:
   data/raw/atac/pmat_l23concensus_{Age}.h5ad
   data/raw/atac_modules/L23{A,B,C}_regions_M{1-5}.bed
-  results/2_development/02.yoo25_l23_cell_groups.tsv
+  results/2_development/01.yoo25_l23_cell_groups.tsv
 Outputs:
-  results/2_development/06.yoo25_l23_atac_region_modules_regions.tsv   (region -> module, pass filter per cell group)
-  results/2_development/06.yoo25_l23_atac_region_modules_samples.tsv   (module score per sample)
-  results/2_development/06.yoo25_l23_atac_region_modules_stats.tsv     (OLS DR and slope per module)
+  results/2_development/04.yoo25_l23_atac_region_modules_regions.tsv   (region -> module, pass filter per cell group)
+  results/2_development/04.yoo25_l23_atac_region_modules_samples.tsv   (module score per sample)
+  results/2_development/04.yoo25_l23_atac_region_modules_stats.tsv     (OLS DR and slope per module)
 """
 
 import os
@@ -31,29 +31,26 @@ import numpy as np
 import pandas as pd
 import anndata as ad
 import scipy.sparse as sp
-import statsmodels.formula.api as smf
-from statsmodels.stats.multitest import multipletests
+
+from l23.constants import AGES, TEST_DAYS
+from l23.timecourse import dr_ols, bh
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-AGES         = ['P6', 'P8', 'P10', 'P12', 'P14', 'P17', 'P21', 'P12DR', 'P14DR', 'P17DR', 'P21DR']
 ARCHETYPES   = ['A', 'B', 'C']
 MODULES      = ['M1', 'M2', 'M3', 'M4', 'M5']
 INPUT_PMAT   = {a: os.path.join(REPO_ROOT, 'data', 'raw', 'atac', f'pmat_l23concensus_{a}.h5ad') for a in AGES}
 INPUT_BED    = {(k, m): os.path.join(REPO_ROOT, 'data', 'raw', 'atac_modules', f'L23{k}_regions_{m}.bed')
                 for k in ARCHETYPES for m in MODULES}
-INPUT_CELLS  = os.path.join(REPO_ROOT, 'results', '2_development', '02.yoo25_l23_cell_groups.tsv')
-OUT_REGIONS  = os.path.join(REPO_ROOT, 'results', '2_development', '06.yoo25_l23_atac_region_modules_regions.tsv')
-OUT_SAMPLES  = os.path.join(REPO_ROOT, 'results', '2_development', '06.yoo25_l23_atac_region_modules_samples.tsv')
-OUT_STATS    = os.path.join(REPO_ROOT, 'results', '2_development', '06.yoo25_l23_atac_region_modules_stats.tsv')
+INPUT_CELLS  = os.path.join(REPO_ROOT, 'results', '2_development', '01.yoo25_l23_cell_groups.tsv')
+OUT_REGIONS  = os.path.join(REPO_ROOT, 'results', '2_development', '04.yoo25_l23_atac_region_modules_regions.tsv')
+OUT_SAMPLES  = os.path.join(REPO_ROOT, 'results', '2_development', '04.yoo25_l23_atac_region_modules_samples.tsv')
+OUT_STATS    = os.path.join(REPO_ROOT, 'results', '2_development', '04.yoo25_l23_atac_region_modules_stats.tsv')
 
-GROUPS         = {'all L2/3': None, "A' cells": "A'", "B' cells": "B'", "C' cells": "C'"}   # name -> 2_development/02 archetype
+GROUPS         = {'all L2/3': None, "A' cells": "A'", "B' cells": "B'", "C' cells": "C'"}   # name -> 2_development/01 archetype
 REF            = ('all L2/3', 'NR', 21)   # (cells, condition, day) of the per-region reference
-TEST_DAYS      = [12, 14, 17, 21]   # Ages with both NR and DR
-D0             = 16      # centering day: mean day of the DR samples (checked below)
 MIN_PB_COUNTS  = 10
 MIN_PB_SAMPLES = 2
-FDR            = 0.05
 
 os.makedirs(os.path.dirname(OUT_STATS), exist_ok=True)
 
@@ -79,7 +76,7 @@ for age, path in INPUT_PMAT.items():
             raise ValueError(f'{len(absent)} BED regions not peaks of {path}: {absent[:5]}')
         col = peaks.get_indexer(regions)
     elif not a.var_names.equals(peaks):
-        raise ValueError(f'peaks of {path} differ from those of {INPUT_PMAT[AGES[0]]}')
+        raise ValueError(f'peaks of {path} differ from those of {next(iter(INPUT_PMAT.values()))}')
     absent = a.obs_names.difference(cells.index)
     if len(absent):
         raise ValueError(f'{len(absent)} cells of {path} not in {INPUT_CELLS}: {list(absent[:3])}')
@@ -134,23 +131,12 @@ print(f'wrote {OUT_SAMPLES}')
 # OLS per module and cell group, P12-P21, for each library
 stats = []
 for (grp, k, m), t in samp[samp['day'].isin(TEST_DAYS)].groupby(['cells', 'archetype', 'module'], sort=False):
-    t = t.assign(age=pd.Categorical(t['day'].map(lambda d: f'P{d}'), categories=[f'P{d}' for d in TEST_DAYS]),
-                 dr=(t['condition'] == 'DR').astype(float))
-    if t.loc[t['dr'] == 1, 'day'].mean() != D0:
-        raise ValueError(f'{grp}: mean DR day is {t.loc[t["dr"] == 1, "day"].mean()}, D0 = {D0}')
-    t['dr_dayc'] = t['dr'] * (t['day'] - D0)
-    r = {'cells': grp, 'archetype': k, 'module': m, 'n_regions': int(t['n_regions'].iloc[0]),
-         'n_NR': int((t['dr'] == 0).sum()), 'n_DR': int((t['dr'] == 1).sum())}
-    for key in ['', '_nfrag']:
-        fit = smf.ols(f'score{key} ~ age + dr + dr_dayc', data=t).fit()
-        r.update({f'DR_d16{key}': fit.params['dr'], f'se_DR_d16{key}': fit.bse['dr'],
-                  f'pvalue_DR_d16{key}': fit.pvalues['dr'], f'slope_per_day{key}': fit.params['dr_dayc'],
-                  f'se_slope{key}': fit.bse['dr_dayc'], f'pvalue_slope{key}': fit.pvalues['dr_dayc']})
-    stats.append(r)
+    stats.append({'cells': grp, 'archetype': k, 'module': m, 'n_regions': int(t['n_regions'].iloc[0]),
+                  'n_NR': int((t['condition'] == 'NR').sum()), 'n_DR': int((t['condition'] == 'DR').sum()),
+                  **dr_ols(t, 'score'), **dr_ols(t, 'score_nfrag', suffix='_nfrag')})
 stats = pd.DataFrame(stats)
 for key in ['DR_d16', 'slope', 'DR_d16_nfrag', 'slope_nfrag']:
-    stats[f'padj_{key}'] = stats.groupby('cells')[f'pvalue_{key}'].transform(
-        lambda p: multipletests(p, method='fdr_bh')[1])
+    stats[f'padj_{key}'] = stats.groupby('cells')[f'pvalue_{key}'].transform(bh)
 stats.to_csv(OUT_STATS, sep='\t', index=False)
 print(stats[['cells', 'archetype', 'module', 'n_regions', 'DR_d16', 'padj_DR_d16', 'DR_d16_nfrag', 'padj_DR_d16_nfrag',
              'slope_per_day', 'padj_slope', 'slope_per_day_nfrag', 'padj_slope_nfrag']]

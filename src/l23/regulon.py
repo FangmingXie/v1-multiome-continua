@@ -2,8 +2,8 @@
 
 Enrichment: does an archetype's marker set M overlap a regulon's target set T more than expected?
 Universe U = the tested expression genes of the adult L2/3 cells (shared expressed / nonzero-variance
-genes across cheng22 + yoo25). A plain Fisher test assumes M and T are exchangeable draws from U; they
-are not -- both are biased toward highly expressed genes. The null here draws a pseudo-marker set M*
+genes across cheng22 + yoo25; 3_regulon/02). A plain Fisher test assumes M and T are exchangeable draws
+from U; they are not -- both are biased toward highly expressed genes. The null here draws a pseudo-marker set M*
 by sampling, within each expression stratum b, exactly m_b = |M & b| genes uniformly without
 replacement from the n_b = |U & b| genes in that stratum. With t_b = |T & b|:
 
@@ -31,11 +31,8 @@ import scipy.sparse as sp
 import scipy.stats
 from statsmodels.stats.multitest import multipletests
 
-# datasets of the adult L2/3 universe (as 3_regulon/02-03): tag, subclass column, depth column
-DATASETS = [
-    dict(tag='cheng22', subclass_col='Subclass', depth_col='n_counts'),
-    dict(tag='yoo25', subclass_col='Subclass', depth_col='total_counts'),
-]
+from .expr import log2_cp10k, pctile_score
+
 MIN_REGULON_GENES = 5    # drop regulons with fewer than this many targets in-universe
 # 20 quantile strata of mean log2-CP10k expression
 N_BINS = 20
@@ -45,58 +42,6 @@ BIN_COVARIATE = 'mean'
 MC_CHECK_DRAWS = 20000
 MC_CHECK_RTOL_MEAN = 0.05
 MC_CHECK_RTOL_TAIL = 0.10
-
-
-def reconstruct_gene_universe(coords_index, subclass_val, adatas):
-    """Tested gene set: shared expressed / nonzero-variance genes over the embedding cells.
-
-    `adatas` maps tag -> full AnnData; `coords_index` holds the 'tag:barcode' embedding cells.
-    Returns (universe, stats): `stats` is indexed by the universe genes with per-gene `mean` /
-    `var` / `detect` of log2(CP10k+1) over the same cells.
-    """
-    subs = {}
-    for d in DATASETS:
-        a = adatas[d['tag']]
-        a = a[a.obs[d['subclass_col']] == subclass_val].copy()
-        subs[d['tag']] = a
-        print(f"    {d['tag']:8s}: {a.n_obs} cells ({subclass_val}), {a.n_vars} genes")
-
-    # shared gene set (inner join), ordered by cheng22, mito removed
-    common_set = set(subs['cheng22'].var_names)
-    for tag in [d['tag'] for d in DATASETS if d['tag'] != 'cheng22']:
-        common_set &= set(subs[tag].var_names)
-    common_genes = [g for g in subs['cheng22'].var_names if g in common_set]
-    common_genes = [g for g in common_genes if not g.lower().startswith('mt-')]
-
-    # CP10k -> log2 per dataset (validated depth + raw counts), then merge
-    expr_frames = []
-    for d in DATASETS:
-        a = subs[d['tag']]
-        depth = a.obs[d['depth_col']].values.astype(np.float64)
-        assert np.all(np.isfinite(depth)) and np.all(depth > 0), \
-            f"{d['tag']}: invalid depth column '{d['depth_col']}' (NaN or <=0)"
-        xc = a.raw[:, common_genes].X
-        xc = xc.toarray() if sp.issparse(xc) else np.asarray(xc, dtype=np.float64)
-        xc = np.log2(xc / depth[:, None] * 1e4 + 1).astype(np.float32)
-        idx = np.array([f"{d['tag']}:{n}" for n in a.obs_names])
-        expr_frames.append(pd.DataFrame(xc, index=idx, columns=common_genes))
-
-    expr_df = pd.concat(expr_frames)
-    missing = np.setdiff1d(coords_index, expr_df.index.values)
-    assert missing.size == 0, \
-        f'{missing.size} coord cells missing from reconstructed expression, e.g. {missing[:5]}'
-    expr_df = expr_df.reindex(coords_index)
-
-    # expressed (nonzero total) + nonzero-variance
-    X = expr_df.values
-    keep = (X.sum(axis=0) > 0) & (X.var(axis=0) > 0)
-    universe = expr_df.columns.values[keep]
-    Xk = X[:, keep]
-    stats = pd.DataFrame({'mean': Xk.mean(axis=0), 'var': Xk.var(axis=0),
-                          'detect': (Xk > 0).mean(axis=0)}, index=universe)
-    print(f'    gene universe: {keep.sum()} expressed nonzero-variance genes '
-          f'(dropped {(~keep).sum()} of {keep.size})')
-    return set(universe), stats
 
 
 def log2_odds_ratio(x, M, T, N):
@@ -252,51 +197,43 @@ def stratified_enrichment(layer, universe, stats, markers, regulons, arch_labels
     return long, M_raw
 
 
+# --------------------------------------------------------------------------- regulon tables
+
+REGULON_COLS = ['regulon', 'TF', 'regulation_direction', 'source', 'Gene']
+
+
+def merge_direct_extended(df):
+    """SCENIC+ (regulon, target) rows from both annotations -> one table: a regulon keeps its DIRECT
+    targets if it has any, else its EXTENDED ones; unique (regulon, Gene) pairs, sorted."""
+    direct_keys = set(df.loc[df['source'] == 'direct', 'regulon'])
+    keep = (df['source'] == 'direct') | ~df['regulon'].isin(direct_keys)
+    table = (df.loc[keep, REGULON_COLS]
+             .drop_duplicates(subset=['regulon', 'Gene'])
+             .sort_values(['regulon', 'Gene'])
+             .reset_index(drop=True))
+    n_direct = table.loc[table['source'] == 'direct', 'regulon'].nunique()
+    if n_direct != len(direct_keys):
+        raise ValueError(f'direct regulon count mismatch: {n_direct} != {len(direct_keys)}')
+    return table
+
+
 # --------------------------------------------------------------------------- target activity
 
-# Yoo25 L2/3 cells of the combined snRNA object: obs Age -> (postnatal day, condition)
-YOO25_STUDY = '2023 Multiome'
-YOO25_SUBCLASS = 'L2/3'
-YOO25_AGES = {'P6': (6, 'NR'), 'P8': (8, 'NR'), 'P10': (10, 'NR'), 'P12': (12, 'NR'), 'P14': (14, 'NR'),
-              'P17': (17, 'NR'), 'P21': (21, 'NR'),
-              'P12DR': (12, 'DR'), 'P14DR': (14, 'DR'), 'P17DR': (17, 'DR'), 'P21DR': (21, 'DR')}
-CP_TARGET = 1e4
 NORM_MAX_PCTILE = 99
-CHUNK = 5000
 
 
 def load_expression(h5ad_path, genes):
     """log2(CP10k+1) of `genes` in every Yoo25 L2/3 cell, plus (Age, Sample, day, condition).
 
-    `h5ad_path` is the combined snRNA object with raw counts in .raw; library size = sum over all genes.
+    `h5ad_path` is the 0_prep/01 extract (raw counts in .X, library size = sum over all genes in obs lib).
     """
-    src = ad.read_h5ad(h5ad_path, backed='r')
-    if src.raw is None:
-        raise ValueError(f'{h5ad_path} has no .raw; raw counts are expected there')
-    obs = src.obs[['Age', 'Sample', 'Study', 'Subclass']].astype(str)
-    sel = ((obs['Study'] == YOO25_STUDY) & (obs['Subclass'] == YOO25_SUBCLASS)).to_numpy()
-    ages = sorted(obs.loc[sel, 'Age'].unique())
-    if sorted(YOO25_AGES) != ages:
-        raise ValueError(f'expected {YOO25_STUDY} L2/3 ages {sorted(YOO25_AGES)}, found {ages}')
-    idx = np.flatnonzero(sel)
-
-    present = [g for g in genes if g in src.raw.var_names]
-    print(f'{len(present)} of {len(genes)} target genes present in .raw')
-    gidx = src.raw.var_names.get_indexer(present)
-    lib, X = np.empty(len(idx)), np.empty((len(idx), len(present)), dtype=np.float32)
-    for s in range(0, len(idx), CHUNK):
-        x = sp.csr_matrix(src.raw.X[idx[s:s + CHUNK]])
-        lib[s:s + CHUNK] = np.asarray(x.sum(axis=1)).ravel()
-        X[s:s + CHUNK] = x[:, gidx].toarray()
-    if (lib <= 0).any():
-        raise ValueError('cells with zero library size')
-    L = np.log2(X / lib[:, None] * CP_TARGET + 1)
-
-    cells = obs.iloc[idx][['Age', 'Sample']].reset_index(drop=True)
-    cells['day'] = cells['Age'].map(lambda a: YOO25_AGES[a][0])
-    cells['condition'] = cells['Age'].map(lambda a: YOO25_AGES[a][1])
-    if (cells.groupby('Sample')['Age'].nunique() != 1).any():
-        raise ValueError('a sample spans more than one Age')
+    src = ad.read_h5ad(h5ad_path)
+    present = [g for g in genes if g in src.var_names]
+    print(f'{len(present)} of {len(genes)} target genes present')
+    X = sp.csr_matrix(src.X)[:, src.var_names.get_indexer(present)].toarray()
+    L = log2_cp10k(X, src.obs['lib'].to_numpy())
+    cells = (src.obs[['Age', 'Sample', 'day', 'condition']]
+             .astype({'Age': str, 'Sample': str, 'condition': str}).reset_index(drop=True))
     print(f'{len(cells)} L2/3 cells; per Age: {cells["Age"].value_counts().to_dict()}')
     return pd.DataFrame(L, columns=present), cells
 
@@ -307,7 +244,4 @@ def regulon_score(tf, genes, L):
     used = [g for g in genes if g in L.columns]
     if not used:
         raise ValueError(f'{tf}: none of its {len(genes)} targets is in the data')
-    x = L[used].to_numpy()
-    hi = np.percentile(x, NORM_MAX_PCTILE, axis=0)
-    hi = np.where(hi > 0, hi, 1.0)
-    return np.clip(x / hi, 0.0, 1.0).mean(axis=1), len(used)
+    return pctile_score(L[used].to_numpy(), NORM_MAX_PCTILE), len(used)

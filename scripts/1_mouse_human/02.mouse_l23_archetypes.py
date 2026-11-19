@@ -1,6 +1,6 @@
 """Mouse L2/3 (Cheng22, P28 NR) archetypes: seeded PCHA on the Gate-A varimax subspace, markers and scores.
 
-PCHA (NOC archetypes) on the Gate-A VX coordinates of script 01 (VX dominated by cell type in 01's
+PCHA (NOC archetypes) on the Gate-A mouse VX coordinates of script 01 (VX dominated by cell type in 01's
 post-varimax variance partition). Top N_TOP_CELLS cells per archetype by distance in VX space;
 conservative one-vs-each Wilcoxon markers (worst case over the other archetypes: min log2FC, max p;
 BH; kept if frac_in >= FRAC_IN_THRESH, fdr < FDR_THRESH, log2FC > LOG2FC_THRESH); per-cell [0, 1]
@@ -16,11 +16,11 @@ Reads:
   results/1_mouse_human/01.mouse_l23_varimax_loadings.tsv
   data/raw/superdupermegaRNA_cheng22_IT_P28NR.h5ad
 Outputs:
-  results/1_mouse_human/03.mouse_l23_pcha_xp.tsv
-  results/1_mouse_human/03.mouse_l23_pcha_aa.tsv
-  results/1_mouse_human/03.mouse_l23_top_cells.tsv
-  results/1_mouse_human/03.mouse_l23_archetype_markers.tsv
-  results/1_mouse_human/03.mouse_l23_archetype_scores.tsv
+  results/1_mouse_human/02.mouse_l23_pcha_xp.tsv
+  results/1_mouse_human/02.mouse_l23_pcha_aa.tsv
+  results/1_mouse_human/02.mouse_l23_top_cells.tsv
+  results/1_mouse_human/02.mouse_l23_archetype_markers.tsv
+  results/1_mouse_human/02.mouse_l23_archetype_scores.tsv
 """
 
 import os
@@ -32,6 +32,7 @@ from statsmodels.stats.multitest import multipletests
 
 from l23.archetype import SCA
 from l23.crossspecies import mouse_log2_cp10k
+from l23.expr import minmax_score
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -39,11 +40,11 @@ RES_DIR        = os.path.join(REPO_ROOT, 'results', '1_mouse_human')
 IN_VX_COORDS   = os.path.join(RES_DIR, '01.mouse_l23_varimax_coords.tsv')
 IN_VX_LOADINGS = os.path.join(RES_DIR, '01.mouse_l23_varimax_loadings.tsv')
 INPUT_MOUSE    = os.path.join(REPO_ROOT, 'data', 'raw', 'superdupermegaRNA_cheng22_IT_P28NR.h5ad')
-OUT_PCHA_XP    = os.path.join(RES_DIR, '03.mouse_l23_pcha_xp.tsv')
-OUT_PCHA_AA    = os.path.join(RES_DIR, '03.mouse_l23_pcha_aa.tsv')
-OUT_TOP_CELLS  = os.path.join(RES_DIR, '03.mouse_l23_top_cells.tsv')
-OUT_MARKERS    = os.path.join(RES_DIR, '03.mouse_l23_archetype_markers.tsv')
-OUT_SCORES     = os.path.join(RES_DIR, '03.mouse_l23_archetype_scores.tsv')
+OUT_PCHA_XP    = os.path.join(RES_DIR, '02.mouse_l23_pcha_xp.tsv')
+OUT_PCHA_AA    = os.path.join(RES_DIR, '02.mouse_l23_pcha_aa.tsv')
+OUT_TOP_CELLS  = os.path.join(RES_DIR, '02.mouse_l23_top_cells.tsv')
+OUT_MARKERS    = os.path.join(RES_DIR, '02.mouse_l23_archetype_markers.tsv')
+OUT_SCORES     = os.path.join(RES_DIR, '02.mouse_l23_archetype_scores.tsv')
 
 MOUSE_SUBCLASS   = 'L2/3'
 VX_COLS          = ['VX1', 'VX2', 'VX5', 'VX7', 'VX8', 'VX9']   # Gate A (01's vx variance partition)
@@ -139,10 +140,7 @@ scores = np.zeros((n_cells, NOC), dtype=np.float32)
 for k, name in enumerate(archetype_names):
     genes = markers_df.loc[markers_df['archetype'] == f'archetype_{k+1}', 'gene'].values
     mat = X_norm[:, [np.where(hvg_names == g)[0][0] for g in genes]]
-    lo  = np.percentile(mat, SCORE_PCTILE_LO, axis=0)
-    hi  = np.percentile(mat, SCORE_PCTILE_HI, axis=0)
-    rng = np.where(hi > lo, hi - lo, 1.0)
-    scores[:, k] = np.clip((mat - lo) / rng, 0, 1).mean(axis=1)
+    scores[:, k] = minmax_score(mat, SCORE_PCTILE_LO, SCORE_PCTILE_HI)
     print(f'  Score {name}: {len(genes)} genes')
 pd.DataFrame(scores, index=m_adata.obs_names.values,
              columns=[f'score_{n}' for n in archetype_names]).to_csv(OUT_SCORES, sep='\t')

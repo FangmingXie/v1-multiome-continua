@@ -26,6 +26,8 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 from sklearn.linear_model import LinearRegression
 
+from .expr import log2_cp10k
+
 # --- CCA parameters ---
 N_PERM          = 4000     # permutation null replicates (z quoted to +-0.2)
 N_BOOT          = 500      # gene bootstraps for weight stability
@@ -133,9 +135,9 @@ def variance_partition(scores, comp_cols, factors, label):
 def mouse_log2_cp10k(adata):
     """log2(CP10k + 1) from the integer counts in .raw (cheng22 .X is already normalized)."""
     X_raw = adata.raw[:, adata.var_names].X.toarray().astype(np.float32)
-    depths = X_raw.sum(axis=1, keepdims=True)
+    depths = X_raw.sum(axis=1)
     depths[depths == 0] = 1
-    return np.log2(X_raw / depths * 1e4 + 1)
+    return log2_cp10k(X_raw, depths)
 
 
 # ======================================================================================

@@ -1,4 +1,4 @@
-"""Shared encoding of the regulon x archetype enrichment figures (3_regulon/05, 06, 07).
+"""Shared encoding of the regulon x archetype enrichment figures (3_regulon/05, 06).
 
   colour  = log2_enr on a blue (below 0) / YlOrRd (above 0) ramp with a hard break at 0,
             the value where the observed overlap equals the expression-matched expectation
@@ -13,6 +13,8 @@ import numpy as np
 from matplotlib.colors import LinearSegmentedColormap
 from plotly.colors import sample_colorscale
 
+from .constants import ARCH_COLORS  # noqa: F401  (archetype colours of the figures)
+
 SIGN = '+/+'                 # activating regulons only
 STAR_FDR = 0.05
 STAR_LOG2ENR = 1.0
@@ -23,7 +25,6 @@ FRAC_REF = 0.40
 SIZE_REF = 260.0
 SIZE_LEGEND = [0.05, 0.15, 0.25, 0.35]
 BOX_LW = 1.4                 # outline width for significant cells
-ARCH_COLORS = {"A'": 'C0', "B'": 'C1', "C'": 'C2'}
 
 
 def log2enr_cmap():

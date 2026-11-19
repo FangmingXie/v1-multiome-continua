@@ -1,6 +1,6 @@
 """Yoo25 L2/3 archetype (A/B/C) genes per condition (= Table S4), from raw counts.
 
-Cells: Yoo25 ('2023 Multiome') L2/3, all 11 conditions (cond = Age: NR P6-P21, DR P12-P21).
+Cells: Yoo25 L2/3 (0_prep/01), all 11 conditions (cond = Age: NR P6-P21, DR P12-P21).
 Steps (per condition unless noted):
   1) scores. Cheng22 L2/3 archetype genes (P17on = A/B/C) present in Yoo25. log2(CP10k+1) with
      lib = sum over ALL genes; each scored gene min-max scaled over the condition's cells (+EPS);
@@ -13,9 +13,12 @@ Steps (per condition unless noted):
      OFFSET) difference. Gene of X: log2FC > 0 vs both others, max log2FC > L2FC_TH, min q < ALPHA;
      for B also min log2FC > L2FC_TH_B_MIN.
 
+The archetype genes are checked against the published Table S4 (exact match per condition and archetype).
+
 Reads:
-  data/raw/superdupermegaRNA_hasraw.h5ad        (Yoo25 counts in .raw)
+  results/0_prep/01.yoo25_l23.h5ad              (Yoo25 L2/3 raw counts, all conditions)
   data/raw/Cheng22_Xie25_L23_ABC_genes_n286.csv     (Cheng22 adult L2/3 A/B/C genes)
+  data/raw/TableS4_L23_archetypal_genes.tsv     (published Table S4; exact-match check only)
 Outputs:
   results/0_prep/02.yoo25_l23_abc_scores.tsv    (step 1; cell, cond, score_a, score_b, score_c)
   results/0_prep/02.yoo25_l23_abc_cells.tsv     (step 2; cell, cond, archetype: A/B/C, '' = none)
@@ -32,18 +35,19 @@ import scipy.sparse as sp
 from scipy import stats
 from statsmodels.stats.multitest import multipletests
 
+from l23.constants import AGES
+
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-INPUT_H5AD  = os.path.join(REPO_ROOT, 'data', 'raw', 'superdupermegaRNA_hasraw.h5ad')
+INPUT_H5AD  = os.path.join(REPO_ROOT, 'results', '0_prep', '01.yoo25_l23.h5ad')
 INPUT_GENES = os.path.join(REPO_ROOT, 'data', 'raw', 'Cheng22_Xie25_L23_ABC_genes_n286.csv')
+INPUT_S4    = os.path.join(REPO_ROOT, 'data', 'raw', 'TableS4_L23_archetypal_genes.tsv')
 OUT_SCORES  = os.path.join(REPO_ROOT, 'results', '0_prep', '02.yoo25_l23_abc_scores.tsv')
 OUT_CELLS   = os.path.join(REPO_ROOT, 'results', '0_prep', '02.yoo25_l23_abc_cells.tsv')
 OUT_GENES   = os.path.join(REPO_ROOT, 'results', '0_prep', '02.yoo25_l23_abc_genes.tsv')
 OUT_STATS   = os.path.join(REPO_ROOT, 'results', '0_prep', '02.yoo25_l23_abc_gene_stats.parquet')
 
-STUDY    = '2023 Multiome'
-SUBCLASS = 'L2/3'
-CONDS = ['P6', 'P8', 'P10', 'P12', 'P14', 'P17', 'P21', 'P12DR', 'P14DR', 'P17DR', 'P21DR']
+CONDS = list(AGES)
 ARCHS = ['A', 'B', 'C']
 # step 1
 EPS = 1e-10                    # min-max denominator
@@ -59,20 +63,14 @@ L2FC_TH_B_MIN = np.log2(1.2)   # B only
 os.makedirs(os.path.dirname(OUT_GENES), exist_ok=True)
 
 # ---- inputs: counts and gene sets ----
-src = ad.read_h5ad(INPUT_H5AD, backed='r')
-if src.raw is None:
-    raise ValueError(f'{INPUT_H5AD} has no .raw; raw counts are expected there')
-obs = src.obs[['Age', 'Study', 'Subclass']].astype(str)
-idx = np.flatnonzero(((obs['Study'] == STUDY) & (obs['Subclass'] == SUBCLASS)).to_numpy())
-cell_ids = obs.index[idx]
-cond = obs['Age'].iloc[idx].to_numpy()
+src = ad.read_h5ad(INPUT_H5AD)
+cell_ids = src.obs_names
+cond = src.obs['Age'].astype(str).to_numpy()
 if sorted(set(cond)) != sorted(CONDS):
     raise ValueError(f'expected conditions {CONDS}, found {sorted(set(cond))}')
-X = sp.csr_matrix(src.raw.X[idx]).astype(np.float64)
-genes = src.raw.var_names
-if not np.allclose(X.data, np.round(X.data)):
-    raise ValueError(f'{INPUT_H5AD} .raw.X is not integer counts')
-print(f'{len(idx)} cells x {len(genes)} genes')
+X = sp.csr_matrix(src.X).astype(np.float64)
+genes = src.var_names
+print(f'{len(cell_ids)} cells x {len(genes)} genes')
 
 anno = pd.read_csv(INPUT_GENES)
 score_sets = {}
@@ -87,7 +85,7 @@ scores = pd.DataFrame(index=pd.Index(cell_ids, name='cell'))
 scores['cond'] = cond
 for k, gi in score_sets.items():
     L = np.log2(1 + X[:, gi].toarray() / lib_all[:, None] * 1e4)
-    s = np.empty(len(idx))
+    s = np.empty(len(cell_ids))
     for c in CONDS:
         m = cond == c
         lo, hi = L[m].min(0), L[m].max(0)
@@ -98,7 +96,7 @@ scores.to_csv(OUT_SCORES, sep='\t')
 # ---- step 2: archetype cells ----
 axis_ca = (scores['score_c'] - scores['score_a']).to_numpy()
 score_b = scores['score_b'].to_numpy()
-arch = np.full(len(idx), '', dtype=object)
+arch = np.full(len(cell_ids), '', dtype=object)
 for c in CONDS:
     m = np.flatnonzero(cond == c)
     r_ca, r_b = pd.Series(axis_ca[m]).rank().to_numpy(), pd.Series(score_b[m]).rank().to_numpy()
@@ -146,4 +144,12 @@ gene_stats.to_parquet(OUT_STATS, index=False)
 res = gene_stats.loc[gene_stats['is_gene'], ['cond', 'archetype', 'gene', 'l2fc_max', 'l2fc_min', 'l2fc_avg', 'q_min']]
 res.to_csv(OUT_GENES, sep='\t', index=False)
 print(res.groupby(['archetype', 'cond']).size().unstack()[CONDS].to_string())
+
+s4 = pd.read_csv(INPUT_S4, sep='\t', usecols=['Condition', 'Archetype', 'Gene']).apply(lambda c: c.str.strip())
+ours = res.groupby(['cond', 'archetype'])['gene'].apply(set)
+theirs = s4.groupby(['Condition', 'Archetype'])['Gene'].apply(set)
+diff = [k for k in theirs.index.union(ours.index) if ours.get(k, set()) != theirs.get(k, set())]
+if diff:
+    raise ValueError(f'archetype genes differ from Table S4 in {len(diff)} cond x archetype: {diff}')
+print('matches Table S4 exactly')
 print(f'wrote {OUT_SCORES}\nwrote {OUT_CELLS}\nwrote {OUT_GENES}\nwrote {OUT_STATS}')
