@@ -60,6 +60,8 @@ environment (numpy, OpenBLAS, DESeq2) are in [REPRODUCIBILITY.md](REPRODUCIBILIT
 | `04` | Archetype chromatin (ATAC) region modules over age, NR vs DR | |
 | `05` | Number of archetype genes per age, NR vs DR | `05.*.pdf` |
 | `06` | Figures of 03 (gene modules) and 04 (region modules) | `06.*.pdf` |
+| `07` | Cells in P8 / P21 PC space of the global HVGs; variance per age along the P21 archetype A-C and B axes | |
+| `08` | Figures of 07 | `08.*.pdf` |
 
 ### 3. Regulon enrichment
 | Script | What it does | Figures |

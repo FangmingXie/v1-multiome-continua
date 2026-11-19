@@ -30,4 +30,4 @@ Repository layout, inputs and the script index are in README.md.
 - Seed every random step (shuffles, subsampling, random initializations) so reruns give the same numbers.
 
 ## Imported development scripts
-- Scripts copied from scomics (e.g. `scripts/2_development/07.*`) are kept as is, with only the changes needed to run here, each marked `# CHANGED` and listed at the top of the file, until they are cleaned up.
+- Scripts copied from scomics are kept as is, with only the changes needed to run here, each marked `# CHANGED` and listed at the top of the file, until they are cleaned up.
