@@ -16,10 +16,7 @@ Reads:
   results/1_mouse_human/01.mouse_l23_varimax_loadings.tsv
   results/0_prep/01.cheng22_p28nr_l23.h5ad
 Outputs:
-  results/1_mouse_human/02.mouse_l23_pcha_xp.tsv
-  results/1_mouse_human/02.mouse_l23_pcha_aa.tsv
   results/1_mouse_human/02.mouse_l23_pcha_aa_vx.tsv      (the archetypes in the Gate-A VX space)
-  results/1_mouse_human/02.mouse_l23_top_cells.tsv
   results/1_mouse_human/02.mouse_l23_archetype_markers.tsv
   results/1_mouse_human/02.mouse_l23_archetype_scores.tsv
 """
@@ -41,10 +38,7 @@ RES_DIR        = os.path.join(REPO_ROOT, 'results', '1_mouse_human')
 IN_VX_COORDS   = os.path.join(RES_DIR, '01.mouse_l23_varimax_coords.tsv')
 IN_VX_LOADINGS = os.path.join(RES_DIR, '01.mouse_l23_varimax_loadings.tsv')
 INPUT_MOUSE    = os.path.join(REPO_ROOT, 'results', '0_prep', '01.cheng22_p28nr_l23.h5ad')
-OUT_PCHA_XP    = os.path.join(RES_DIR, '02.mouse_l23_pcha_xp.tsv')
-OUT_PCHA_AA    = os.path.join(RES_DIR, '02.mouse_l23_pcha_aa.tsv')
 OUT_PCHA_AA_VX = os.path.join(RES_DIR, '02.mouse_l23_pcha_aa_vx.tsv')
-OUT_TOP_CELLS  = os.path.join(RES_DIR, '02.mouse_l23_top_cells.tsv')
 OUT_MARKERS    = os.path.join(RES_DIR, '02.mouse_l23_archetype_markers.tsv')
 OUT_SCORES     = os.path.join(RES_DIR, '02.mouse_l23_archetype_scores.tsv')
 
@@ -78,11 +72,6 @@ sca.setup_feature_matrix(method='data')
 np.random.seed(PCHA_SEED)
 sca.proj_and_pcha(ndim, NOC)
 
-pc_names = [f'PC{i+1}' for i in range(ndim)]
-pd.DataFrame(sca.xp, index=vx_df.index, columns=pc_names).to_csv(OUT_PCHA_XP, sep='\t')
-pd.DataFrame(sca.aa.T, columns=pc_names,
-             index=[f'archetype_{k+1}' for k in range(NOC)]).to_csv(OUT_PCHA_AA, sep='\t')
-
 # --- top cells per archetype, by distance in VX space ---
 inner_comps = sca.pca_.components_[:ndim]                    # VX axes -> PCHA space
 aa_vx = sca.aa.T @ inner_comps + sca.pca_.mean_              # (NOC, len(VX_COLS))
@@ -94,9 +83,6 @@ for k in range(NOC):
     for j in range(k + 1, NOC):
         if len(np.intersect1d(top_cells[k], top_cells[j])):
             raise ValueError(f'top-cell sets of archetype_{k+1} and archetype_{j+1} overlap; N_TOP_CELLS too large')
-cell_index = vx_df.index.values
-pd.DataFrame([{'archetype': f'archetype_{k+1}', 'rank': r, 'cell': cell_index[i]}
-              for k in range(NOC) for r, i in enumerate(top_cells[k])]).to_csv(OUT_TOP_CELLS, sep='\t', index=False)
 
 # --- expression on 01's HVGs ---
 print('Loading expression...')
@@ -145,5 +131,5 @@ for k, name in enumerate(archetype_names):
     print(f'  Score {name}: {len(genes)} genes')
 pd.DataFrame(scores, index=m_adata.obs_names.values,
              columns=[f'score_{n}' for n in archetype_names]).to_csv(OUT_SCORES, sep='\t')
-for p in (OUT_PCHA_XP, OUT_PCHA_AA, OUT_PCHA_AA_VX, OUT_TOP_CELLS, OUT_MARKERS, OUT_SCORES):
+for p in (OUT_PCHA_AA_VX, OUT_MARKERS, OUT_SCORES):
     print(f'Saved {p}')

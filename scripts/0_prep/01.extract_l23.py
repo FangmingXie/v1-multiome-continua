@@ -13,12 +13,10 @@ Reads:
 Outputs:
   results/0_prep/01.yoo25_l23.h5ad
   results/0_prep/01.cheng22_p28nr_l23.h5ad
-  results/0_prep/01.cell_counts.tsv     (Yoo25 cells per Age and Sample)
 """
 
 import os
 import numpy as np
-import pandas as pd
 import anndata as ad
 import scipy.sparse as sp
 
@@ -29,7 +27,6 @@ REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fi
 INPUT_SOURCE = os.path.join(REPO_ROOT, 'data', 'raw', 'superdupermegaRNA_hasraw.h5ad')
 OUT_H5AD     = os.path.join(REPO_ROOT, 'results', '0_prep', '01.yoo25_l23.h5ad')
 OUT_CHENG22  = os.path.join(REPO_ROOT, 'results', '0_prep', '01.cheng22_p28nr_l23.h5ad')
-OUT_COUNTS   = os.path.join(REPO_ROOT, 'results', '0_prep', '01.cell_counts.tsv')
 
 os.makedirs(os.path.dirname(OUT_H5AD), exist_ok=True)
 
@@ -86,10 +83,3 @@ out = ad.AnnData(X=raw_counts(src, idx).astype(np.float32), obs=c_obs, var=src.v
 out.write_h5ad(OUT_CHENG22)
 print(f'wrote {OUT_CHENG22} {out.shape}', flush=True)
 
-counts = (sub_obs.astype({'Age': str, 'Sample': str}).groupby(['Age', 'Sample']).size().rename('n_cells')
-          .reset_index())
-counts['Age'] = pd.Categorical(counts['Age'], categories=list(AGES))
-counts = counts.sort_values(['Age', 'Sample'])
-counts.to_csv(OUT_COUNTS, sep='\t', index=False)
-print(counts.to_string(index=False))
-print(f'wrote {OUT_COUNTS}')

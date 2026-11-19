@@ -21,7 +21,6 @@ Reads:
   data/raw/TableS4_L23_archetypal_genes.tsv     (published Table S4; exact-match check only)
 Outputs:
   results/2_development/01.yoo25_l23_abc_scores.tsv    (step 1; cell, cond, score_a, score_b, score_c)
-  results/2_development/01.yoo25_l23_abc_cells.tsv     (step 2; cell, cond, archetype: A/B/C, '' = none)
   results/2_development/01.yoo25_l23_abc_genes.tsv     (step 3, = Table S4; cond, archetype, gene, l2fc_max/min/avg, q_min)
   results/2_development/01.yoo25_l23_abc_gene_stats.parquet  (step 3, every test gene: l2fc_vs_X and q_vs_X
                                                 for each other archetype X, l2fc_max/min/avg, q_min, is_gene)
@@ -43,7 +42,6 @@ INPUT_H5AD  = os.path.join(REPO_ROOT, 'results', '0_prep', '01.yoo25_l23.h5ad')
 INPUT_GENES = os.path.join(REPO_ROOT, 'data', 'raw', 'Cheng22_Xie25_L23_ABC_genes_n286.csv')
 INPUT_S4    = os.path.join(REPO_ROOT, 'data', 'raw', 'TableS4_L23_archetypal_genes.tsv')
 OUT_SCORES  = os.path.join(REPO_ROOT, 'results', '2_development', '01.yoo25_l23_abc_scores.tsv')
-OUT_CELLS   = os.path.join(REPO_ROOT, 'results', '2_development', '01.yoo25_l23_abc_cells.tsv')
 OUT_GENES   = os.path.join(REPO_ROOT, 'results', '2_development', '01.yoo25_l23_abc_genes.tsv')
 OUT_STATS   = os.path.join(REPO_ROOT, 'results', '2_development', '01.yoo25_l23_abc_gene_stats.parquet')
 
@@ -104,9 +102,7 @@ for c in CONDS:
     multi = np.sum(list(top.values()), axis=0) > 1
     for k, v in top.items():
         arch[m[v & ~multi]] = k
-cells = scores[['cond']].assign(archetype=arch)
-cells.to_csv(OUT_CELLS, sep='\t')
-print(cells[cells['archetype'] != ''].groupby(['archetype', 'cond']).size().unstack()[CONDS].to_string())
+print(pd.crosstab(arch[arch != ''], cond[arch != ''])[CONDS].to_string())   # archetype cells per condition
 
 # ---- step 3: archetype genes ----
 keep = ~genes.str.contains(r'^mt-|^Xist$') & (np.asarray((X > 0).sum(0)).ravel() > MIN_CELLS)
@@ -152,4 +148,4 @@ diff = [k for k in theirs.index.union(ours.index) if ours.get(k, set()) != their
 if diff:
     raise ValueError(f'archetype genes differ from Table S4 in {len(diff)} cond x archetype: {diff}')
 print('matches Table S4 exactly')
-print(f'wrote {OUT_SCORES}\nwrote {OUT_CELLS}\nwrote {OUT_GENES}\nwrote {OUT_STATS}')
+print(f'wrote {OUT_SCORES}\nwrote {OUT_GENES}\nwrote {OUT_STATS}')
