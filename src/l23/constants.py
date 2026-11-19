@@ -1,7 +1,8 @@
 """Constants shared across steps: Yoo25 L2/3 cells and ages, the NR vs DR test design, colours."""
 
-# Yoo25 L2/3 cells of the combined snRNA object (superdupermegaRNA_hasraw.h5ad)
+# Yoo25 and Cheng22 L2/3 cells of the combined snRNA object (superdupermegaRNA_hasraw.h5ad)
 YOO25_STUDY = '2023 Multiome'
+CHENG22_AGE = 'P28'        # Cheng22 NR (Study missing); P28_dr / P28_dl are DR / dark-light
 L23_SUBCLASS = 'L2/3'
 # obs Age -> (postnatal day, condition); NR at P6-P21, DR only at P12-P21
 AGES = {'P6': (6, 'NR'), 'P8': (8, 'NR'), 'P10': (10, 'NR'), 'P12': (12, 'NR'), 'P14': (14, 'NR'),

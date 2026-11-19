@@ -133,8 +133,8 @@ def variance_partition(scores, comp_cols, factors, label):
 
 
 def mouse_log2_cp10k(adata):
-    """log2(CP10k + 1) from the integer counts in .raw (cheng22 .X is already normalized)."""
-    X_raw = adata.raw[:, adata.var_names].X.toarray().astype(np.float32)
+    """log2(CP10k + 1) from the integer counts in .X (the 0_prep/01 Cheng22 extract)."""
+    X_raw = adata.X.toarray().astype(np.float32)
     depths = X_raw.sum(axis=1)
     depths[depths == 0] = 1
     return log2_cp10k(X_raw, depths)

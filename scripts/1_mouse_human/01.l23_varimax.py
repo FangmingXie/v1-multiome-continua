@@ -4,7 +4,7 @@ Per species: HVGs = top N_HVG by raw variance of the log-normalized matrix; Stan
 -> Kaiser varimax; VX components ordered by descending score variance (l23.crossspecies.pca_varimax).
 The post-varimax variance partition is what the Gate-A VX selection (VX dominated by cell type) of
 scripts 02 and 04 is read from.
-  mouse  cheng22 .X is log1p(CP10k), so the integer raw counts in .raw are re-normalized with
+  mouse  the integer raw counts of the 0_prep/01 Cheng22 L2/3 extract are normalized with
          log2(CP10k + 1). Factors: cell_type / sample / library_size.
   human  .X is already log-normalized (ln(CPM+1)) and is used directly. Gene identifiers are ENSG in
          var_names; symbols (var['feature_name']) index the loadings, because the ortholog table is
@@ -12,7 +12,7 @@ scripts 02 and 04 is read from.
          excluded: it is 1:1 with donor_id).
 
 Reads:
-  data/raw/superdupermegaRNA_cheng22_IT_P28NR.h5ad
+  results/0_prep/01.cheng22_p28nr_l23.h5ad
   data/raw/jorstad23_human_WithinArea_L23IT.h5ad
 Outputs (species = mouse, human):
   results/1_mouse_human/01.{species}_l23_varimax_coords.tsv
@@ -30,7 +30,7 @@ from l23.crossspecies import pca_varimax, variance_partition, dummies, library_s
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-INPUT_MOUSE = os.path.join(REPO_ROOT, 'data', 'raw', 'superdupermegaRNA_cheng22_IT_P28NR.h5ad')
+INPUT_MOUSE = os.path.join(REPO_ROOT, 'results', '0_prep', '01.cheng22_p28nr_l23.h5ad')
 INPUT_HUMAN = os.path.join(REPO_ROOT, 'data', 'raw', 'jorstad23_human_WithinArea_L23IT.h5ad')
 OUT_DIR     = os.path.join(REPO_ROOT, 'results', '1_mouse_human')
 OUT         = {k: os.path.join(OUT_DIR, f'01.{{}}_l23_{k}.tsv') for k in
@@ -39,7 +39,6 @@ OUT         = {k: os.path.join(OUT_DIR, f'01.{{}}_l23_{k}.tsv') for k in
 N_HVG = 2000
 N_PCS = 10
 # mouse
-MOUSE_SUBCLASS = 'L2/3'
 M_CLUSTER_COL  = 'Type'
 M_SAMPLE_COL   = 'Sample'
 M_LIBSIZE_COL  = 'n_counts'
@@ -74,7 +73,6 @@ def fit_and_save(species, X_norm, gene_names, factors, cells, meta):
 
 print('Loading mouse cheng22 data...')
 m_adata = ad.read_h5ad(INPUT_MOUSE)
-m_adata = m_adata[m_adata.obs['Subclass'] == MOUSE_SUBCLASS]
 print(f'  {m_adata.n_obs} cells, {m_adata.n_vars} genes')
 types, samples = m_adata.obs[M_CLUSTER_COL].values, m_adata.obs[M_SAMPLE_COL].values
 fit_and_save('mouse', mouse_log2_cp10k(m_adata), m_adata.var_names.values,

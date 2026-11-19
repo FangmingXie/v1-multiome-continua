@@ -1,14 +1,15 @@
 """Gene universe of the regulon enrichment: genes expressed in adult L2/3 IT neurons (Cheng22 P28 NR + Yoo25 P21 NR).
 
-Cells: every L2/3 cell (Subclass == 'L2/3') of the two datasets, Cheng22 first, each in file order.
+Cells: the L2/3 cells of the 0_prep/01 extracts, Cheng22 (all, P28 NR) first, then Yoo25 Age == 'P21' (NR),
+each in file order.
 Genes: the shared gene set (inner join, Cheng22 order, mito removed); expression log2(CP10k+1) from the
-.raw counts with each dataset's validated library-size column (cheng22 'n_counts', yoo25
+raw counts with each dataset's validated library-size column (cheng22 'n_counts', yoo25
 'total_counts'). Universe = genes with nonzero total and nonzero variance over all cells; their
 mean / var / detection rate of log2(CP10k+1) are what 03's expression strata are built from.
 
 Reads:
-  data/raw/superdupermegaRNA_cheng22_IT_P28NR.h5ad
-  data/raw/superdupermegaRNA_yoo25_IT_P21.h5ad
+  results/0_prep/01.cheng22_p28nr_l23.h5ad
+  results/0_prep/01.yoo25_l23.h5ad
 Outputs:
   results/3_regulon/02.l23_gene_universe_stats.tsv   (gene, mean, var, detect)
 """
@@ -21,12 +22,11 @@ import scipy.sparse as sp
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-INPUT_H5AD = {'cheng22': os.path.join(REPO_ROOT, 'data', 'raw', 'superdupermegaRNA_cheng22_IT_P28NR.h5ad'),
-              'yoo25': os.path.join(REPO_ROOT, 'data', 'raw', 'superdupermegaRNA_yoo25_IT_P21.h5ad')}
+INPUT_H5AD = {'cheng22': os.path.join(REPO_ROOT, 'results', '0_prep', '01.cheng22_p28nr_l23.h5ad'),
+              'yoo25': os.path.join(REPO_ROOT, 'results', '0_prep', '01.yoo25_l23.h5ad')}
 OUT_STATS  = os.path.join(REPO_ROOT, 'results', '3_regulon', '02.l23_gene_universe_stats.tsv')
 
-SUBCLASS_COL = 'Subclass'
-SUBCLASS     = 'L2/3'
+YOO25_AGE    = 'P21'   # NR
 DEPTH_COL    = {'cheng22': 'n_counts', 'yoo25': 'total_counts'}
 
 os.makedirs(os.path.dirname(OUT_STATS), exist_ok=True)
@@ -34,8 +34,8 @@ os.makedirs(os.path.dirname(OUT_STATS), exist_ok=True)
 subs = {}
 for tag, path in INPUT_H5AD.items():
     a = ad.read_h5ad(path)
-    subs[tag] = a[a.obs[SUBCLASS_COL] == SUBCLASS].copy()
-    print(f'  {tag:8s}: {subs[tag].n_obs} cells ({SUBCLASS}), {subs[tag].n_vars} genes')
+    subs[tag] = a[a.obs['Age'] == YOO25_AGE].copy() if tag == 'yoo25' else a
+    print(f'  {tag:8s}: {subs[tag].n_obs} L2/3 cells, {subs[tag].n_vars} genes')
 
 # shared gene set (inner join), ordered by cheng22, mito removed
 common_set = set(subs['cheng22'].var_names) & set(subs['yoo25'].var_names)
@@ -48,7 +48,7 @@ for tag, a in subs.items():
     depth = a.obs[DEPTH_COL[tag]].values.astype(np.float64)
     if not (np.all(np.isfinite(depth)) and np.all(depth > 0)):
         raise ValueError(f"{tag}: invalid depth column '{DEPTH_COL[tag]}' (NaN or <=0)")
-    xc = a.raw[:, common_genes].X
+    xc = a[:, common_genes].X
     xc = xc.toarray() if sp.issparse(xc) else np.asarray(xc, dtype=np.float64)
     frames.append(pd.DataFrame(np.log2(xc / depth[:, None] * 1e4 + 1).astype(np.float32), columns=common_genes))
 X = pd.concat(frames).values   # (the float32 sums below depend on this memory layout)

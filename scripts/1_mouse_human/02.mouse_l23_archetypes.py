@@ -6,7 +6,7 @@ conservative one-vs-each Wilcoxon markers (worst case over the other archetypes:
 BH; kept if frac_in >= FRAC_IN_THRESH, fdr < FDR_THRESH, log2FC > LOG2FC_THRESH); per-cell [0, 1]
 archetype score = mean over the archetype's markers of expression min-max clipped at the
 SCORE_PCTILE_LO / SCORE_PCTILE_HI percentiles.
-Expression is log2(CP10k + 1) from the .raw integer counts, restricted to 01's HVGs (the genes the
+Expression is log2(CP10k + 1) from the integer raw counts, restricted to 01's HVGs (the genes the
 loadings were fit on). log2FC is a difference of log2 values (no division by ln 2).
 Letters: archetype_k -> A, B, C (internal PCHA order); downstream relabel to the published primed
 letters: C -> A', B -> B', A -> C' (archetype_3 -> A', archetype_2 -> B', archetype_1 -> C').
@@ -14,7 +14,7 @@ letters: C -> A', B -> B', A -> C' (archetype_3 -> A', archetype_2 -> B', archet
 Reads:
   results/1_mouse_human/01.mouse_l23_varimax_coords.tsv
   results/1_mouse_human/01.mouse_l23_varimax_loadings.tsv
-  data/raw/superdupermegaRNA_cheng22_IT_P28NR.h5ad
+  results/0_prep/01.cheng22_p28nr_l23.h5ad
 Outputs:
   results/1_mouse_human/02.mouse_l23_pcha_xp.tsv
   results/1_mouse_human/02.mouse_l23_pcha_aa.tsv
@@ -40,7 +40,7 @@ REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fi
 RES_DIR        = os.path.join(REPO_ROOT, 'results', '1_mouse_human')
 IN_VX_COORDS   = os.path.join(RES_DIR, '01.mouse_l23_varimax_coords.tsv')
 IN_VX_LOADINGS = os.path.join(RES_DIR, '01.mouse_l23_varimax_loadings.tsv')
-INPUT_MOUSE    = os.path.join(REPO_ROOT, 'data', 'raw', 'superdupermegaRNA_cheng22_IT_P28NR.h5ad')
+INPUT_MOUSE    = os.path.join(REPO_ROOT, 'results', '0_prep', '01.cheng22_p28nr_l23.h5ad')
 OUT_PCHA_XP    = os.path.join(RES_DIR, '02.mouse_l23_pcha_xp.tsv')
 OUT_PCHA_AA    = os.path.join(RES_DIR, '02.mouse_l23_pcha_aa.tsv')
 OUT_PCHA_AA_VX = os.path.join(RES_DIR, '02.mouse_l23_pcha_aa_vx.tsv')
@@ -48,11 +48,9 @@ OUT_TOP_CELLS  = os.path.join(RES_DIR, '02.mouse_l23_top_cells.tsv')
 OUT_MARKERS    = os.path.join(RES_DIR, '02.mouse_l23_archetype_markers.tsv')
 OUT_SCORES     = os.path.join(RES_DIR, '02.mouse_l23_archetype_scores.tsv')
 
-MOUSE_SUBCLASS   = 'L2/3'
 VX_COLS          = ['VX1', 'VX2', 'VX5', 'VX7', 'VX8', 'VX9']   # Gate A (01's vx variance partition)
 NOC              = 3
 N_TOP_CELLS      = 300
-SUBCLASS_COL     = 'Subclass'
 CLUSTER_COL      = 'Type'
 PCHA_SEED        = 0
 FRAC_IN_THRESH   = 0.25
@@ -103,7 +101,6 @@ pd.DataFrame([{'archetype': f'archetype_{k+1}', 'rank': r, 'cell': cell_index[i]
 # --- expression on 01's HVGs ---
 print('Loading expression...')
 m_adata = ad.read_h5ad(INPUT_MOUSE)
-m_adata = m_adata[m_adata.obs[SUBCLASS_COL] == MOUSE_SUBCLASS]
 m_adata = m_adata[vx_df.index]        # align to the varimax coord order
 X_norm = mouse_log2_cp10k(m_adata)
 hvg_genes  = pd.read_csv(IN_VX_LOADINGS, sep='\t', index_col=0).index.values

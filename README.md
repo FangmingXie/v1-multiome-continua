@@ -33,7 +33,7 @@ environment (numpy, OpenBLAS, DESeq2) are in [REPRODUCIBILITY.md](REPRODUCIBILIT
 ### 0. Shared prep
 | Script | What it does |
 |---|---|
-| `0_prep/01.extract_yoo25_l23.py` | Yoo25 L2/3 neurons of every age (NR P6-P21, DR P12-P21), raw counts; every later step reads this extract |
+| `0_prep/01.extract_l23.py` | L2/3 neurons with raw counts: Yoo25 of every age (NR P6-P21, DR P12-P21) and Cheng22 P28 NR; every later step reads these extracts |
 | `0_prep/02.archetype_genes.py` | Per-cell A/B/C scores, archetype cells and archetype genes per condition; checks the exact match to Table S4 |
 
 ### 1. Mouse vs human L2/3
@@ -98,11 +98,9 @@ All inputs go in `data/raw/`, which is not tracked:
 | File in `data/raw/` | Content | Used by | Source |
 |---|---|---|---|
 | `superdupermegaRNA_hasraw.h5ad` | Cheng22 + Yoo25 mouse V1 snRNA-seq, raw counts | 0_prep/01 | TBD |
-| `superdupermegaRNA_cheng22_IT_P28NR.h5ad` | Cheng22 P28 NR IT neurons | 1/01, 1/02, 3/02 | TBD |
-| `superdupermegaRNA_yoo25_IT_P21.h5ad` | Yoo25 P21 IT neurons | 3/02 | TBD |
 | `jorstad23_human_WithinArea_L23IT.h5ad` | Human L2/3 IT (Jorstad et al. 2023) | 1/01, 1/03 | TBD |
 | `wang25_human_multiome_gex_v1_l23.h5ad` | Human developing V1 L2/3, multiome GEX (Wang et al. 2025) | 1/08 | TBD |
-| `regulons/yoo25_L2_3/` | Yoo25 L2/3 SCENIC+ eRegulon metadata | 3/01 | TBD |
+| `regulons/yoo25_L2_3/L2_3_{direct,extended}_e_regulon_metadata.csv` | Yoo25 L2/3 SCENIC+ eRegulon metadata | 3/01 | TBD |
 | `regulons/human_regulons_SuppTable13.xlsx` | Wang25 human eRegulons (Supp. Table 13) | 1/07 | TBD |
 | `atac/pmat_l23concensus_{age}.h5ad` | Yoo25 L2/3 ATAC peak matrices, 11 conditions | 2/04 | TBD |
 | `P28NRDR_v1glut_rna_merfish_240729.h5ad` | Mouse P28 NR/DR V1 MERFISH | 1/06 | TBD |
@@ -114,7 +112,7 @@ All inputs go in `data/raw/`, which is not tracked:
 | `gene_sets_l23{a,b,c}_250423.csv` | Module (M1-M5) of each archetype gene | 2/03 | TBD |
 | `atac_modules/L23{A,B,C}_regions_M{1-5}.bed` | Archetype chromatin region modules | 2/04 | TBD |
 | `human_mouse_orthologs.tsv` | Human-mouse ortholog pairs | 1/03, 1/04, 1/06 | TBD |
-| `TableS4_L23_archetypal_genes.tsv` | Published Table S4, used only for the exact-match check | 0_prep/02 | TBD |
+| `TableS4_L23_archetypal_genes.tsv` | Published Table S4; exact-match check only | 0_prep/02 | TBD |
 
 ## Layout
 ```
