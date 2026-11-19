@@ -18,6 +18,7 @@ Reads:
 Outputs:
   results/1_mouse_human/02.mouse_l23_pcha_xp.tsv
   results/1_mouse_human/02.mouse_l23_pcha_aa.tsv
+  results/1_mouse_human/02.mouse_l23_pcha_aa_vx.tsv      (the archetypes in the Gate-A VX space)
   results/1_mouse_human/02.mouse_l23_top_cells.tsv
   results/1_mouse_human/02.mouse_l23_archetype_markers.tsv
   results/1_mouse_human/02.mouse_l23_archetype_scores.tsv
@@ -42,6 +43,7 @@ IN_VX_LOADINGS = os.path.join(RES_DIR, '01.mouse_l23_varimax_loadings.tsv')
 INPUT_MOUSE    = os.path.join(REPO_ROOT, 'data', 'raw', 'superdupermegaRNA_cheng22_IT_P28NR.h5ad')
 OUT_PCHA_XP    = os.path.join(RES_DIR, '02.mouse_l23_pcha_xp.tsv')
 OUT_PCHA_AA    = os.path.join(RES_DIR, '02.mouse_l23_pcha_aa.tsv')
+OUT_PCHA_AA_VX = os.path.join(RES_DIR, '02.mouse_l23_pcha_aa_vx.tsv')
 OUT_TOP_CELLS  = os.path.join(RES_DIR, '02.mouse_l23_top_cells.tsv')
 OUT_MARKERS    = os.path.join(RES_DIR, '02.mouse_l23_archetype_markers.tsv')
 OUT_SCORES     = os.path.join(RES_DIR, '02.mouse_l23_archetype_scores.tsv')
@@ -86,6 +88,8 @@ pd.DataFrame(sca.aa.T, columns=pc_names,
 # --- top cells per archetype, by distance in VX space ---
 inner_comps = sca.pca_.components_[:ndim]                    # VX axes -> PCHA space
 aa_vx = sca.aa.T @ inner_comps + sca.pca_.mean_              # (NOC, len(VX_COLS))
+pd.DataFrame(aa_vx, columns=VX_COLS,
+             index=[f'archetype_{k+1}' for k in range(NOC)]).to_csv(OUT_PCHA_AA_VX, sep='\t')
 dists = np.stack([np.linalg.norm(xn - aa_vx[k], axis=1) for k in range(NOC)], axis=1)
 top_cells = [np.argsort(dists[:, k])[:N_TOP_CELLS] for k in range(NOC)]
 for k in range(NOC):
@@ -144,5 +148,5 @@ for k, name in enumerate(archetype_names):
     print(f'  Score {name}: {len(genes)} genes')
 pd.DataFrame(scores, index=m_adata.obs_names.values,
              columns=[f'score_{n}' for n in archetype_names]).to_csv(OUT_SCORES, sep='\t')
-for p in (OUT_PCHA_XP, OUT_PCHA_AA, OUT_TOP_CELLS, OUT_MARKERS, OUT_SCORES):
+for p in (OUT_PCHA_XP, OUT_PCHA_AA, OUT_PCHA_AA_VX, OUT_TOP_CELLS, OUT_MARKERS, OUT_SCORES):
     print(f'Saved {p}')

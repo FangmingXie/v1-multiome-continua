@@ -50,7 +50,7 @@ environment (numpy, OpenBLAS, DESeq2) are in [REPRODUCIBILITY.md](REPRODUCIBILIT
 | `09` | Figure of 05 | `09.l23_abc_normalized_compact.pdf` |
 | `10` | Figures of 06 | `10.*.pdf` |
 | `11` | Figure of 08, mouse vs human | `11.*.pdf` |
-| `12` | Mouse archetype scores (B', C' − A') of human and mouse cells on the CCA1 x CCA2 embedding (from 05) | `12.l23_abc_scores_cca_embedding.pdf` |
+| `12` | Mouse archetype scores (B', C' − A') of human and mouse cells on the CCA1 x CCA2 embedding, mouse archetype triangle (from 05) | `12.l23_abc_scores_cca_embedding.pdf` |
 
 ### 2. Development (NR)
 | Script | What it does | Figures |
