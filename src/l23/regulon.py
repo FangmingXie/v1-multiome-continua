@@ -2,7 +2,7 @@
 
 Enrichment: does an archetype's marker set M overlap a regulon's target set T more than expected?
 Universe U = the tested expression genes of the adult L2/3 cells (shared expressed / nonzero-variance
-genes across cheng22 + yoo25; 3_regulon/02). A plain Fisher test assumes M and T are exchangeable draws
+genes across cheng22 + yoo25; 3_regulon/01). A plain Fisher test assumes M and T are exchangeable draws
 from U; they are not -- both are biased toward highly expressed genes. The null here draws a pseudo-marker set M*
 by sampling, within each expression stratum b, exactly m_b = |M & b| genes uniformly without
 replacement from the n_b = |U & b| genes in that stratum. With t_b = |T & b|:

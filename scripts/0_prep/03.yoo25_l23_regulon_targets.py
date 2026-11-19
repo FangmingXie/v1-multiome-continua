@@ -19,7 +19,7 @@ Reads:
   data/raw/regulons/yoo25_L2_3/L2_3_direct_e_regulon_metadata.csv
   data/raw/regulons/yoo25_L2_3/L2_3_extended_e_regulon_metadata.csv
 Outputs:
-  results/3_regulon/01.yoo25_l23_regulon_targets.tsv
+  results/0_prep/03.yoo25_l23_regulon_targets.tsv
 """
 
 import os
@@ -31,7 +31,7 @@ REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fi
 
 INPUT_DIRECT   = os.path.join(REPO_ROOT, 'data', 'raw', 'regulons', 'yoo25_L2_3', 'L2_3_direct_e_regulon_metadata.csv')
 INPUT_EXTENDED = os.path.join(REPO_ROOT, 'data', 'raw', 'regulons', 'yoo25_L2_3', 'L2_3_extended_e_regulon_metadata.csv')
-OUT_TSV        = os.path.join(REPO_ROOT, 'results', '3_regulon', '01.yoo25_l23_regulon_targets.tsv')
+OUT_TSV        = os.path.join(REPO_ROOT, 'results', '0_prep', '03.yoo25_l23_regulon_targets.tsv')
 
 KEEP_DIRECTIONS = {'+/+', '-/+'}   # positive R2G (second) sign
 

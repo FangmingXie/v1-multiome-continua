@@ -1,4 +1,4 @@
-"""Figure of 04: TF -> target-gene network of the L2/3-archetype-enriched Yoo25 regulons (activating, +/+).
+"""Figure of 03: TF -> target-gene network of the L2/3-archetype-enriched Yoo25 regulons (activating, +/+).
 
 TFs are squares coloured by their enriched archetype; marker genes are circles coloured by the archetype
 they mark; a target that is a TF but not enriched is a small square (always labelled). All edges are
@@ -6,10 +6,10 @@ drawn alike (thin, arrowed, in the TF's colour); self-regulation is a small loop
 TF names only. PDF: the network (edges, nodes) is one rasterized image; all text stays vector.
 
 Reads:
-  results/3_regulon/04.regulon_network_nodes.tsv
-  results/3_regulon/04.regulon_network_edges.tsv
+  results/3_regulon/03.regulon_network_nodes.tsv
+  results/3_regulon/03.regulon_network_edges.tsv
 Outputs:
-  figures/3_regulon/09.regulon_network_free.pdf
+  figures/3_regulon/07.regulon_network_free.pdf
 """
 
 import os
@@ -28,9 +28,9 @@ from l23.constants import ARCH_COLORS
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-INPUT_NODES = os.path.join(REPO_ROOT, 'results', '3_regulon', '04.regulon_network_nodes.tsv')
-INPUT_EDGES = os.path.join(REPO_ROOT, 'results', '3_regulon', '04.regulon_network_edges.tsv')
-OUT_PDF = os.path.join(REPO_ROOT, 'figures', '3_regulon', '09.regulon_network_free.pdf')
+INPUT_NODES = os.path.join(REPO_ROOT, 'results', '3_regulon', '03.regulon_network_nodes.tsv')
+INPUT_EDGES = os.path.join(REPO_ROOT, 'results', '3_regulon', '03.regulon_network_edges.tsv')
+OUT_PDF = os.path.join(REPO_ROOT, 'figures', '3_regulon', '07.regulon_network_free.pdf')
 
 SIGN = '+/+'
 TF_NODE_SIZE = 750
@@ -49,7 +49,7 @@ os.makedirs(os.path.dirname(OUT_PDF), exist_ok=True)
 
 
 def load_graph():
-    """The 04 graph, nodes and edges in their original order (draw order follows it)."""
+    """The 03 graph, nodes and edges in their original order (draw order follows it)."""
     nodes = pd.read_csv(INPUT_NODES, sep='\t')
     edges = pd.read_csv(INPUT_EDGES, sep='\t')
     g = nx.DiGraph()

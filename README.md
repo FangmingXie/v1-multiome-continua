@@ -30,11 +30,13 @@ environment (numpy, OpenBLAS, DESeq2) are in [REPRODUCIBILITY.md](REPRODUCIBILIT
 
 ## Scripts and figures
 
-### 0. Shared prep
+### 0. Input prep
 | Script | What it does |
 |---|---|
 | `0_prep/01.extract_l23.py` | L2/3 neurons with raw counts: Yoo25 of every age (NR P6-P21, DR P12-P21) and Cheng22 P28 NR; every later step reads these extracts |
 | `0_prep/02.extract_merfish_l23.py` | L2/3 MERFISH cells, P28 NR (for 1/06) and P21 NR (for 5/02); later steps read these extracts |
+| `0_prep/03.yoo25_l23_regulon_targets.py` | Yoo25 L2/3 SCENIC+ regulon -> target table |
+| `0_prep/04.human_wang25_regulon_targets.py` | Human (Wang25) regulon -> target table |
 
 ### 1. Mouse vs human L2/3
 | Script | What it does | Figures |
@@ -65,15 +67,13 @@ environment (numpy, OpenBLAS, DESeq2) are in [REPRODUCIBILITY.md](REPRODUCIBILIT
 ### 3. Regulon enrichment
 | Script | What it does | Figures |
 |---|---|---|
-| `01` | Yoo25 L2/3 SCENIC+ regulon -> target table | |
-| `02` | Gene universe: genes expressed in adult L2/3 (Cheng22 + Yoo25) and their expression stats | |
-| `03` | Expression-stratified regulon x archetype enrichment; enriched TFs | |
-| `04` | TF -> target network: edges and layout | |
-| `05` | Human (Wang25) regulon -> target table | |
-| `06` | AP-1/EGR regulon target activity over development, human (Wang25) and mouse (B' TFs) | |
-| `07`, `08` | Dot plot of enriched regulons; archetype-gene overlap bars | `07.*.pdf`, `08.*.pdf` |
-| `09` | Figure of 04 | `09.regulon_network_free.pdf` |
-| `10` | Figure of 06, mouse vs human | `10.*.pdf` |
+| `01` | Gene universe: genes expressed in adult L2/3 (Cheng22 + Yoo25) and their expression stats | |
+| `02` | Expression-stratified regulon x archetype enrichment; enriched TFs | |
+| `03` | TF -> target network: edges and layout | |
+| `04` | AP-1/EGR regulon target activity over development, human (Wang25) and mouse (B' TFs) | |
+| `05`, `06` | Dot plot of enriched regulons; archetype-gene overlap bars | `05.*.pdf`, `06.*.pdf` |
+| `07` | Figure of 03 | `07.regulon_network_free.pdf` |
+| `08` | Figure of 04, mouse vs human | `08.*.pdf` |
 
 ### 4. Dark rearing
 Results 2's `03`, `04` and `05` also show NR vs DR.
@@ -100,9 +100,9 @@ All inputs go in `data/raw/`, which is not tracked:
 |---|---|---|---|
 | `superdupermegaRNA_hasraw.h5ad` | Cheng22 + Yoo25 mouse V1 snRNA-seq, raw counts | 0_prep/01 | TBD |
 | `jorstad23_human_WithinArea_L23IT.h5ad` | Human L2/3 IT (Jorstad et al. 2023) | 1/01, 1/03 | TBD |
-| `wang25_human_multiome_gex_v1_l23.h5ad` | Human developing V1 L2/3, multiome GEX (Wang et al. 2025) | 3/06 | TBD |
-| `regulons/yoo25_L2_3/L2_3_{direct,extended}_e_regulon_metadata.csv` | Yoo25 L2/3 SCENIC+ eRegulon metadata | 3/01 | TBD |
-| `regulons/human_regulons_SuppTable13.xlsx` | Wang25 human eRegulons (Supp. Table 13) | 3/05 | TBD |
+| `wang25_human_multiome_gex_v1_l23.h5ad` | Human developing V1 L2/3, multiome GEX (Wang et al. 2025) | 3/04 | TBD |
+| `regulons/yoo25_L2_3/L2_3_{direct,extended}_e_regulon_metadata.csv` | Yoo25 L2/3 SCENIC+ eRegulon metadata | 0_prep/03 | TBD |
+| `regulons/human_regulons_SuppTable13.xlsx` | Wang25 human eRegulons (Supp. Table 13) | 0_prep/04 | TBD |
 | `atac/pmat_l23concensus_{age}.h5ad` | Yoo25 L2/3 ATAC peak matrices, 11 conditions | 2/05 | TBD |
 | `P28NRDR_v1glut_rna_merfish_240729.h5ad` | Mouse P28 NR/DR V1 MERFISH; only the NR sections' L2/3 labels are used | 0_prep/02 | TBD |
 | `P28NR{a,b}_{ant,pos}_l2_v1_240723.h5ad` | Mouse P28 NR MERFISH sections (500 genes) | 0_prep/02 | TBD |

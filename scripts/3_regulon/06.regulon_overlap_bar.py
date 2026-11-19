@@ -1,16 +1,16 @@
-"""Archetype-gene overlap of 03's enriched L2/3 regulons: one hbar panel per archetype (A', B', C').
+"""Archetype-gene overlap of 02's enriched L2/3 regulons: one hbar panel per archetype (A', B', C').
 
-Each enriched +/+ regulon of 03's selection (NR-union archetype genes, star rule) is drawn in the
+Each enriched +/+ regulon of 02's selection (NR-union archetype genes, star rule) is drawn in the
 panel of the archetype it is enriched in. Its bar stacks the number of A', B' and C' marker genes
-among the regulon's targets (03's `overlap` per archetype; the marker sets are disjoint), with the
+among the regulon's targets (02's `overlap` per archetype; the marker sets are disjoint), with the
 enriched archetype's segment first so it starts at 0. Bars are sorted by the enriched archetype's overlap, largest on top. Every
 selected TF is starred in exactly one archetype, so each appears once.
 
 Reads:
-  results/3_regulon/03.enriched_regulon_selection.tsv
-  results/3_regulon/03.l23_stratified_enrichment.tsv   (overlap with every archetype)
+  results/3_regulon/02.enriched_regulon_selection.tsv
+  results/3_regulon/02.l23_stratified_enrichment.tsv   (overlap with every archetype)
 Outputs:
-  figures/3_regulon/08.regulon_overlap_bar.pdf
+  figures/3_regulon/06.regulon_overlap_bar.pdf
 """
 
 import os
@@ -23,9 +23,9 @@ from l23.regulon_plot import ARCH_COLORS
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # --- file paths ---
-INPUT_SELECTION = os.path.join(REPO_ROOT, 'results', '3_regulon', '03.enriched_regulon_selection.tsv')
-INPUT_ENRICHMENT = os.path.join(REPO_ROOT, 'results', '3_regulon', '03.l23_stratified_enrichment.tsv')
-OUT_PDF = os.path.join(REPO_ROOT, 'figures', '3_regulon', '08.regulon_overlap_bar.pdf')
+INPUT_SELECTION = os.path.join(REPO_ROOT, 'results', '3_regulon', '02.enriched_regulon_selection.tsv')
+INPUT_ENRICHMENT = os.path.join(REPO_ROOT, 'results', '3_regulon', '02.l23_stratified_enrichment.tsv')
+OUT_PDF = os.path.join(REPO_ROOT, 'figures', '3_regulon', '06.regulon_overlap_bar.pdf')
 
 ROW_H = 0.22                                         # inches per bar
 

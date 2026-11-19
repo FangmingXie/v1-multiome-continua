@@ -5,13 +5,13 @@ each in file order.
 Genes: the shared gene set (inner join, Cheng22 order, mito removed); expression log2(CP10k+1) from the
 raw counts with each dataset's validated library-size column (cheng22 'n_counts', yoo25
 'total_counts'). Universe = genes with nonzero total and nonzero variance over all cells; their
-mean / var / detection rate of log2(CP10k+1) are what 03's expression strata are built from.
+mean / var / detection rate of log2(CP10k+1) are what 02's expression strata are built from.
 
 Reads:
   results/0_prep/01.cheng22_p28nr_l23.h5ad
   results/0_prep/01.yoo25_l23.h5ad
 Outputs:
-  results/3_regulon/02.l23_gene_universe_stats.tsv   (gene, mean, var, detect)
+  results/3_regulon/01.l23_gene_universe_stats.tsv   (gene, mean, var, detect)
 """
 
 import os
@@ -24,7 +24,7 @@ REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fi
 
 INPUT_H5AD = {'cheng22': os.path.join(REPO_ROOT, 'results', '0_prep', '01.cheng22_p28nr_l23.h5ad'),
               'yoo25': os.path.join(REPO_ROOT, 'results', '0_prep', '01.yoo25_l23.h5ad')}
-OUT_STATS  = os.path.join(REPO_ROOT, 'results', '3_regulon', '02.l23_gene_universe_stats.tsv')
+OUT_STATS  = os.path.join(REPO_ROOT, 'results', '3_regulon', '01.l23_gene_universe_stats.tsv')
 
 YOO25_AGE    = 'P21'   # NR
 DEPTH_COL    = {'cheng22': 'n_counts', 'yoo25': 'total_counts'}

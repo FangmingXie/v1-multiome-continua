@@ -1,14 +1,14 @@
-"""Figure of 06: B'-enriched AP-1 and EGR regulons, target-gene activity over normal development, mouse vs human.
+"""Figure of 04: B'-enriched AP-1 and EGR regulons, target-gene activity over normal development, mouse vs human.
 
 Left: mouse Yoo25 L2/3 NR, per age; right: human Wang25 V1 L2/3, per developmental stage. Mean +/- SEM
 over cells, divided by the peak; one colour per TF in both panels (tab20 colour i for TF i, AP-1 then
 EGR), marker = member order within its family.
 
 Reads:
-  results/3_regulon/06.l23_b_regulon_targets_nr_mouse.tsv
-  results/3_regulon/06.wang25_l23_ap1_egr_regulon_targets_over_stage.tsv
+  results/3_regulon/04.l23_b_regulon_targets_nr_mouse.tsv
+  results/3_regulon/04.wang25_l23_ap1_egr_regulon_targets_over_stage.tsv
 Outputs:
-  figures/3_regulon/10.l23_b_regulon_targets_mouse_vs_human.pdf
+  figures/3_regulon/08.l23_b_regulon_targets_mouse_vs_human.pdf
 """
 
 import os
@@ -21,9 +21,9 @@ import matplotlib.pyplot as plt
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 RES_DIR   = os.path.join(REPO_ROOT, 'results', '3_regulon')
-IN_MOUSE  = os.path.join(RES_DIR, '06.l23_b_regulon_targets_nr_mouse.tsv')
-IN_HUMAN  = os.path.join(RES_DIR, '06.wang25_l23_ap1_egr_regulon_targets_over_stage.tsv')
-OUT_PDF   = os.path.join(REPO_ROOT, 'figures', '3_regulon', '10.l23_b_regulon_targets_mouse_vs_human.pdf')
+IN_MOUSE  = os.path.join(RES_DIR, '04.l23_b_regulon_targets_nr_mouse.tsv')
+IN_HUMAN  = os.path.join(RES_DIR, '04.wang25_l23_ap1_egr_regulon_targets_over_stage.tsv')
+OUT_PDF   = os.path.join(REPO_ROOT, 'figures', '3_regulon', '08.l23_b_regulon_targets_mouse_vs_human.pdf')
 
 SIGN = '+/+'
 HUMAN_STAGES = {'Second_trimester': '2nd trim.', 'Third_trimester': '3rd trim.',

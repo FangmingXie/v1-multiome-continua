@@ -1,6 +1,6 @@
 """Clean regulon -> target-gene table from Wang25 human SCENIC+ eRegulons.
 
-Human analog of 3_regulon/01 (mouse Yoo25 L2/3); the merge is l23.regulon.merge_direct_extended.
+Human analog of 0_prep/03 (mouse Yoo25 L2/3); the merge is l23.regulon.merge_direct_extended.
 The input here is a single Excel
 supplementary table (Wang25, human cortex multiome) rather than the SCENIC+ CSVs used
 for the mouse data, so the parsing differs:
@@ -28,7 +28,7 @@ Same regulon model and dedup rule as the mouse script:
 Reads:
   data/raw/regulons/human_regulons_SuppTable13.xlsx
 Outputs:
-  results/3_regulon/05.human_wang25_regulon_targets.tsv
+  results/0_prep/04.human_wang25_regulon_targets.tsv
 """
 
 import os
@@ -42,7 +42,7 @@ from l23.regulon import REGULON_COLS, merge_direct_extended
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 XLSX = os.path.join(REPO_ROOT, "data", "raw", "regulons", "human_regulons_SuppTable13.xlsx")
-OUT_TSV = os.path.join(REPO_ROOT, "results", "3_regulon", "05.human_wang25_regulon_targets.tsv")
+OUT_TSV = os.path.join(REPO_ROOT, "results", "0_prep", "04.human_wang25_regulon_targets.tsv")
 
 GENE_SHEET = "xl/worksheets/sheet2.xml"  # "Supplementary Table 13b" — target genes
 

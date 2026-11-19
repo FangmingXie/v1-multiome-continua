@@ -1,7 +1,7 @@
 """Expression-stratified regulon x archetype enrichment, L2/3, on the developmental archetype genes.
 
-Test (src/l23/regulon.py): each Yoo25 L2/3 regulon's targets (01) against each archetype's marker
-set, over the adult L2/3 gene universe (02), with the closed-form null stratified by mean expression
+Test (src/l23/regulon.py): each Yoo25 L2/3 regulon's targets (0_prep/03) against each archetype's marker
+set, over the adult L2/3 gene universe (01), with the closed-form null stratified by mean expression
 (20 strata) and BH over mid-p.
 
 Marker sets: the archetype genes of 2_development/01 (= Table S4), union per archetype over the
@@ -15,12 +15,12 @@ each TF is assigned to its max-log2_enr starred archetype.
 
 Reads:
   results/2_development/01.yoo25_l23_abc_genes.tsv
-  results/3_regulon/01.yoo25_l23_regulon_targets.tsv
-  results/3_regulon/02.l23_gene_universe_stats.tsv
+  results/0_prep/03.yoo25_l23_regulon_targets.tsv
+  results/3_regulon/01.l23_gene_universe_stats.tsv
 Outputs:
-  results/3_regulon/03.l23_nr_union_markers.tsv
-  results/3_regulon/03.l23_stratified_enrichment.tsv
-  results/3_regulon/03.enriched_regulon_selection.tsv
+  results/3_regulon/02.l23_nr_union_markers.tsv
+  results/3_regulon/02.l23_stratified_enrichment.tsv
+  results/3_regulon/02.enriched_regulon_selection.tsv
 """
 
 import os
@@ -33,11 +33,11 @@ from l23.regulon import stratified_enrichment
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 INPUT_GENES    = os.path.join(REPO_ROOT, 'results', '2_development', '01.yoo25_l23_abc_genes.tsv')
-INPUT_REGULONS = os.path.join(REPO_ROOT, 'results', '3_regulon', '01.yoo25_l23_regulon_targets.tsv')
-INPUT_UNIVERSE = os.path.join(REPO_ROOT, 'results', '3_regulon', '02.l23_gene_universe_stats.tsv')
-OUT_MARKERS    = os.path.join(REPO_ROOT, 'results', '3_regulon', '03.l23_nr_union_markers.tsv')
-OUT_ENRICHMENT = os.path.join(REPO_ROOT, 'results', '3_regulon', '03.l23_stratified_enrichment.tsv')
-OUT_SELECTION  = os.path.join(REPO_ROOT, 'results', '3_regulon', '03.enriched_regulon_selection.tsv')
+INPUT_REGULONS = os.path.join(REPO_ROOT, 'results', '0_prep', '03.yoo25_l23_regulon_targets.tsv')
+INPUT_UNIVERSE = os.path.join(REPO_ROOT, 'results', '3_regulon', '01.l23_gene_universe_stats.tsv')
+OUT_MARKERS    = os.path.join(REPO_ROOT, 'results', '3_regulon', '02.l23_nr_union_markers.tsv')
+OUT_ENRICHMENT = os.path.join(REPO_ROOT, 'results', '3_regulon', '02.l23_stratified_enrichment.tsv')
+OUT_SELECTION  = os.path.join(REPO_ROOT, 'results', '3_regulon', '02.enriched_regulon_selection.tsv')
 
 LAYER = 'L2_3'
 NR_CONDITIONS = {'P6', 'P8', 'P10', 'P12', 'P14', 'P17', 'P21'}
