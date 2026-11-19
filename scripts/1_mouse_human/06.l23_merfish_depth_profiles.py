@@ -4,8 +4,10 @@ Genes: PROFILE_GENES (mouse symbol, a row per side; A = superficial, C = deep), 
 orthologs (data/raw/human_mouse_orthologs.tsv); every gene must be on both MERFISH panels (checked).
 INSITU_GENES (a subset) are drawn in situ by 10.
 Sections: every NR mouse section (PROFILE_MOUSE_SECTIONS) and the Fang22 human sections with >= 300
-eL2/3.IT cells (PROFILE_HUMAN_SECTIONS). Human sections are kept only if every INSITU_GENES gene is
-detected in > H_MIN_DETECT of their L2/3 cells (some 4000-gene sections barely detect KCNH5).
+eL2/3.IT cells in which every INSITU_GENES gene is detected in > H_MIN_DETECT of the L2/3 cells
+(PROFILE_HUMAN_SECTIONS; checked). Three other 4000-gene sections with >= 300 eL2/3.IT cells barely detect
+KCNH5 (< 7% of L2/3 cells) and are not used: H18.06.006.MTG.4000.expand.rep3, H22.26.401.MTG.4000.expand.rep1,
+H20.30.001.STG.4000.expand.rep1.
 Cells and expression:
   mouse  P28 NR sections: MERFISH cells (modality == 'merfish') with gated_pred_subclass == 'L2/3' and depth
          from pia in MOUSE_DEPTH_RANGE (um; drops label-transfer outliers), from the P28 NR/DR MERFISH object;
@@ -30,11 +32,11 @@ Reads:
 Outputs:
   results/1_mouse_human/06.l23_merfish_genes.tsv              (side, human_symbol, mouse_symbol, insitu)
   results/1_mouse_human/06.l23_merfish_sections.tsv           (every section: cells, outliers, L2/3 thickness,
-                                                               top-of-L2/3 fit, INSITU_GENES detection, kept)
-  results/1_mouse_human/06.l23_merfish_top_fit_points.tsv     (kept sections: the points the top was fit to)
-  results/1_mouse_human/06.l23_merfish_cells.parquet          (kept sections, every L2/3 cell: raw position,
+                                                               top-of-L2/3 fit, INSITU_GENES detection)
+  results/1_mouse_human/06.l23_merfish_top_fit_points.tsv     (every section: the points the top was fit to)
+  results/1_mouse_human/06.l23_merfish_cells.parquet          (every section, every L2/3 cell: raw position,
                                                                outlier flag, relative position, log expression)
-  results/1_mouse_human/06.l23_merfish_rel_depth_profiles.tsv (kept sections: gene x bin profiles)
+  results/1_mouse_human/06.l23_merfish_rel_depth_profiles.tsv (every section: gene x bin profiles)
 """
 
 import os
@@ -61,8 +63,8 @@ PROFILE_GENES = {   # mouse symbol, by side (A = superficial, C = deep); all on 
     'C': ['Kcnh5', 'Tox', 'Lrp1b'],
 }
 INSITU_GENES = ['Cdh13', 'Kcnh5']   # drawn in situ (10); the human-section detection filter uses them
-H_MIN_DETECT = 0.10   # keep human sections where every INSITU_GENES gene is detected in > this fraction of the
-                      # section's L2/3 cells
+H_MIN_DETECT = 0.10   # every human section must detect every INSITU_GENES gene in > this fraction of its
+                      # L2/3 cells (checked)
 MOUSE_SUBCLASS = 'L2/3'
 MOUSE_SUBCLASS_COL = 'gated_pred_subclass'
 MOUSE_CONDITION = 'P28NR'           # sample-name prefix of the NR sections
@@ -73,11 +75,11 @@ H_DEEP = ['eL6.IT', 'eL6b', 'eL6.CT', 'eL6.IT.CAR3', 'eL5/6.NP', 'eL6.CAR3', 'eN
 H_SRC_X, H_SRC_Y = 'adjusted.x', 'adjusted.y'   # pre-expansion um
 H_MIN_ANCHOR = 5
 PROFILE_MOUSE_SECTIONS = ['P28NRa_ant', 'P28NRa_pos', 'P28NRb_ant', 'P28NRb_pos']   # all NR
-PROFILE_HUMAN_SECTIONS = [   # Fang22 human sections with >= 300 eL2/3.IT cells (all have the genes)
-    'H18.06.006.MTG.250.expand.rep1', 'H18.06.006.MTG.4000.expand.rep1', 'H18.06.006.MTG.4000.expand.rep3',
-    'H22.26.401.MTG.250.unexpand.rep1', 'H22.26.401.MTG.4000.expand.rep1',
+PROFILE_HUMAN_SECTIONS = [   # Fang22: >= 300 eL2/3.IT cells and INSITU_GENES detected (see the docstring)
+    'H18.06.006.MTG.250.expand.rep1', 'H18.06.006.MTG.4000.expand.rep1',
+    'H22.26.401.MTG.250.unexpand.rep1',
     'H20.30.001.STG.250.unexpand.rep1', 'H20.30.001.STG.250.unexpand.rep2',
-    'H20.30.001.STG.4000.expand.rep1', 'H20.30.001.STG.4000.expand.rep2',
+    'H20.30.001.STG.4000.expand.rep2',
 ]
 CURVE_N_BINS  = 10    # top-of-L2/3 fit (every section): equal-count bins along the section ...
 CURVE_PCTILE  = 5     # ... each giving (median x, this depth percentile); a 2nd-order polynomial fit to these
@@ -211,25 +213,24 @@ for g in INSITU_GENES:
     sections[f'detect_{g}'] = [(c.loc[~c['outlier'], g] > 0).mean() for c, _, _ in done]
 h = sections['species'] == 'human'
 sections['detect_threshold'] = H_MIN_DETECT
-sections['kept'] = ~h | (sections[[f'detect_{g}' for g in INSITU_GENES]] > H_MIN_DETECT).all(axis=1)
-print(f'human sections, fraction of L2/3 cells detecting {INSITU_GENES} (keep if all > {H_MIN_DETECT}):')
-print(sections[h].set_index('section')[[f'detect_{g}' for g in INSITU_GENES] + ['kept']].round(3).to_string())
-if not sections.loc[h, 'kept'].any():
-    raise ValueError(f'no human section detects all of {INSITU_GENES} in > {H_MIN_DETECT} of L2/3 cells')
+print(f'human sections, fraction of L2/3 cells detecting {INSITU_GENES} (each must be > {H_MIN_DETECT}):')
+print(sections[h].set_index('section')[[f'detect_{g}' for g in INSITU_GENES]].round(3).to_string())
+low = sections.loc[h & (sections[[f'detect_{g}' for g in INSITU_GENES]] <= H_MIN_DETECT).any(axis=1), 'section']
+if len(low):
+    raise ValueError(f'human sections {list(low)} detect one of {INSITU_GENES} in <= {H_MIN_DETECT} of L2/3 cells')
 sections.to_csv(OUT_SECTIONS, sep='\t', index=False)
-kept = [d for d, k in zip(done, sections['kept']) if k]
-(pd.concat([d[1] for d in kept])[['species', 'section', 'x', 'depth']].assign(depth_pctile=CURVE_PCTILE)
+(pd.concat([d[1] for d in done])[['species', 'section', 'x', 'depth']].assign(depth_pctile=CURVE_PCTILE)
  .to_csv(OUT_POINTS, sep='\t', index=False))
-cells = pd.concat([d[0] for d in kept], ignore_index=True)
+cells = pd.concat([d[0] for d in done], ignore_index=True)
 cells.to_parquet(OUT_CELLS, index=False)
 print(f'wrote {OUT_SECTIONS}\nwrote {OUT_POINTS}\nwrote {OUT_CELLS}')
 
-# --- depth profiles: per gene and kept section, bin means over relative depth / peak bin ---
+# --- depth profiles: per gene and section, bin means over relative depth / peak bin ---
 edges = np.linspace(0, 1, N_REL_BINS + 1)
 mids = (edges[:-1] + edges[1:]) / 2
 rows = []
 for mg in genes['mouse_symbol']:
-    for c, _, info in kept:
+    for c, _, info in done:
         sp, sec, c = info['species'], info['section'], c[~c['outlier']]
         inb = c['rel_depth'].between(0, 1)
         b = np.clip(np.searchsorted(edges, c.loc[inb, 'rel_depth'], side='right') - 1, 0, N_REL_BINS - 1)

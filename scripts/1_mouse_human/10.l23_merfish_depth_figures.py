@@ -52,13 +52,12 @@ genes = pd.read_csv(IN_GENES, sep='\t')
 gi = genes.set_index('mouse_symbol', drop=False)
 insitu = list(genes.loc[genes['insitu'], 'mouse_symbol'])
 sections = pd.read_csv(IN_SECTIONS, sep='\t')
-kept = sections[sections['kept']]
 cells = pd.read_parquet(IN_CELLS)
 points = pd.read_csv(IN_POINTS, sep='\t')
 prof = pd.read_csv(IN_PROFILES, sep='\t')
 rows = [(sp, sec, cells[(cells['section'] == sec) & ~cells['outlier']])
-        for sp, sec in zip(kept['species'], kept['section'])]
-n_sec = kept['species'].value_counts()
+        for sp, sec in zip(sections['species'], sections['section'])]
+n_sec = sections['species'].value_counts()
 
 # --- depth profiles on the relative L2/3 scale, mean +- SEM over sections ---
 n_col = genes.groupby('side').size().max()
