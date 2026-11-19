@@ -43,13 +43,14 @@ environment (numpy, OpenBLAS, DESeq2) are in [REPRODUCIBILITY.md](REPRODUCIBILIT
 | `02` | Mouse L2/3 archetypes, markers and scores | |
 | `03` | Mouse archetype scores on human cells | |
 | `04` | Cross-species CCA of the varimax axes | |
-| `05` | A'/B'/C' scores along CCA1/CCA2, human vs mouse: binned profiles and human-mouse r | |
+| `05` | A'/B'/C' scores along CCA1/CCA2, human vs mouse: binned profiles and human-mouse r; per-cell CCA coordinates | |
 | `06` | Conserved A vs C genes in situ, mouse P28 MERFISH vs human MERFISH (Fang22): relative L2/3 depth, profiles | |
 | `07` | Human (Wang25) regulon -> target table | |
 | `08` | AP-1/EGR regulon target activity over development, human (Wang25) and mouse (B' TFs) | |
 | `09` | Figure of 05 | `09.l23_abc_normalized_compact.pdf` |
 | `10` | Figures of 06 | `10.*.pdf` |
 | `11` | Figure of 08, mouse vs human | `11.*.pdf` |
+| `12` | Mouse archetype scores (B', C' − A') of human and mouse cells on the CCA1 x CCA2 embedding (from 05) | `12.l23_abc_scores_cca_embedding.pdf` |
 
 ### 2. Development (NR)
 | Script | What it does | Figures |

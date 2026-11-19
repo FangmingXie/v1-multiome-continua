@@ -12,7 +12,8 @@ Profiles normalized for the cross-species comparison, per species:
   - per panel, Pearson r between the N_BINS paired human and mouse bin means, with a one-sided
     permutation p (scores shuffled across cells within each species, N_PERM times; one RNG stream
     over the panels in PANELS order).
-Figure: 09.
+Also written: every cell's CCA1, CCA2 and A', B', C' scores (figure 12).
+Figures: 09, 12.
 
 Reads:
   results/1_mouse_human/01.{mouse,human}_l23_varimax_coords.tsv
@@ -22,6 +23,7 @@ Reads:
 Outputs:
   results/1_mouse_human/05.l23_abc_scores_along_cca_profiles.tsv   (axis, archetype, species, bin, pct, mean, sem)
   results/1_mouse_human/05.l23_abc_scores_along_cca_stats.tsv      (axis, archetype, r, p_perm, n_perm)
+  results/1_mouse_human/05.l23_cca_cells.tsv                       (species, cell, CCA1, CCA2, score_A', score_B', score_C')
 """
 
 import os
@@ -39,6 +41,7 @@ IN_H_WEIGHTS = os.path.join(RES_DIR, '04.l23_axis_cca_weights_human.tsv')
 IN_M_WEIGHTS = os.path.join(RES_DIR, '04.l23_axis_cca_weights_mouse.tsv')
 OUT_PROFILES = os.path.join(RES_DIR, '05.l23_abc_scores_along_cca_profiles.tsv')
 OUT_STATS    = os.path.join(RES_DIR, '05.l23_abc_scores_along_cca_stats.tsv')
+OUT_CELLS    = os.path.join(RES_DIR, '05.l23_cca_cells.tsv')
 
 HUMAN_VX = ['VX2', 'VX6', 'VX7', 'VX8', 'VX9', 'VX10']   # Gate A, as script 04
 MOUSE_VX = ['VX1', 'VX2', 'VX5', 'VX7', 'VX8', 'VX9']
@@ -79,6 +82,10 @@ if not h_scores.index.equals(h_index):
 if not m_scores.index.equals(m_index):
     raise ValueError(f'Mouse scores ({IN_M_SCORES}) and coords ({IN_M_COORDS}) cover different cells/order.')
 species = [('human', h_cca, h_scores), ('mouse', m_cca, m_scores)]
+cells = pd.concat([pd.DataFrame({'species': name, 'cell': scores.index, 'CCA1': cca[:, 0], 'CCA2': cca[:, 1],
+                                 **{f'score_{d}': scores[f'score_{old_letter[d]}'].values for d in sorted(old_letter)}})
+                   for name, cca, scores in species], ignore_index=True)
+cells.to_csv(OUT_CELLS, sep='\t', index=False)
 print(f'--- L2/3; human cells {len(h_cca)}, mouse cells {len(m_cca)}; CCA r = {r[0]:.3f}, {r[1]:.3f} ---')
 
 rng = np.random.default_rng(SEED)
@@ -106,4 +113,4 @@ for axis, disp in PANELS:
 
 pd.concat(profiles, ignore_index=True).to_csv(OUT_PROFILES, sep='\t', index=False)
 pd.DataFrame(stats).to_csv(OUT_STATS, sep='\t', index=False)
-print(f'Saved {OUT_PROFILES}\nSaved {OUT_STATS}')
+print(f'Saved {OUT_PROFILES}\nSaved {OUT_STATS}\nSaved {OUT_CELLS}')
