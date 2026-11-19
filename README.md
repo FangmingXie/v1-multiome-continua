@@ -89,6 +89,8 @@ Results 2's `02`, `03` and `04` also show NR vs DR.
 | `01` | Per-cell A'-C' axis, Yoo25 P21 NR | |
 | `02` | Archetype scores along the A'-C' axis (snRNA) and depth (P21 MERFISH); EASI-FISH LM vs RL depth profiles (3 samples) | |
 | `03` | Figure of 02 | `03.*.pdf` |
+| `04` | EASI-FISH LM vs RL, 3 samples: depth profiles, x-y projection bias, per x-y bin mean-depth difference vs a label-shuffle null | |
+| `05` | Figures of 04: cell maps, depth profiles, x-y maps, null histograms | `05.*.pdf` |
 
 ## Inputs
 All inputs go in `data/raw/`, which is not tracked:
@@ -107,7 +109,7 @@ All inputs go in `data/raw/`, which is not tracked:
 | `P28NR{a,b}_{ant,pos}_l2_v1_240723.h5ad` | Mouse P28 NR MERFISH sections | 1/06 | TBD |
 | `fang22_human_merfish/*.csv` | Human cortex MERFISH, 9 sections (Fang et al. 2022) | 1/06 | TBD |
 | `P8P14P21NR_v1l23glut_rna_merfish_250411.h5ad` | Mouse P8/P14/P21 NR V1 L2/3 MERFISH | 5/02 | TBD |
-| `easifish/easifish_sample{1,2,3}_res.csv` | EASI-FISH retrograde labels (LM, RL), 3 samples | 5/02 | TBD |
+| `easifish/easifish_sample{1,2,3}_res.csv` | EASI-FISH retrograde labels (LM, RL), 3 samples | 5/02, 5/04, 5/05 | TBD |
 | `Cheng22_Xie25_L23_ABC_genes_n286.csv` | Adult L2/3 archetype genes, the seed of the archetype genes | 0_prep/02 | TBD |
 | `gene_sets_l23{a,b,c}_250423.csv` | Module (M1-M5) of each archetype gene | 2/03 | TBD |
 | `atac_modules/L23{A,B,C}_regions_M{1-5}.bed` | Archetype chromatin region modules | 2/04 | TBD |
