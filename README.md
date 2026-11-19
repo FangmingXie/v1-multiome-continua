@@ -16,6 +16,7 @@ counts (`0_prep/02`, identical to Table S4). Five results build on them:
 ```
 conda env create -f environment.yml
 conda activate v1-multiome-continua
+pip install --no-deps -e .     # shared code src/l23/, importable by every script
 # put the inputs in data/raw/ (see "Inputs")
 bash run_all.sh
 ```
