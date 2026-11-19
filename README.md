@@ -21,10 +21,11 @@ bash run_all.sh
 ```
 `run_all.sh` runs every script in dependency order: 0_prep, 3_regulon, 1_mouse_human,
 2_development, 4_dr, 5_easifish. It writes tables to `results/<folder>/`, figures to
-`figures/<folder>/` and one log per script to `results/logs/`. The whole run takes about 5 minutes.
+`figures/<folder>/` and one log per script to `results/logs/`. The whole run takes about 3 minutes.
 Each output file name starts with the number of the script that writes it. Within a folder, the
 computing scripts come first and write tables; the figure scripts (`*figure*.py`, and those listed
-with figures below) come after them and only read tables.
+with figures below) come after them and only read tables. Numerical notes on the pinned
+environment (numpy, OpenBLAS, DESeq2) are in [REPRODUCIBILITY.md](REPRODUCIBILITY.md).
 
 ## Scripts and figures
 
@@ -109,25 +110,31 @@ All inputs go in `data/raw/`, which is not tracked:
 | `human_mouse_orthologs.tsv` | Human-mouse ortholog pairs | 1/03, 1/04, 1/06 | TBD |
 | `TableS4_L23_archetypal_genes.tsv` | Published Table S4, used only for the exact-match check | 0_prep/02 | TBD |
 
-## Environment and numerical notes
-- **numpy:** the pipeline runs on numpy 1.26.4 (`environment.yml`). The archetype fit (`py_pcha`)
-  uses `np.mat`, which numpy 2 removed. `run_all.sh` sets `PYTHONNOUSERSITE=1`, so that packages
-  in `~/.local` can't shadow the env's.
-- **OpenBLAS:** `environment.yml` pins OpenBLAS 0.3.32. With 0.3.34, the PCA/varimax coordinates
-  shift by about 1e-4, a few tied top-cell ranks swap, and DESeq2 p-values change. With the pinned
-  env, two runs of `run_all.sh` give identical tables.
-- **DESeq2 p-values:** the DESeq2 p-values of `2_development/02` depend slightly on the numpy version.
-  Under numpy 2.2.6, padj differs by up to 0.13, and about 0.5% of significance calls flip. Fold changes
-  agree to 4 decimals, and the genes and stars shown in `4_dr/02` don't change.
-
 ## Layout
-- `data/raw/`: inputs (not tracked).
-- `src/l23/`: shared code:
-  - constants shared across steps: Yoo25 ages, NR vs DR test days, colours (`constants.py`);
-  - log2(CP10k+1) and the percentile-scaled gene-set scores (`expr.py`);
-  - the NR vs DR OLS test and the time-course panel (`timecourse.py`);
-  - archetype analysis (`archetype.py`, `utils.py`);
-  - cross-species varimax/CCA (`crossspecies.py`);
-  - regulon enrichment, regulon tables and target activity (`regulon.py`, `regulon_plot.py`).
-- `scripts/<k>_<result>/NN.*.py`: analysis scripts, numbered in run order.
-- `results/`, `figures/`: outputs (not tracked).
+```
+v1-multiome-continua/
+├── README.md
+├── REPRODUCIBILITY.md      numerical notes on the pinned environment
+├── run_all.sh              runs every script in dependency order
+├── environment.yml         pinned conda env (see REPRODUCIBILITY.md)
+├── data/raw/               inputs (not tracked; see "Inputs")
+├── src/l23/                shared code, imported by the scripts
+│   ├── constants.py        Yoo25 ages, NR vs DR test days, colours
+│   ├── expr.py             log2(CP10k+1), percentile-scaled gene-set scores
+│   ├── timecourse.py       NR vs DR OLS test and time-course panel
+│   ├── archetype.py        archetype analysis (PCA + PCHA)
+│   ├── utils.py            helpers of archetype.py: normalization, projection, PCHA
+│   ├── crossspecies.py     cross-species varimax / CCA
+│   ├── regulon.py          regulon enrichment, regulon tables, target activity
+│   └── regulon_plot.py     shared encoding of the enrichment figures
+├── scripts/
+│   ├── 0_prep/             NN.*.py, numbered in run order
+│   ├── 1_mouse_human/
+│   ├── 2_development/
+│   ├── 3_regulon/
+│   ├── 4_dr/
+│   └── 5_easifish/
+├── results/<folder>/       tables (not tracked); results/logs/ = one log per script
+├── figures/<folder>/       figures (not tracked)
+└── plan/                   development plans
+```
