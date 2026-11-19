@@ -1,6 +1,6 @@
 """A', B', C' archetype scores along the L2/3 A'-C' axis (Yoo25 P21 NR snRNA) and along L2/3 depth (P21 NR
 MERFISH), and the EASI-FISH LM vs RL retrograde-label depth profiles: binned panels on one normalized y.
-Score panels use the MARKER_CONDITION (P21) archetype gene sets (= Table S4; 0_prep/02). Figure: 03.
+Score panels use the MARKER_CONDITION (P21) archetype gene sets (= Table S4; 2_development/01). Figure: 03.
 
 Score per cell = mean over all MARKER_CONDITION genes of that archetype of expression
 scaled per gene to [0, 1]: 0 = no expression, 1 = the gene's SCORE_MAX_PCTILE percentile across
@@ -35,8 +35,8 @@ The um / axis bounds used are printed and in the panels TSV (y0, y1).
 Reads:
   results/5_easifish/01.yoo25_p21nr_ac_axis.tsv
   results/0_prep/01.yoo25_l23.h5ad
-  results/0_prep/02.yoo25_l23_abc_genes.tsv
-  results/0_prep/03.merfish_p21nr_l23.h5ad
+  results/2_development/01.yoo25_l23_abc_genes.tsv
+  results/0_prep/02.merfish_p21nr_l23.h5ad
   data/raw/easifish/easifish_sample{1,2,3}_res.csv
 Outputs:
   results/5_easifish/02.l23_archetype_scores_and_easifish_proj_depth_bins.tsv            (snRNA and MERFISH)
@@ -58,9 +58,9 @@ REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fi
 
 INPUT_AXIS    = os.path.join(REPO_ROOT, 'results', '5_easifish', '01.yoo25_p21nr_ac_axis.tsv')
 INPUT_YOO25   = os.path.join(REPO_ROOT, 'results', '0_prep', '01.yoo25_l23.h5ad')
-INPUT_MARKERS = os.path.join(REPO_ROOT, 'results', '0_prep', '02.yoo25_l23_abc_genes.tsv')
-INPUT_MERFISH = {   # panel label -> L2/3 MERFISH cells (0_prep/03)
-    'P21 NR': os.path.join(REPO_ROOT, 'results', '0_prep', '03.merfish_p21nr_l23.h5ad'),
+INPUT_MARKERS = os.path.join(REPO_ROOT, 'results', '2_development', '01.yoo25_l23_abc_genes.tsv')
+INPUT_MERFISH = {   # panel label -> L2/3 MERFISH cells (0_prep/02)
+    'P21 NR': os.path.join(REPO_ROOT, 'results', '0_prep', '02.merfish_p21nr_l23.h5ad'),
 }
 INPUT_EASIFISH = [os.path.join(REPO_ROOT, 'data', 'raw', 'easifish', f'easifish_sample{i}_res.csv') for i in (1, 2, 3)]
 OUT_PREFIX    = os.path.join(REPO_ROOT, 'results', '5_easifish', '02.l23_archetype_scores_and_easifish_proj_depth')

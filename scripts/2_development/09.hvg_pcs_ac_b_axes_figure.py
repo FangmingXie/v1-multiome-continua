@@ -1,9 +1,9 @@
-"""Figures of 2_development/07: Yoo25 L2/3 cells in P21 PC space colored by archetype score, and the
+"""Figures of 2_development/06: Yoo25 L2/3 cells in P21 PC space colored by archetype score, and the
 variance of each Age along the A-C and B axes, NR vs DR.
 
   08.yoo25_l23_pc12_abc_scores.pdf      one column per Age (NR P6-P21, then DR P12-P21); cells in the
                                         P21 (PC1, PC2) with the P21 archetype triangle (dashed). Row 1
-                                        colored by score C - A, row 2 by score B (0_prep/02); color
+                                        colored by score C - A, row 2 by score B (2_development/01); color
                                         range = 5th-95th percentile over all cells.
   08.yoo25_l23_ac_b_variance_over_age.pdf  variance over postnatal day of P8 PC1, the A-C axis and the B axis;
                                         lines = per Age, markers = per Sample, dashed = shuffled-gene null.
@@ -11,13 +11,13 @@ variance of each Age along the A-C and B axes, NR vs DR.
                                         B by the max B variance.
 
 Reads:
-  results/2_development/07.yoo25_l23_hvg_pcs_cells.tsv
-  results/2_development/07.yoo25_l23_hvg_pcs_archetypes.tsv
-  results/2_development/07.yoo25_l23_hvg_pcs_variance.tsv
-  results/0_prep/02.yoo25_l23_abc_scores.tsv
+  results/2_development/06.yoo25_l23_hvg_pcs_cells.tsv
+  results/2_development/06.yoo25_l23_hvg_pcs_archetypes.tsv
+  results/2_development/06.yoo25_l23_hvg_pcs_variance.tsv
+  results/2_development/01.yoo25_l23_abc_scores.tsv
 Outputs:
-  figures/2_development/08.yoo25_l23_pc12_abc_scores.pdf
-  figures/2_development/08.yoo25_l23_ac_b_variance_over_age.pdf
+  figures/2_development/09.yoo25_l23_pc12_abc_scores.pdf
+  figures/2_development/09.yoo25_l23_ac_b_variance_over_age.pdf
 """
 
 import os
@@ -36,12 +36,12 @@ matplotlib.rcParams['pdf.fonttype'] = 42
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-INPUT_CELLS  = os.path.join(REPO_ROOT, 'results', '2_development', '07.yoo25_l23_hvg_pcs_cells.tsv')
-INPUT_ARCH   = os.path.join(REPO_ROOT, 'results', '2_development', '07.yoo25_l23_hvg_pcs_archetypes.tsv')
-INPUT_VAR    = os.path.join(REPO_ROOT, 'results', '2_development', '07.yoo25_l23_hvg_pcs_variance.tsv')
-INPUT_SCORES = os.path.join(REPO_ROOT, 'results', '0_prep', '02.yoo25_l23_abc_scores.tsv')
-OUT_PC12     = os.path.join(REPO_ROOT, 'figures', '2_development', '08.yoo25_l23_pc12_abc_scores.pdf')
-OUT_VAR      = os.path.join(REPO_ROOT, 'figures', '2_development', '08.yoo25_l23_ac_b_variance_over_age.pdf')
+INPUT_CELLS  = os.path.join(REPO_ROOT, 'results', '2_development', '06.yoo25_l23_hvg_pcs_cells.tsv')
+INPUT_ARCH   = os.path.join(REPO_ROOT, 'results', '2_development', '06.yoo25_l23_hvg_pcs_archetypes.tsv')
+INPUT_VAR    = os.path.join(REPO_ROOT, 'results', '2_development', '06.yoo25_l23_hvg_pcs_variance.tsv')
+INPUT_SCORES = os.path.join(REPO_ROOT, 'results', '2_development', '01.yoo25_l23_abc_scores.tsv')
+OUT_PC12     = os.path.join(REPO_ROOT, 'figures', '2_development', '09.yoo25_l23_pc12_abc_scores.pdf')
+OUT_VAR      = os.path.join(REPO_ROOT, 'figures', '2_development', '09.yoo25_l23_ac_b_variance_over_age.pdf')
 
 PCTILES   = (5, 95)      # color range of the scores
 POINT_S   = 4

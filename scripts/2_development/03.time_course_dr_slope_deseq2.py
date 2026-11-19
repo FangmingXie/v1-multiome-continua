@@ -1,7 +1,7 @@
 """Does the dark-rearing (DR) effect change steadily with postnatal day? Yoo25 L2/3, P12-P21, per cell
-group of 2_development/01 (all L2/3, A', B', C' cells), pseudobulk DESeq2.
+group of 2_development/02 (all L2/3, A', B', C' cells), pseudobulk DESeq2.
 
-Pseudobulk counts from 2_development/01 (raw counts summed per sample and cell group), restricted to the Ages with
+Pseudobulk counts from 2_development/02 (raw counts summed per sample and cell group), restricted to the Ages with
 both NR and DR (P12, P14, P17, P21; 9 NR and 8 DR samples). Sex-linked genes (EXCLUDE_GENES) are
 dropped; genes need >= MIN_PB_COUNTS counts in >= MIN_PB_SAMPLES samples. Per gene,
 negative-binomial GLM:
@@ -17,10 +17,10 @@ Wald tests of b_int (slope) and b_DR, each with BH padj over all genes tested in
 Implied DR log2FC at P12 and P21 = b_DR + b_int * (day - D0) (reported, not tested).
 
 Reads:
-  results/2_development/01.yoo25_l23_pseudobulk_counts.tsv
-  results/2_development/01.yoo25_l23_pseudobulk_samples.tsv
+  results/2_development/02.yoo25_l23_pseudobulk_counts.tsv
+  results/2_development/02.yoo25_l23_pseudobulk_samples.tsv
 Outputs:
-  results/2_development/02.yoo25_l23_time_course_dr_by_day_slope_deseq2.tsv
+  results/2_development/03.yoo25_l23_time_course_dr_by_day_slope_deseq2.tsv
 """
 
 import os
@@ -33,9 +33,9 @@ from l23.constants import TEST_DAYS, D0, FDR
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-INPUT_PB         = os.path.join(REPO_ROOT, 'results', '2_development', '01.yoo25_l23_pseudobulk_counts.tsv')
-INPUT_PB_SAMPLES = os.path.join(REPO_ROOT, 'results', '2_development', '01.yoo25_l23_pseudobulk_samples.tsv')
-OUT_TSV          = os.path.join(REPO_ROOT, 'results', '2_development', '02.yoo25_l23_time_course_dr_by_day_slope_deseq2.tsv')
+INPUT_PB         = os.path.join(REPO_ROOT, 'results', '2_development', '02.yoo25_l23_pseudobulk_counts.tsv')
+INPUT_PB_SAMPLES = os.path.join(REPO_ROOT, 'results', '2_development', '02.yoo25_l23_pseudobulk_samples.tsv')
+OUT_TSV          = os.path.join(REPO_ROOT, 'results', '2_development', '03.yoo25_l23_time_course_dr_by_day_slope_deseq2.tsv')
 
 GENES          = ['Cdh13', 'Robo1', 'Pcdh9', 'Baz1a']
 GROUPS         = ['all L2/3', "A' cells", "B' cells", "C' cells"]

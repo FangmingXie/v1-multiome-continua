@@ -14,7 +14,7 @@ cross-archetype regulation is visible; self-regulation is a loop.
 Layout: free force-directed (every node moves), seeded from a fixed start -- TFs on a unit ring, each
 archetype on its own sector centred on ARCH_ANGLE, spread over TF_ARC_DEG in descending log2_enr; genes
 inside -- so the result is deterministic; then rotated so the A' -> C' TF centroids are horizontal (A'
-left) with B' below. Figure: 07.
+left) with B' below. Figure: 09.
 
 Reads:
   results/3_regulon/03.enriched_regulon_selection.tsv

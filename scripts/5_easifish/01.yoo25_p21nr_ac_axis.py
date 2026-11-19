@@ -1,7 +1,7 @@
 """Per-cell L2/3 A'-C' axis for Yoo25 P21 NR (Age P21 of the 0_prep/01 extract).
 
 Per-cell archetype score = mean over the MARKER_CONDITION A' or C' archetype genes (= Table S4;
-0_prep/02) of log2(CP10k+1) scaled per gene to [0, 1]: 0 = no expression, 1 = the gene's SCORE_MAX_PCTILE percentile across
+2_development/01) of log2(CP10k+1) scaled per gene to [0, 1]: 0 = no expression, 1 = the gene's SCORE_MAX_PCTILE percentile across
 cells (values above capped at 1). EXCLUDE_GENES (Cdh13 is an A' gene, Chrm2 a C' gene, Trpc6 is B')
 are removed from the sets so that these marker genes, when plotted against the axis, do not help
 define it.
@@ -9,7 +9,7 @@ A'-C' axis = score_C' - score_A' (negative = A' end, positive = C' end).
 
 Reads:
   results/0_prep/01.yoo25_l23.h5ad
-  results/0_prep/02.yoo25_l23_abc_genes.tsv
+  results/2_development/01.yoo25_l23_abc_genes.tsv
 Outputs:
   results/5_easifish/01.yoo25_p21nr_ac_axis.tsv  (cell, replicate, Type, score_A, score_C, ac_axis)
 """
@@ -25,7 +25,7 @@ from l23.expr import log2_cp10k, pctile_score
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 INPUT_YOO25   = os.path.join(REPO_ROOT, 'results', '0_prep', '01.yoo25_l23.h5ad')
-INPUT_MARKERS = os.path.join(REPO_ROOT, 'results', '0_prep', '02.yoo25_l23_abc_genes.tsv')
+INPUT_MARKERS = os.path.join(REPO_ROOT, 'results', '2_development', '01.yoo25_l23_abc_genes.tsv')
 OUT_TSV       = os.path.join(REPO_ROOT, 'results', '5_easifish', '01.yoo25_p21nr_ac_axis.tsv')
 
 AGE              = 'P21'   # Yoo25 P21 NR

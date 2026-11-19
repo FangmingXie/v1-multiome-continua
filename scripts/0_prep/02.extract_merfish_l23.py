@@ -15,8 +15,8 @@ Reads:
   data/raw/{P28NRa_ant,P28NRa_pos,P28NRb_ant,P28NRb_pos}_l2_v1_240723.h5ad      (section expression)
   data/raw/P8P14P21NR_v1l23glut_rna_merfish_250411.h5ad
 Outputs:
-  results/0_prep/03.merfish_p28nr_l23.h5ad
-  results/0_prep/03.merfish_p21nr_l23.h5ad
+  results/0_prep/02.merfish_p28nr_l23.h5ad
+  results/0_prep/02.merfish_p21nr_l23.h5ad
 """
 
 import os
@@ -30,8 +30,8 @@ REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fi
 INPUT_P28        = os.path.join(REPO_ROOT, 'data', 'raw', 'P28NRDR_v1glut_rna_merfish_240729.h5ad')
 INPUT_P28_SECTION = os.path.join(REPO_ROOT, 'data', 'raw', '{}_l2_v1_240723.h5ad')
 INPUT_P21        = os.path.join(REPO_ROOT, 'data', 'raw', 'P8P14P21NR_v1l23glut_rna_merfish_250411.h5ad')
-OUT_P28          = os.path.join(REPO_ROOT, 'results', '0_prep', '03.merfish_p28nr_l23.h5ad')
-OUT_P21          = os.path.join(REPO_ROOT, 'results', '0_prep', '03.merfish_p21nr_l23.h5ad')
+OUT_P28          = os.path.join(REPO_ROOT, 'results', '0_prep', '02.merfish_p28nr_l23.h5ad')
+OUT_P21          = os.path.join(REPO_ROOT, 'results', '0_prep', '02.merfish_p21nr_l23.h5ad')
 
 P28_SECTIONS = ['P28NRa_ant', 'P28NRa_pos', 'P28NRb_ant', 'P28NRb_pos']   # every P28 NR section
 P21_PREFIX   = 'P21NR'                                                   # sample-name prefix of the P21 NR sections

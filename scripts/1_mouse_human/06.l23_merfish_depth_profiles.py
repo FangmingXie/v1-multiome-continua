@@ -2,14 +2,14 @@
 
 Genes: PROFILE_GENES (mouse symbol, a row per side; A = superficial, C = deep), mapped to human by 1-to-1
 orthologs (data/raw/human_mouse_orthologs.tsv); every gene must be on both MERFISH panels (checked).
-INSITU_GENES (a subset) are drawn in situ by 10.
+INSITU_GENES (a subset) are drawn in situ by 08.
 Sections: every NR mouse section (PROFILE_MOUSE_SECTIONS) and the Fang22 human sections with >= 300
 eL2/3.IT cells in which every INSITU_GENES gene is detected in > H_MIN_DETECT of the L2/3 cells
 (PROFILE_HUMAN_SECTIONS; checked). Three other 4000-gene sections with >= 300 eL2/3.IT cells barely detect
 KCNH5 (< 7% of L2/3 cells) and are not used: H18.06.006.MTG.4000.expand.rep3, H22.26.401.MTG.4000.expand.rep1,
 H20.30.001.STG.4000.expand.rep1.
 Cells and expression:
-  mouse  P28 NR sections: the L2/3 MERFISH cells of the 0_prep/03 extract with depth from pia in
+  mouse  P28 NR sections: the L2/3 MERFISH cells of the 0_prep/02 extract with depth from pia in
          MOUSE_DEPTH_RANGE (um; drops label-transfer outliers); expression log2(jnorm + 1) (the section's
          500-gene panel); position = width x depth from pia (um).
   human  Fang22 section (250 or 4000 genes): eL2/3.IT cells; counts scaled to the median total per cell, log1p;
@@ -21,12 +21,12 @@ Tukey's fences (Q1 - TUKEY_K IQR, Q3 + TUKEY_K IQR) are removed. Relative L2/3 d
 the same unit (L2/3 thicknesses), so mouse (~300 um band) and human (~1500 um band) share one scale.
 Profiles: per gene and section, mean log expression in N_REL_BINS equal-width relative-depth bins (cells
 outside [0, 1] left out), divided by its highest bin (peak = 1). Sections, not cells, are the replicates
-(10 plots mean +- SEM over sections): pooling cells first would weight sections by cell count and mix panels
+(08 plots mean +- SEM over sections): pooling cells first would weight sections by cell count and mix panels
 of different sensitivity (250 vs 4000 genes), whereas per-section peak normalization removes those offsets.
 
 Reads:
   data/raw/human_mouse_orthologs.tsv
-  results/0_prep/03.merfish_p28nr_l23.h5ad                                     (L2/3 cells, depth, expression)
+  results/0_prep/02.merfish_p28nr_l23.h5ad                                     (L2/3 cells, depth, expression)
   data/raw/fang22_human_merfish/{section}.{features,genes,matrix}.csv          (every PROFILE_HUMAN_SECTIONS)
 Outputs:
   results/1_mouse_human/06.l23_merfish_genes.tsv              (side, human_symbol, mouse_symbol, insitu)
@@ -48,7 +48,7 @@ REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fi
 
 RES_DIR    = os.path.join(REPO_ROOT, 'results', '1_mouse_human')
 IN_ORTHO   = os.path.join(REPO_ROOT, 'data', 'raw', 'human_mouse_orthologs.tsv')
-IN_MOUSE   = os.path.join(REPO_ROOT, 'results', '0_prep', '03.merfish_p28nr_l23.h5ad')
+IN_MOUSE   = os.path.join(REPO_ROOT, 'results', '0_prep', '02.merfish_p28nr_l23.h5ad')
 HUMAN_DIR  = os.path.join(REPO_ROOT, 'data', 'raw', 'fang22_human_merfish')
 OUT_GENES    = os.path.join(RES_DIR, '06.l23_merfish_genes.tsv')
 OUT_SECTIONS = os.path.join(RES_DIR, '06.l23_merfish_sections.tsv')
@@ -60,7 +60,7 @@ PROFILE_GENES = {   # mouse symbol, by side (A = superficial, C = deep); all on 
     'A': ['Cdh13', 'Robo1', 'Epha6'],
     'C': ['Kcnh5', 'Tox', 'Lrp1b'],
 }
-INSITU_GENES = ['Cdh13', 'Kcnh5']   # drawn in situ (10); the human-section detection filter uses them
+INSITU_GENES = ['Cdh13', 'Kcnh5']   # drawn in situ (08); the human-section detection filter uses them
 H_MIN_DETECT = 0.10   # every human section must detect every INSITU_GENES gene in > this fraction of its
                       # L2/3 cells (checked)
 MOUSE_DEPTH_RANGE = (50, 450)      # um from pia; ~ the 5-95% depth range of L2/3 MERFISH cells
@@ -135,7 +135,7 @@ def finish(species, section, pos, ex):
     return cells, pts.assign(species=species, section=section), info
 
 
-# --- mouse: L2/3 NR cells (0_prep/03, in section-file order) in the depth range ---
+# --- mouse: L2/3 NR cells (0_prep/02, in section-file order) in the depth range ---
 mad = ad.read_h5ad(IN_MOUSE)
 absent = [g for g in genes['mouse_symbol'] if g not in mad.var_names]
 if absent:

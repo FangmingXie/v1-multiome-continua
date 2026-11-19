@@ -20,10 +20,10 @@ Reads:
   data/raw/Cheng22_Xie25_L23_ABC_genes_n286.csv     (Cheng22 adult L2/3 A/B/C genes)
   data/raw/TableS4_L23_archetypal_genes.tsv     (published Table S4; exact-match check only)
 Outputs:
-  results/0_prep/02.yoo25_l23_abc_scores.tsv    (step 1; cell, cond, score_a, score_b, score_c)
-  results/0_prep/02.yoo25_l23_abc_cells.tsv     (step 2; cell, cond, archetype: A/B/C, '' = none)
-  results/0_prep/02.yoo25_l23_abc_genes.tsv     (step 3, = Table S4; cond, archetype, gene, l2fc_max/min/avg, q_min)
-  results/0_prep/02.yoo25_l23_abc_gene_stats.parquet  (step 3, every test gene: l2fc_vs_X and q_vs_X
+  results/2_development/01.yoo25_l23_abc_scores.tsv    (step 1; cell, cond, score_a, score_b, score_c)
+  results/2_development/01.yoo25_l23_abc_cells.tsv     (step 2; cell, cond, archetype: A/B/C, '' = none)
+  results/2_development/01.yoo25_l23_abc_genes.tsv     (step 3, = Table S4; cond, archetype, gene, l2fc_max/min/avg, q_min)
+  results/2_development/01.yoo25_l23_abc_gene_stats.parquet  (step 3, every test gene: l2fc_vs_X and q_vs_X
                                                 for each other archetype X, l2fc_max/min/avg, q_min, is_gene)
 """
 
@@ -42,10 +42,10 @@ REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fi
 INPUT_H5AD  = os.path.join(REPO_ROOT, 'results', '0_prep', '01.yoo25_l23.h5ad')
 INPUT_GENES = os.path.join(REPO_ROOT, 'data', 'raw', 'Cheng22_Xie25_L23_ABC_genes_n286.csv')
 INPUT_S4    = os.path.join(REPO_ROOT, 'data', 'raw', 'TableS4_L23_archetypal_genes.tsv')
-OUT_SCORES  = os.path.join(REPO_ROOT, 'results', '0_prep', '02.yoo25_l23_abc_scores.tsv')
-OUT_CELLS   = os.path.join(REPO_ROOT, 'results', '0_prep', '02.yoo25_l23_abc_cells.tsv')
-OUT_GENES   = os.path.join(REPO_ROOT, 'results', '0_prep', '02.yoo25_l23_abc_genes.tsv')
-OUT_STATS   = os.path.join(REPO_ROOT, 'results', '0_prep', '02.yoo25_l23_abc_gene_stats.parquet')
+OUT_SCORES  = os.path.join(REPO_ROOT, 'results', '2_development', '01.yoo25_l23_abc_scores.tsv')
+OUT_CELLS   = os.path.join(REPO_ROOT, 'results', '2_development', '01.yoo25_l23_abc_cells.tsv')
+OUT_GENES   = os.path.join(REPO_ROOT, 'results', '2_development', '01.yoo25_l23_abc_genes.tsv')
+OUT_STATS   = os.path.join(REPO_ROOT, 'results', '2_development', '01.yoo25_l23_abc_gene_stats.parquet')
 
 CONDS = list(AGES)
 ARCHS = ['A', 'B', 'C']

@@ -2,14 +2,14 @@
 
 Regulons: every +/+ TF of 3_regulon/03's selection (developmental archetype genes, star rule;
 A' 12, B' 13, C' 5), +/+ targets from 3_regulon/01, in archetype order and by descending log2_enr. The
-expression loader and the per-cell score are l23.regulon's (as 1_mouse_human/08): each target's
+expression loader and the per-cell score are l23.regulon's (as 3_regulon/06): each target's
 log2(CP10k+1) divided by its NORM_MAX_PCTILE percentile over ALL Yoo25 L2/3 cells (every age, NR and DR
 pooled, so both share one scale), capped at 1, averaged over the regulon's targets.
 
 Replicates: per (condition, Age, Sample) the mean score over the sample's cells; per age, the mean over
 replicates. Each TF is divided by its largest NR replicate-mean, so 1 = the NR peak (DR can exceed 1).
 
-Statistics (l23.timecourse.dr_ols, as 2_development/03): per TF, OLS of the replicate scores (mean_norm)
+Statistics (l23.timecourse.dr_ols, as 2_development/04): per TF, OLS of the replicate scores (mean_norm)
 over the P12-P21 samples, score ~ age (factor) + DR + DR*(day - D0), D0 = 16 = mean DR day: b_DR =
 average DR effect at day 16 (in NR-peak units), b_slope = change in the DR effect per day; t-test
 p-values, BH padj over all tested TFs. rel_change_P21 = (P21 DR - P21 NR) / P21 NR of the replicate-mean

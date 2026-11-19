@@ -13,8 +13,8 @@ Profiles normalized for the cross-species comparison, per species:
     permutation p (scores shuffled across cells within each species, N_PERM times; one RNG stream
     over the panels in PANELS order).
 Also written: every cell's CCA1, CCA2 and A', B', C' scores, and the mouse archetypes (02's PCHA
-vertices in the VX space) projected the same way as the mouse cells (figure 12).
-Figures: 09, 12.
+vertices in the VX space) projected the same way as the mouse cells (figure 09).
+Figures: 07, 09.
 
 Reads:
   results/1_mouse_human/01.{mouse,human}_l23_varimax_coords.tsv

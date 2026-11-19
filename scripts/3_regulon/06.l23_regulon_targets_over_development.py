@@ -7,23 +7,23 @@ over cells, divided by the largest per-stage mean (1 = peak stage, 0 = no activi
 magnitudes across stages are preserved).
 
   human  Wang25 developing-cortex 10x multiome GEX, V1 L2/3 excitatory neurons (EN-L2_3-IT); the
-         activating (+/+) eRegulons of 07 for HUMAN_PANELS; cells pooled by developmental stage
+         activating (+/+) eRegulons of 05 for HUMAN_PANELS; cells pooled by developmental stage
          (second trimester -> third trimester -> infancy -> adolescence).
   mouse  Yoo25 L2/3, normally reared (NR) ages P6-P21 (0_prep/01); the AP-1 + EGR members of
          3_regulon/03's B' TFs (developmental archetype genes, star rule) that have a +/+ regulon in
          both species (human has no FOSB regulon); +/+ targets from 3_regulon/01. Every B' TF of
          3_regulon/03 must land in exactly one of FAMILIES.
-Figure (mouse vs human, side by side): 11. NR vs DR in mouse is 4_dr/01.
+Figure (mouse vs human, side by side): 10. NR vs DR in mouse is 4_dr/01.
 
 Reads:
   data/raw/wang25_human_multiome_gex_v1_l23.h5ad
-  results/1_mouse_human/07.human_wang25_regulon_targets.tsv
+  results/3_regulon/05.human_wang25_regulon_targets.tsv
   results/0_prep/01.yoo25_l23.h5ad
   results/3_regulon/01.yoo25_l23_regulon_targets.tsv
   results/3_regulon/03.enriched_regulon_selection.tsv
 Outputs:
-  results/1_mouse_human/08.wang25_l23_ap1_egr_regulon_targets_over_stage.tsv
-  results/1_mouse_human/08.l23_b_regulon_targets_nr_mouse.tsv
+  results/3_regulon/06.wang25_l23_ap1_egr_regulon_targets_over_stage.tsv
+  results/3_regulon/06.l23_b_regulon_targets_nr_mouse.tsv
 """
 
 import os
@@ -37,15 +37,15 @@ from l23.expr import log2_cp10k, pctile_score
 from l23.regulon import NORM_MAX_PCTILE, load_expression, regulon_score
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-RES_DIR   = os.path.join(REPO_ROOT, 'results', '1_mouse_human')
+RES_DIR   = os.path.join(REPO_ROOT, 'results', '3_regulon')
 
 IN_HUMAN_H5AD    = os.path.join(REPO_ROOT, 'data', 'raw', 'wang25_human_multiome_gex_v1_l23.h5ad')
-IN_HUMAN_REG     = os.path.join(RES_DIR, '07.human_wang25_regulon_targets.tsv')
+IN_HUMAN_REG     = os.path.join(RES_DIR, '05.human_wang25_regulon_targets.tsv')
 IN_MOUSE_H5AD    = os.path.join(REPO_ROOT, 'results', '0_prep', '01.yoo25_l23.h5ad')
 IN_MOUSE_REG     = os.path.join(REPO_ROOT, 'results', '3_regulon', '01.yoo25_l23_regulon_targets.tsv')
 IN_SELECTION     = os.path.join(REPO_ROOT, 'results', '3_regulon', '03.enriched_regulon_selection.tsv')
-OUT_HUMAN        = os.path.join(RES_DIR, '08.wang25_l23_ap1_egr_regulon_targets_over_stage.tsv')
-OUT_MOUSE        = os.path.join(RES_DIR, '08.l23_b_regulon_targets_nr_mouse.tsv')
+OUT_HUMAN        = os.path.join(RES_DIR, '06.wang25_l23_ap1_egr_regulon_targets_over_stage.tsv')
+OUT_MOUSE        = os.path.join(RES_DIR, '06.l23_b_regulon_targets_nr_mouse.tsv')
 
 SIGN = '+/+'                   # activating regulons only
 # human: panels (label, TFs)

@@ -8,8 +8,8 @@ cd "$(dirname "$0")"
 export PYTHONNOUSERSITE=1          # ignore ~/.local packages; use only the env's (numpy 1.26.4)
 export PYTHONPATH=src
 
-# 3_regulon before 1_mouse_human (1/08 reads 3/01, 3/03) and 2_development before 4_dr (4/02 reads 2/01-02).
-FOLDERS=(0_prep 3_regulon 1_mouse_human 2_development 4_dr 5_easifish)
+# Every folder reads only from itself and lower-numbered folders.
+FOLDERS=(0_prep 1_mouse_human 2_development 3_regulon 4_dr 5_easifish)
 
 python -c "import numpy; assert numpy.__version__ == '1.26.4', f'numpy {numpy.__version__}, expected 1.26.4'"
 mkdir -p results/logs

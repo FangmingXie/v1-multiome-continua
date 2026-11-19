@@ -1,4 +1,4 @@
-"""Shared encoding of the regulon x archetype enrichment figures (3_regulon/05, 06).
+"""Shared encoding of the regulon x archetype enrichment figures (3_regulon/07, 08).
 
   colour  = log2_enr on a blue (below 0) / YlOrRd (above 0) ramp with a hard break at 0,
             the value where the observed overlap equals the expression-matched expectation

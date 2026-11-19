@@ -3,7 +3,7 @@ spread of each Age along the A-C and B axes of the P21 archetype triangle.
 Cleaned from scomics revision/imported/analysis_multiome_py/31.multiome_basics_pcs_global_hvgs.
 
 Cells: the Yoo25 L2/3 neurons of every Age (0_prep/01).
-Genes: drop ^mt- and Xist, keep genes detected in > MIN_CELLS cells over all Ages (the rule of 0_prep/02
+Genes: drop ^mt- and Xist, keep genes detected in > MIN_CELLS cells over all Ages (the rule of 2_development/01
 step 3). Expression: CP10k with lib = sum over all genes (obs lib); log2(CP10k+1).
 HVGs: genes split into N_BIN quantile bins of mean CP10k; per bin, the top HVG_FRAC by CP10k variance / mean.
 PCs: PCA of the HVG log2(CP10k+1) fit on the P_EARLY cells (PC1) and on the P_LATER cells (PC1, PC2),
@@ -11,17 +11,17 @@ then applied to every cell (signs flipped as in the original; randomized SVD, se
 on the P_LATER cells with each gene shuffled across cells (seeded), applied to the real data of every cell.
 Archetypes: PCHA (NOC, DELTA, seeded) on the P_LATER cells in their (PC1, PC2). A-C axis = unit vector
 between the two vertices with the lowest and highest PC1, B axis = its perpendicular; signs set so that
-the A-C axis increases with score C - A and the B axis with score B (0_prep/02 scores); the vertices are
+the A-C axis increases with score C - A and the B axis with score B (2_development/01 scores); the vertices are
 labeled A, C (ends of the A-C axis) and B (the third). Per cell: ac, b = (PC1, PC2) projected on the axes
 (real and null PCs). Variance (ddof 1) of pc_early1, ac, b, ac_shuff, b_shuff per Age and per Sample.
 
 Reads:
   results/0_prep/01.yoo25_l23.h5ad
-  results/0_prep/02.yoo25_l23_abc_scores.tsv
+  results/2_development/01.yoo25_l23_abc_scores.tsv
 Outputs:
-  results/2_development/07.yoo25_l23_hvg_pcs_cells.tsv        (per cell: PCs, ac, b, null ac, b)
-  results/2_development/07.yoo25_l23_hvg_pcs_archetypes.tsv   (A, B, C vertices in P_LATER (PC1, PC2))
-  results/2_development/07.yoo25_l23_hvg_pcs_variance.tsv     (variances per Age and per Sample)
+  results/2_development/06.yoo25_l23_hvg_pcs_cells.tsv        (per cell: PCs, ac, b, null ac, b)
+  results/2_development/06.yoo25_l23_hvg_pcs_archetypes.tsv   (A, B, C vertices in P_LATER (PC1, PC2))
+  results/2_development/06.yoo25_l23_hvg_pcs_variance.tsv     (variances per Age and per Sample)
 """
 
 import os
@@ -38,10 +38,10 @@ from l23.utils import pcha, shuffle_rows_per_col
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 INPUT_YOO25  = os.path.join(REPO_ROOT, 'results', '0_prep', '01.yoo25_l23.h5ad')
-INPUT_SCORES = os.path.join(REPO_ROOT, 'results', '0_prep', '02.yoo25_l23_abc_scores.tsv')
-OUT_CELLS    = os.path.join(REPO_ROOT, 'results', '2_development', '07.yoo25_l23_hvg_pcs_cells.tsv')
-OUT_ARCH     = os.path.join(REPO_ROOT, 'results', '2_development', '07.yoo25_l23_hvg_pcs_archetypes.tsv')
-OUT_VAR      = os.path.join(REPO_ROOT, 'results', '2_development', '07.yoo25_l23_hvg_pcs_variance.tsv')
+INPUT_SCORES = os.path.join(REPO_ROOT, 'results', '2_development', '01.yoo25_l23_abc_scores.tsv')
+OUT_CELLS    = os.path.join(REPO_ROOT, 'results', '2_development', '06.yoo25_l23_hvg_pcs_cells.tsv')
+OUT_ARCH     = os.path.join(REPO_ROOT, 'results', '2_development', '06.yoo25_l23_hvg_pcs_archetypes.tsv')
+OUT_VAR      = os.path.join(REPO_ROOT, 'results', '2_development', '06.yoo25_l23_hvg_pcs_variance.tsv')
 
 MIN_CELLS = 10       # keep genes detected in more than this many cells
 N_BIN     = 20       # mean-expression bins for HVG selection

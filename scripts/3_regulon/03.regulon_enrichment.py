@@ -4,7 +4,7 @@ Test (src/l23/regulon.py): each Yoo25 L2/3 regulon's targets (01) against each a
 set, over the adult L2/3 gene universe (02), with the closed-form null stratified by mean expression
 (20 strata) and BH over mid-p.
 
-Marker sets: the archetype genes of 0_prep/02 (= Table S4), union per archetype over the
+Marker sets: the archetype genes of 2_development/01 (= Table S4), union per archetype over the
 normally-reared timepoints P6..P21 (every DR condition excluded). A gene called for more than one
 archetype at different timepoints is dropped, so each marker belongs to exactly one archetype.
 Archetype letters are carried as the adult PCHA labels (A -> archetype_3, B -> archetype_2,
@@ -14,7 +14,7 @@ Selection: the star rule (fdr_strat < 0.05, log2_enr > 1, overlap >= 5) on the +
 each TF is assigned to its max-log2_enr starred archetype.
 
 Reads:
-  results/0_prep/02.yoo25_l23_abc_genes.tsv
+  results/2_development/01.yoo25_l23_abc_genes.tsv
   results/3_regulon/01.yoo25_l23_regulon_targets.tsv
   results/3_regulon/02.l23_gene_universe_stats.tsv
 Outputs:
@@ -32,7 +32,7 @@ from l23.regulon import stratified_enrichment
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-INPUT_GENES    = os.path.join(REPO_ROOT, 'results', '0_prep', '02.yoo25_l23_abc_genes.tsv')
+INPUT_GENES    = os.path.join(REPO_ROOT, 'results', '2_development', '01.yoo25_l23_abc_genes.tsv')
 INPUT_REGULONS = os.path.join(REPO_ROOT, 'results', '3_regulon', '01.yoo25_l23_regulon_targets.tsv')
 INPUT_UNIVERSE = os.path.join(REPO_ROOT, 'results', '3_regulon', '02.l23_gene_universe_stats.tsv')
 OUT_MARKERS    = os.path.join(REPO_ROOT, 'results', '3_regulon', '03.l23_nr_union_markers.tsv')

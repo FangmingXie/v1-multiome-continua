@@ -9,7 +9,7 @@ Reads:
   results/1_mouse_human/05.l23_abc_scores_along_cca_profiles.tsv
   results/1_mouse_human/05.l23_abc_scores_along_cca_stats.tsv
 Outputs:
-  figures/1_mouse_human/09.l23_abc_normalized_compact.pdf
+  figures/1_mouse_human/07.l23_abc_normalized_compact.pdf
 """
 
 import os
@@ -25,7 +25,7 @@ REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fi
 RES_DIR     = os.path.join(REPO_ROOT, 'results', '1_mouse_human')
 IN_PROFILES = os.path.join(RES_DIR, '05.l23_abc_scores_along_cca_profiles.tsv')
 IN_STATS    = os.path.join(RES_DIR, '05.l23_abc_scores_along_cca_stats.tsv')
-OUT_PDF     = os.path.join(REPO_ROOT, 'figures', '1_mouse_human', '09.l23_abc_normalized_compact.pdf')
+OUT_PDF     = os.path.join(REPO_ROOT, 'figures', '1_mouse_human', '07.l23_abc_normalized_compact.pdf')
 
 PANELS  = [('CCA1', "A'"), ('CCA2', "B'"), ('CCA1', "C'")]   # (axis, archetype), left to right
 MARKERS = {'mouse': 's', 'human': 'o'}

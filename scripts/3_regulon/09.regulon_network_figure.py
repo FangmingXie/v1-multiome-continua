@@ -9,7 +9,7 @@ Reads:
   results/3_regulon/04.regulon_network_nodes.tsv
   results/3_regulon/04.regulon_network_edges.tsv
 Outputs:
-  figures/3_regulon/07.regulon_network_free.pdf
+  figures/3_regulon/09.regulon_network_free.pdf
 """
 
 import os
@@ -30,7 +30,7 @@ REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fi
 
 INPUT_NODES = os.path.join(REPO_ROOT, 'results', '3_regulon', '04.regulon_network_nodes.tsv')
 INPUT_EDGES = os.path.join(REPO_ROOT, 'results', '3_regulon', '04.regulon_network_edges.tsv')
-OUT_PDF = os.path.join(REPO_ROOT, 'figures', '3_regulon', '07.regulon_network_free.pdf')
+OUT_PDF = os.path.join(REPO_ROOT, 'figures', '3_regulon', '09.regulon_network_free.pdf')
 
 SIGN = '+/+'
 TF_NODE_SIZE = 750

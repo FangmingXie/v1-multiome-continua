@@ -2,7 +2,7 @@
 
 Code to reproduce the L2/3 archetype analyses of mouse primary visual cortex (V1). L2/3 neurons
 vary along continua between archetypes A', B' and C'. The archetype genes are rebuilt from raw
-counts (`0_prep/02`, identical to Table S4). Five results build on them:
+counts (`2_development/01`, identical to Table S4) and are also used by results 3-5. Five results:
 
 | # | Result | Folder |
 |---|---|---|
@@ -20,8 +20,8 @@ pip install --no-deps -e .     # shared code src/l23/, importable by every scrip
 # put the inputs in data/raw/ (see "Inputs")
 bash run_all.sh
 ```
-`run_all.sh` runs every script in dependency order: 0_prep, 3_regulon, 1_mouse_human,
-2_development, 4_dr, 5_easifish. It writes tables to `results/<folder>/`, figures to
+`run_all.sh` runs every script in number order, folder by folder (0_prep, then 1_mouse_human to
+5_easifish); each folder reads only from itself and lower-numbered folders. It writes tables to `results/<folder>/`, figures to
 `figures/<folder>/` and one log per script to `results/logs/`. The whole run takes about 3 minutes.
 Each output file name starts with the number of the script that writes it. Within a folder, the
 computing scripts come first and write tables; the figure scripts (`*figure*.py`, and those listed
@@ -34,8 +34,7 @@ environment (numpy, OpenBLAS, DESeq2) are in [REPRODUCIBILITY.md](REPRODUCIBILIT
 | Script | What it does |
 |---|---|
 | `0_prep/01.extract_l23.py` | L2/3 neurons with raw counts: Yoo25 of every age (NR P6-P21, DR P12-P21) and Cheng22 P28 NR; every later step reads these extracts |
-| `0_prep/02.archetype_genes.py` | Per-cell A/B/C scores, archetype cells and archetype genes per condition; checks the exact match to Table S4 |
-| `0_prep/03.extract_merfish_l23.py` | L2/3 MERFISH cells, P28 NR (for 1/06) and P21 NR (for 5/02); later steps read these extracts |
+| `0_prep/02.extract_merfish_l23.py` | L2/3 MERFISH cells, P28 NR (for 1/06) and P21 NR (for 5/02); later steps read these extracts |
 
 ### 1. Mouse vs human L2/3
 | Script | What it does | Figures |
@@ -46,24 +45,22 @@ environment (numpy, OpenBLAS, DESeq2) are in [REPRODUCIBILITY.md](REPRODUCIBILIT
 | `04` | Cross-species CCA of the varimax axes | |
 | `05` | A'/B'/C' scores along CCA1/CCA2, human vs mouse: binned profiles and human-mouse r; per-cell CCA coordinates | |
 | `06` | Conserved A vs C genes in situ, mouse P28 MERFISH vs human MERFISH (Fang22): relative L2/3 depth, profiles | |
-| `07` | Human (Wang25) regulon -> target table | |
-| `08` | AP-1/EGR regulon target activity over development, human (Wang25) and mouse (B' TFs) | |
-| `09` | Figure of 05 | `09.l23_abc_normalized_compact.pdf` |
-| `10` | Figures of 06 | `10.*.pdf` |
-| `11` | Figure of 08, mouse vs human | `11.*.pdf` |
-| `12` | Mouse archetype scores (B', C' − A') of human and mouse cells on the CCA1 x CCA2 embedding, mouse archetype triangle (from 05) | `12.l23_abc_scores_cca_embedding.pdf` |
+| `07` | Figure of 05 | `07.l23_abc_normalized_compact.pdf` |
+| `08` | Figures of 06 | `08.*.pdf` |
+| `09` | Mouse archetype scores (B', C' − A') of human and mouse cells on the CCA1 x CCA2 embedding, mouse archetype triangle (from 05) | `09.l23_abc_scores_cca_embedding.pdf` |
 
 ### 2. Development (NR)
 | Script | What it does | Figures |
 |---|---|---|
-| `01` | Archetype cell groups and pseudobulk counts, P6-P21 | |
-| `02` | Pseudobulk DESeq2: DR effect and its change with age (P12-P21) | |
-| `03` | Archetype gene modules M1-M5 over age, NR vs DR | |
-| `04` | Archetype chromatin (ATAC) region modules over age, NR vs DR | |
-| `05` | Number of archetype genes per age, NR vs DR | `05.*.pdf` |
-| `06` | Figures of 03 (gene modules) and 04 (region modules) | `06.*.pdf` |
-| `07` | Cells in P8 / P21 PC space of the global HVGs; variance per age along the P21 archetype A-C and B axes | |
-| `08` | Figures of 07 | `08.*.pdf` |
+| `01` | Per-cell A/B/C scores, archetype cells and archetype genes per age (NR and DR); checks the exact match to Table S4 | |
+| `02` | Archetype cell groups and pseudobulk counts, P6-P21 | |
+| `03` | Pseudobulk DESeq2: DR effect and its change with age (P12-P21) | |
+| `04` | Archetype gene modules M1-M5 over age, NR vs DR | |
+| `05` | Archetype chromatin (ATAC) region modules over age, NR vs DR | |
+| `06` | Cells in P8 / P21 PC space of the global HVGs; variance per age along the P21 archetype A-C and B axes | |
+| `07` | Number of archetype genes per age, NR vs DR | `07.*.pdf` |
+| `08` | Figures of 04 (gene modules) and 05 (region modules) | `08.*.pdf` |
+| `09` | Figures of 06 | `09.*.pdf` |
 
 ### 3. Regulon enrichment
 | Script | What it does | Figures |
@@ -72,11 +69,14 @@ environment (numpy, OpenBLAS, DESeq2) are in [REPRODUCIBILITY.md](REPRODUCIBILIT
 | `02` | Gene universe: genes expressed in adult L2/3 (Cheng22 + Yoo25) and their expression stats | |
 | `03` | Expression-stratified regulon x archetype enrichment; enriched TFs | |
 | `04` | TF -> target network: edges and layout | |
-| `05`, `06` | Dot plot of enriched regulons; archetype-gene overlap bars | `05.*.pdf`, `06.*.pdf` |
-| `07` | Figure of 04 | `07.regulon_network_free.pdf` |
+| `05` | Human (Wang25) regulon -> target table | |
+| `06` | AP-1/EGR regulon target activity over development, human (Wang25) and mouse (B' TFs) | |
+| `07`, `08` | Dot plot of enriched regulons; archetype-gene overlap bars | `07.*.pdf`, `08.*.pdf` |
+| `09` | Figure of 04 | `09.regulon_network_free.pdf` |
+| `10` | Figure of 06, mouse vs human | `10.*.pdf` |
 
 ### 4. Dark rearing
-Results 2's `02`, `03` and `04` also show NR vs DR.
+Results 2's `03`, `04` and `05` also show NR vs DR.
 
 | Script | What it does | Figures |
 |---|---|---|
@@ -100,20 +100,20 @@ All inputs go in `data/raw/`, which is not tracked:
 |---|---|---|---|
 | `superdupermegaRNA_hasraw.h5ad` | Cheng22 + Yoo25 mouse V1 snRNA-seq, raw counts | 0_prep/01 | TBD |
 | `jorstad23_human_WithinArea_L23IT.h5ad` | Human L2/3 IT (Jorstad et al. 2023) | 1/01, 1/03 | TBD |
-| `wang25_human_multiome_gex_v1_l23.h5ad` | Human developing V1 L2/3, multiome GEX (Wang et al. 2025) | 1/08 | TBD |
+| `wang25_human_multiome_gex_v1_l23.h5ad` | Human developing V1 L2/3, multiome GEX (Wang et al. 2025) | 3/06 | TBD |
 | `regulons/yoo25_L2_3/L2_3_{direct,extended}_e_regulon_metadata.csv` | Yoo25 L2/3 SCENIC+ eRegulon metadata | 3/01 | TBD |
-| `regulons/human_regulons_SuppTable13.xlsx` | Wang25 human eRegulons (Supp. Table 13) | 1/07 | TBD |
-| `atac/pmat_l23concensus_{age}.h5ad` | Yoo25 L2/3 ATAC peak matrices, 11 conditions | 2/04 | TBD |
-| `P28NRDR_v1glut_rna_merfish_240729.h5ad` | Mouse P28 NR/DR V1 MERFISH; only the NR sections' L2/3 labels are used | 0_prep/03 | TBD |
-| `P28NR{a,b}_{ant,pos}_l2_v1_240723.h5ad` | Mouse P28 NR MERFISH sections (500 genes) | 0_prep/03 | TBD |
+| `regulons/human_regulons_SuppTable13.xlsx` | Wang25 human eRegulons (Supp. Table 13) | 3/05 | TBD |
+| `atac/pmat_l23concensus_{age}.h5ad` | Yoo25 L2/3 ATAC peak matrices, 11 conditions | 2/05 | TBD |
+| `P28NRDR_v1glut_rna_merfish_240729.h5ad` | Mouse P28 NR/DR V1 MERFISH; only the NR sections' L2/3 labels are used | 0_prep/02 | TBD |
+| `P28NR{a,b}_{ant,pos}_l2_v1_240723.h5ad` | Mouse P28 NR MERFISH sections (500 genes) | 0_prep/02 | TBD |
 | `fang22_human_merfish/*.csv` | Human cortex MERFISH, 6 sections (Fang et al. 2022) | 1/06 | TBD |
-| `P8P14P21NR_v1l23glut_rna_merfish_250411.h5ad` | Mouse P8/P14/P21 NR V1 L2/3 MERFISH; only the P21 NR sections are used | 0_prep/03 | TBD |
+| `P8P14P21NR_v1l23glut_rna_merfish_250411.h5ad` | Mouse P8/P14/P21 NR V1 L2/3 MERFISH; only the P21 NR sections are used | 0_prep/02 | TBD |
 | `easifish/easifish_sample{1,2,3}_res.csv` | EASI-FISH retrograde labels (LM, RL), 3 samples | 5/02, 5/04, 5/05 | TBD |
-| `Cheng22_Xie25_L23_ABC_genes_n286.csv` | Adult L2/3 archetype genes, the seed of the archetype genes | 0_prep/02 | TBD |
-| `gene_sets_l23{a,b,c}_250423.csv` | Module (M1-M5) of each archetype gene | 2/03 | TBD |
-| `atac_modules/L23{A,B,C}_regions_M{1-5}.bed` | Archetype chromatin region modules | 2/04 | TBD |
+| `Cheng22_Xie25_L23_ABC_genes_n286.csv` | Adult L2/3 archetype genes, the seed of the archetype genes | 2/01 | TBD |
+| `gene_sets_l23{a,b,c}_250423.csv` | Module (M1-M5) of each archetype gene | 2/04 | TBD |
+| `atac_modules/L23{A,B,C}_regions_M{1-5}.bed` | Archetype chromatin region modules | 2/05 | TBD |
 | `human_mouse_orthologs.tsv` | Human-mouse ortholog pairs | 1/03, 1/04, 1/06 | TBD |
-| `TableS4_L23_archetypal_genes.tsv` | Published Table S4; exact-match check only | 0_prep/02 | TBD |
+| `TableS4_L23_archetypal_genes.tsv` | Published Table S4; exact-match check only | 2/01 | TBD |
 
 ## Layout
 ```

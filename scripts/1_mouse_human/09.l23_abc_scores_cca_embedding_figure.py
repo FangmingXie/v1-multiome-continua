@@ -14,7 +14,7 @@ Reads:
   results/1_mouse_human/05.l23_cca_mouse_archetypes.tsv
   results/1_mouse_human/04.l23_axis_cca_weights_human.tsv
 Outputs:
-  figures/1_mouse_human/12.l23_abc_scores_cca_embedding.pdf
+  figures/1_mouse_human/09.l23_abc_scores_cca_embedding.pdf
 """
 
 import os
@@ -30,7 +30,7 @@ REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fi
 IN_CELLS   = os.path.join(REPO_ROOT, 'results', '1_mouse_human', '05.l23_cca_cells.tsv')
 IN_M_AA    = os.path.join(REPO_ROOT, 'results', '1_mouse_human', '05.l23_cca_mouse_archetypes.tsv')
 IN_WEIGHTS = os.path.join(REPO_ROOT, 'results', '1_mouse_human', '04.l23_axis_cca_weights_human.tsv')
-OUT_PDF    = os.path.join(REPO_ROOT, 'figures', '1_mouse_human', '12.l23_abc_scores_cca_embedding.pdf')
+OUT_PDF    = os.path.join(REPO_ROOT, 'figures', '1_mouse_human', '09.l23_abc_scores_cca_embedding.pdf')
 
 ROWS         = [('human', 'Human (Jorstad23), mouse scores'), ('mouse', 'Mouse (Cheng22)')]
 SCORE_PCTILE = (5, 95)   # color range of score B'

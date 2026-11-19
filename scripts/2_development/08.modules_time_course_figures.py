@@ -1,4 +1,4 @@
-"""Figures of 2_development/03 and 04: A/B/C archetype gene modules (RNA) and chromatin region modules (ATAC),
+"""Figures of 2_development/04 and 05: A/B/C archetype gene modules (RNA) and chromatin region modules (ATAC),
 M1-M5, over postnatal day in Yoo25 L2/3, NR vs DR, per cell group (all L2/3, A', B', C' cells).
 
 One panel per (cell group, gene / region set, module): y = module score per sample (mean over the module's
@@ -11,11 +11,11 @@ no effect-size cutoff. y is shared within a row. Per modality, the same panels i
   *_by_module   one page per set (A, B, C); rows = M1-M5, columns = cell groups
 
 Reads:
-  results/2_development/03.yoo25_l23_gene_modules_{samples,stats}.tsv
-  results/2_development/04.yoo25_l23_atac_region_modules_{samples,stats}.tsv
+  results/2_development/04.yoo25_l23_gene_modules_{samples,stats}.tsv
+  results/2_development/05.yoo25_l23_atac_region_modules_{samples,stats}.tsv
 Outputs:
-  figures/2_development/06.yoo25_l23_gene_modules_time_course_by_{cells,module}.pdf
-  figures/2_development/06.yoo25_l23_atac_region_modules_time_course_by_{cells,module}.pdf
+  figures/2_development/08.yoo25_l23_gene_modules_time_course_by_{cells,module}.pdf
+  figures/2_development/08.yoo25_l23_atac_region_modules_time_course_by_{cells,module}.pdf
 """
 
 import os
@@ -40,8 +40,8 @@ PANEL_W    = 2.5   # inches
 # modality -> inputs, outputs and wording
 KINDS = {
     'genes': dict(
-        samples='03.yoo25_l23_gene_modules_samples.tsv', stats='03.yoo25_l23_gene_modules_stats.tsv',
-        out='06.yoo25_l23_gene_modules_time_course_by_{}.pdf', panel_h=3.2,
+        samples='04.yoo25_l23_gene_modules_samples.tsv', stats='04.yoo25_l23_gene_modules_stats.tsv',
+        out='08.yoo25_l23_gene_modules_time_course_by_{}.pdf', panel_h=3.2,
         n_title=lambda r: (f'n = {int(r["n_genes"])}; per-gene: DR {r["frac_genes_DR_14"]:.0%}, '
                            f'slope {r["frac_genes_slope_14"]:.0%}'),
         row='{} genes', page_cells='{}: A/B/C gene modules (clst 0-4 = M1-M5)',
@@ -49,8 +49,8 @@ KINDS = {
         ylabel='mean log$_2$(CPM+1) − P21 NR mean',
         n_note=f'n = module genes passing the filter; per-gene = fraction of genes with DESeq2 padj < {FDR}'),
     'atac': dict(
-        samples='04.yoo25_l23_atac_region_modules_samples.tsv', stats='04.yoo25_l23_atac_region_modules_stats.tsv',
-        out='06.yoo25_l23_atac_region_modules_time_course_by_{}.pdf', panel_h=3.0,
+        samples='05.yoo25_l23_atac_region_modules_samples.tsv', stats='05.yoo25_l23_atac_region_modules_stats.tsv',
+        out='08.yoo25_l23_atac_region_modules_time_course_by_{}.pdf', panel_h=3.0,
         n_title=lambda r: f'n = {int(r["n_regions"])} regions',
         row='{} regions', page_cells='{}: A/B/C ATAC region modules (M1-M5)',
         page_module='{} ATAC region modules (M1-M5) by cell group',

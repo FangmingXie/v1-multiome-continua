@@ -1,9 +1,9 @@
-"""Number of Yoo25 L2/3 A/B/C genes per condition (0_prep/02, = Table S4), NR vs DR.
+"""Number of Yoo25 L2/3 A/B/C genes per condition (2_development/01, = Table S4), NR vs DR.
 
 Reads:
-  results/0_prep/02.yoo25_l23_abc_genes.tsv
+  results/2_development/01.yoo25_l23_abc_genes.tsv
 Outputs:
-  figures/2_development/05.yoo25_l23_abc_gene_counts.pdf
+  figures/2_development/07.yoo25_l23_abc_gene_counts.pdf
 """
 
 import os
@@ -15,8 +15,8 @@ matplotlib.rcParams['pdf.fonttype'] = 42
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-INPUT_GENES = os.path.join(REPO_ROOT, 'results', '0_prep', '02.yoo25_l23_abc_genes.tsv')
-OUT_PDF     = os.path.join(REPO_ROOT, 'figures', '2_development', '05.yoo25_l23_abc_gene_counts.pdf')
+INPUT_GENES = os.path.join(REPO_ROOT, 'results', '2_development', '01.yoo25_l23_abc_genes.tsv')
+OUT_PDF     = os.path.join(REPO_ROOT, 'figures', '2_development', '07.yoo25_l23_abc_gene_counts.pdf')
 
 NR = {'P6': 6, 'P8': 8, 'P10': 10, 'P12': 12, 'P14': 14, 'P17': 17, 'P21': 21}
 DR = {'P12DR': 12, 'P14DR': 14, 'P17DR': 17, 'P21DR': 21}

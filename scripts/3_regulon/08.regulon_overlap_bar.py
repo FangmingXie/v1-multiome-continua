@@ -10,7 +10,7 @@ Reads:
   results/3_regulon/03.enriched_regulon_selection.tsv
   results/3_regulon/03.l23_stratified_enrichment.tsv   (overlap with every archetype)
 Outputs:
-  figures/3_regulon/06.regulon_overlap_bar.pdf
+  figures/3_regulon/08.regulon_overlap_bar.pdf
 """
 
 import os
@@ -25,7 +25,7 @@ REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fi
 # --- file paths ---
 INPUT_SELECTION = os.path.join(REPO_ROOT, 'results', '3_regulon', '03.enriched_regulon_selection.tsv')
 INPUT_ENRICHMENT = os.path.join(REPO_ROOT, 'results', '3_regulon', '03.l23_stratified_enrichment.tsv')
-OUT_PDF = os.path.join(REPO_ROOT, 'figures', '3_regulon', '06.regulon_overlap_bar.pdf')
+OUT_PDF = os.path.join(REPO_ROOT, 'figures', '3_regulon', '08.regulon_overlap_bar.pdf')
 
 ROW_H = 0.22                                         # inches per bar
 
