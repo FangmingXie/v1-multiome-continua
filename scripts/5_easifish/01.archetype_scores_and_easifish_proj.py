@@ -1,4 +1,4 @@
-"""A', B', C' archetype scores along the L2/3 A'-C' axis (Yoo25 P21 NR snRNA) and along L2/3 depth (P21 NR
+"""A, B, C archetype scores along the L2/3 A-C axis (Yoo25 P21 NR snRNA) and along L2/3 depth (P21 NR
 MERFISH), and the EASI-FISH LM vs RL retrograde labels in 3 samples: depth profiles, x-y projection bias and
 the per x-y bin mean-depth difference with a label-shuffle null (ported from scomics
 revision/e00/e00.easifish_proj_3samples). Figures: 02 (score and depth panels), 03 (EASI-FISH).
@@ -10,11 +10,11 @@ expression, 1 = the gene's SCORE_MAX_PCTILE percentile across cells (values abov
   MERFISH: layer MERFISH_LAYER, the archetype genes on the panel (a subset; counts printed).
 MERFISH percentiles are per dataset.
 
-A'-C' axis (Yoo25 P21 NR cells) = score_C' - score_A' (negative = A' end, positive = C' end), with
-EXCLUDE_GENES (Cdh13 is an A' gene, Chrm2 a C' gene, Trpc6 is B') removed from the A'/C' sets so that
+A-C axis (Yoo25 P21 NR cells) = score_C - score_A (negative = A end, positive = C end), with
+EXCLUDE_GENES (Cdh13 is an A gene, Chrm2 a C gene, Trpc6 is B) removed from the A/C sets so that
 these marker genes, when plotted against the axis, do not help define it.
-Caveat, snRNA panel: the axis is built from (almost) the same A'/C' genes as the A' and C' scores, so
-those curves are close to circular by construction; B' is independent of the axis. The MERFISH panels
+Caveat, snRNA panel: the axis is built from (almost) the same A/C genes as the A and C scores, so
+those curves are close to circular by construction; B is independent of the axis. The MERFISH panels
 (depth) are independent of the axis.
 
 Score panels: cells are cut into N_BINS equal-count bins along the axis / depth (MERFISH cells kept
@@ -42,7 +42,7 @@ Null: per sample, N_PERM times, the RL labels and the LM labels are each permute
 (independently; one seeded stream over the samples) and dz recomputed in the same x-y bins;
 p_perm = (1 + #(|dz_null| >= |dz|)) / (1 + N_PERM) over the reps where dz_null is defined.
 
-Normalized y (all panels, 0 to 1; 0 = A' end / superficial, 1 = C' end / deep), linear in each
+Normalized y (all panels, 0 to 1; 0 = A end / superficial, 1 = C end / deep), linear in each
 panel's position variable: snRNA and MERFISH map their cells' Y_NORM_PCTILE percentiles to 0 and 1
 (snRNA: all axis cells; MERFISH: the depth-filtered L2/3 cells); EASI-FISH maps EASI_SHOW (50-400 um,
 the drawn depth window) to 0 and 1. Linear, so curve shapes are unchanged; it removes the different
@@ -94,7 +94,7 @@ OUT_NULL       = os.path.join(RES_DIR, '01.easifish_xy_dz_null.tsv')
 
 AGE              = 'P21'   # Yoo25 P21 NR
 MARKER_CONDITION = 'P21'
-EXCLUDE_GENES    = ['Cdh13', 'Trpc6', 'Chrm2']   # left out of the A'-C' axis only
+EXCLUDE_GENES    = ['Cdh13', 'Trpc6', 'Chrm2']   # left out of the A-C axis only
 SCORE_MAX_PCTILE = 98    # per-gene scale: 0 = no expression, this percentile = 1
 N_BINS           = 15
 MERFISH_LAYER    = 'ljnorm'
@@ -166,11 +166,11 @@ def per_bin(values, t, fill=np.nan):
 
 mk = pd.read_csv(INPUT_MARKERS, sep='\t', usecols=['cond', 'archetype', 'gene'])
 mk = mk[mk['cond'] == MARKER_CONDITION]
-sets = {f"{k}'": sorted(set(g['gene'])) for k, g in mk.groupby('archetype')}
+sets = {k: sorted(set(g['gene'])) for k, g in mk.groupby('archetype')}
 if sorted(sets) != sorted(ARCH_COLORS):
     raise ValueError(f'expected archetypes {sorted(ARCH_COLORS)} in {INPUT_MARKERS}, got {sorted(sets)}')
 
-# --- Yoo25 P21 NR: A'-C' axis, and the archetype scores along it ---
+# --- Yoo25 P21 NR: A-C axis, and the archetype scores along it ---
 a = ad.read_h5ad(INPUT_YOO25)
 a = a[a.obs['Age'] == AGE].copy()
 for k, gs in sets.items():
@@ -186,8 +186,8 @@ def score(genes):
     return pctile_score(log2_cp10k(counts[:, idx].toarray(), lib), SCORE_MAX_PCTILE)
 
 
-axis_sets = {k: sorted(set(sets[k]) - set(EXCLUDE_GENES)) for k in ["A'", "C'"]}
-pos = score(axis_sets["C'"]) - score(axis_sets["A'"])
+axis_sets = {k: sorted(set(sets[k]) - set(EXCLUDE_GENES)) for k in ['A', 'C']}
+pos = score(axis_sets['C']) - score(axis_sets['A'])
 print(f'Yoo25 P21 NR: {a.n_obs} cells; axis genes { {k: len(v) for k, v in axis_sets.items()} } '
       f'(excluded {EXCLUDE_GENES})')
 print(pd.Series(pos, name='ac_axis').groupby(a.obs['Type'].astype(str).to_numpy()).describe().round(3).to_string())

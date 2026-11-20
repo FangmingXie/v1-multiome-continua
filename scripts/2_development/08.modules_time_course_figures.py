@@ -1,5 +1,5 @@
 """Figures of 2_development/05 and 06: A/B/C archetype gene modules (RNA) and chromatin region modules (ATAC),
-M1-M5, over postnatal day in Yoo25 L2/3, NR vs DR, per cell group (all L2/3, A', B', C' cells).
+M1-M5, over postnatal day in Yoo25 L2/3, NR vs DR, per cell group (all L2/3, A, B, C cells).
 
 One panel per (cell group, gene / region set, module): y = module score per sample (mean over the module's
 genes / regions of log2(CPM+1) minus their P21 NR mean, all L2/3; dashed line at 0); lines through the
@@ -33,7 +33,7 @@ REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fi
 RES_DIR   = os.path.join(REPO_ROOT, 'results', '2_development')
 FIG_DIR   = os.path.join(REPO_ROOT, 'figures', '2_development')
 
-GROUPS     = ['all L2/3', "A' cells", "B' cells", "C' cells"]
+GROUPS     = ['all L2/3', 'A cells', 'B cells', 'C cells']
 ARCHETYPES = ['A', 'B', 'C']
 MODULES    = ['M1', 'M2', 'M3', 'M4', 'M5']
 PANEL_W    = 2.5   # inches

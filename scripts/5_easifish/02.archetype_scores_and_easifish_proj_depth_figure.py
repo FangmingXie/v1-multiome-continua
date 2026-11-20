@@ -1,9 +1,9 @@
-"""Figure of 01: archetype scores along the A'-C' axis (snRNA) and depth (MERFISH), next to the EASI-FISH profiles.
+"""Figure of 01: archetype scores along the A-C axis (snRNA) and depth (MERFISH), next to the EASI-FISH profiles.
 
-Panels left to right: Yoo25 P21 NR snRNA along the normalized A'-C' axis; P21 NR MERFISH along normalized
+Panels left to right: Yoo25 P21 NR snRNA along the normalized A-C axis; P21 NR MERFISH along normalized
 depth; EASI-FISH LM vs RL retrograde labels along normalized depth. Score panels: archetype score
 z-scored within the dataset, mean +/- SEM per equal-count bin (dots on the snRNA panel); EASI-FISH:
-fraction of cells per group, mean +/- SD across samples. y: 0 = A' end / superficial (top), 1 = C' end / deep.
+fraction of cells per group, mean +/- SD across samples. y: 0 = A end / superficial (top), 1 = C end / deep.
 
 Reads:
   results/5_easifish/01.l23_archetype_scores_{bins,panels}.tsv
@@ -57,7 +57,7 @@ for ax, p in zip(axes, score_panels):
                 marker='o' if ax is ax1 else None, ms=2)   # dots on panel 1 only
     ax.set_xlabel('archetype score (z, within dataset)')
     ax.spines[['top', 'right']].set_visible(False)
-ax1.set_ylabel("C'  ←  normalized A'-C' axis  →  A'")   # reads bottom to top
+ax1.set_ylabel("C  ←  normalized A-C axis  →  A")   # reads bottom to top
 r = pan.loc[score_panels[0]]
 ax1.set_title(f'{r["label"]}, L2/3 (n = {int(r["n_cells"])})\n'
               + genes_txt(score_panels[0]) + f' genes; axis {r["y0"]:.2f} to {r["y1"]:.2f}', fontsize=8)
@@ -77,14 +77,14 @@ ax_easi.legend(fontsize=7, frameon=False, loc='upper left', bbox_to_anchor=(1.0,
 ax_easi.spines[['top', 'right']].set_visible(False)
 for ax in axes[1:]:
     ax.set_ylabel('deep  ←  normalized depth  →  superficial')
-for ax in axes:   # all panels: normalized 0 (A' end / superficial, top) to 1 (C' end / deep)
+for ax in axes:   # all panels: normalized 0 (A end / superficial, top) to 1 (C end / deep)
     ax.set_ylim(1, 0)
 lo, hi = y_pct
 fig.suptitle(f'{cond} archetype scores (panels 1-2: mean ± SEM in {n_bins} equal-count bins) '
              'and EASI-FISH projection depth profiles (panel 3)'
              f"\n(y: panels 1-2, {lo}st-{hi}th cell percentiles mapped to 0-1; "
              f"panel 3, {r['y0']:.0f}-{r['y1']:.0f} µm mapped to 0-1; "
-             "panel 1: A'/C' scores partly define the axis)", fontsize=9)
+             "panel 1: A/C scores partly define the axis)", fontsize=9)
 fig.legend(*ax1.get_legend_handles_labels(), fontsize=8, frameon=False, ncol=3,
            loc='lower center')
 fig.tight_layout(rect=(0, 0.05, 1, 1))

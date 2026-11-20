@@ -9,8 +9,8 @@ archetype score = mean over the archetype's markers of expression min-max clippe
 SCORE_PCTILE_LO / SCORE_PCTILE_HI percentiles.
 Expression is log2(CP10k + 1) from the integer raw counts, restricted to 01's HVGs (the genes the
 loadings were fit on). log2FC is a difference of log2 values (no division by ln 2).
-Letters: archetype_k -> A, B, C (internal PCHA order); downstream relabel to the published primed
-letters: C -> A', B -> B', A -> C' (archetype_3 -> A', archetype_2 -> B', archetype_1 -> C').
+Archetypes are named archetype_1..NOC in PCHA order (score columns score_archetype_k); 03 relabels them
+to the paper's letters: archetype_3 -> A, archetype_2 -> B, archetype_1 -> C.
 Human scores: each archetype's marker set is mapped through 1-to-1 human/mouse orthologs and scored on
 the human cells with the same recipe (per gene min-max clipped at SCORE_PCTILE_LO / SCORE_PCTILE_HI,
 mean over the archetype's ortholog list). Human .X is already log-normalized (ln(CPM+1)).
@@ -63,12 +63,11 @@ LOG2FC_THRESH    = np.log2(1.5)
 SCORE_PCTILE_LO  = 2
 SCORE_PCTILE_HI  = 98
 TOP_CELL_FRAC_MAX = 0.25             # NOC * N_TOP_CELLS must stay under this fraction of cells
-ALPHABET         = ['A', 'B', 'C', 'D', 'E', 'F']
 GENE_NAME_COL    = 'feature_name'   # human gene symbols (var_names are ENSG)
 
 os.makedirs(RES_DIR, exist_ok=True)
 ndim = len(VX_COLS) - 1
-archetype_names = ALPHABET[:NOC]
+archetype_names = [f'archetype_{k+1}' for k in range(NOC)]
 
 vx_df = pd.read_csv(IN_VX_COORDS, sep='\t', index_col=0)
 xn    = vx_df[VX_COLS].values

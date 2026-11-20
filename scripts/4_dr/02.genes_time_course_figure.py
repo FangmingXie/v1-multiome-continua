@@ -1,5 +1,5 @@
-"""GENES (rows) x cell groups (all L2/3, A', B', C' cells; columns) of 2_development/03 over postnatal day, NR vs DR,
-with the 2_development/04 statistics. A'/B'/C' cells = top 20% per Age by A/B/C scores from all
+"""GENES (rows) x cell groups (all L2/3, A, B, C cells; columns) of 2_development/03 over postnatal day, NR vs DR,
+with the 2_development/04 statistics. A/B/C cells = top 20% per Age by A/B/C scores from all
 Table S4 conditions' genes merged, cells in more than one group dropped (see 2_development/03).
 y = per-sample pseudobulk log2(CPM+1) = log2(counts / lib * 1e6 + 1) (2_development/03: counts and library sizes
 summed over the cells) minus the gene's reference REF (mean over the P21 NR samples, all L2/3 cells;
@@ -44,7 +44,7 @@ INPUT_STATS      = os.path.join(REPO_ROOT, 'results', '2_development', '04.yoo25
 OUT_FIG          = os.path.join(REPO_ROOT, 'figures', '4_dr', '02.yoo25_l23_genes_time_course_pseudobulk_log2fc.pdf')
 
 GENES       = ['Cdh13', 'Robo1', 'Pcdh9', 'Baz1a']
-GROUPS      = ['all L2/3', "A' cells", "B' cells", "C' cells"]
+GROUPS      = ['all L2/3', 'A cells', 'B cells', 'C cells']
 REF         = ('all L2/3', 'NR', 21)   # (cells, condition, day) of the pseudobulk log2FC reference
 MIN_ABS_LOG2FC = 0.6   # DR effect also needs |log2FC| above this (~1.5-fold) to be marked
 

@@ -1,7 +1,7 @@
 # v1-multiome-continua
 
 Code to reproduce the L2/3 archetype analyses of mouse primary visual cortex (V1). L2/3 neurons
-vary along continua between archetypes A', B' and C'. Five results:
+vary along continua between archetypes A, B and C. Five results:
 
 | # | Result | Folder |
 |---|---|---|
@@ -19,19 +19,18 @@ pip install --no-deps -e .     # shared code src/l23/, importable by every scrip
 bash download_inputs.sh        # data/input/ from the input bundles (see "Data")
 bash run_all.sh                # the analysis, folders 1-5
 ```
-`download_inputs.sh` downloads the input bundles from Google Drive with `curl` (about 1.9 GB), checks their
-sha256 and unpacks them into `data/input/`. 
+`download_inputs.sh` downloads the input bundles from Google Drive with `curl` (about 1.9 GB), checks
+their sha256 and unpacks them into `data/input/`.
 
-`run_all.sh` runs the analysis scripts in number order,
-folder by folder (1_mouse_human to 5_easifish); each folder reads only from itself, lower-numbered
-folders and `data/input/`. They write tables to `results/<folder>/`,
-figures to `figures/<folder>/`, and one log per script to `results/logs/`. It takes about 4 minutes.
-Each output file name starts with the number of the script that writes it. Within a folder, the
-computing scripts come first and write tables; the figure scripts (`*figure*.py`, and those listed
-with figures below) come after them and only read tables. 
+`run_all.sh` runs the analysis scripts in number order, folder by folder (1_mouse_human to 5_easifish),
+in about 4 minutes. Each folder reads only from itself, lower-numbered folders and `data/input/`.
+Scripts write tables to `results/<folder>/`, figures to `figures/<folder>/` and one log each to
+`results/logs/`; each output file name starts with the number of the script that writes it. Within a
+folder, the computing scripts come first and write tables; the figure scripts come after them and only
+read tables.
 
-Numerical notes on the pinned
-environment (numpy, OpenBLAS, DESeq2) are in [REPRODUCIBILITY.md](REPRODUCIBILITY.md).
+Numerical notes on the pinned environment (numpy, OpenBLAS, DESeq2) are in
+[REPRODUCIBILITY.md](REPRODUCIBILITY.md).
 
 ## Data
 `download_inputs.sh` installs `data/input/` from two archives (version 2026-11-20) on Google Drive:
@@ -55,50 +54,50 @@ Rebuilding `data/input/` from `data/raw/` (0_prep) and publishing new bundles (m
 ### 1. Mouse vs human L2/3
 | Script | What it does | Figures |
 |---|---|---|
-| `01` | Mouse (Cheng22 P28 NR) and human (Jorstad23) L2/3: PCA + varimax | |
-| `02` | Mouse L2/3 archetypes, markers and scores; the mouse archetype scores on human cells | |
-| `03` | Cross-species CCA of the varimax axes; A'/B'/C' scores along CCA1/CCA2, human vs mouse: binned profiles and human-mouse r; per-cell CCA coordinates | |
-| `04` | Conserved A vs C genes in situ, mouse P28 MERFISH vs human MERFISH (Fang22): relative L2/3 depth, profiles | |
-| `05` | Figures of 03: scores along CCA1/CCA2, mouse vs human; mouse archetype scores (B', C' − A') of human and mouse cells on the CCA1 x CCA2 embedding, with the mouse archetype triangle | `05.*.pdf` |
-| `06` | Figures of 04 | `06.*.pdf` |
+| `01` | PCA + varimax of L2/3 neurons, mouse (Cheng22, P28 NR) and human (Jorstad23) | |
+| `02` | Mouse archetypes (PCHA on the varimax axes), their marker genes, and archetype scores of mouse and human cells (via orthologs) | |
+| `03` | CCA aligning the mouse and human varimax axes; archetype scores along CCA1 and CCA2 in both species, with the human-mouse correlation | |
+| `04` | L2/3 depth profiles of conserved archetype genes, mouse P28 MERFISH vs human MERFISH (Fang22) | |
+| `05` | Figures of 03: score profiles along CCA1 and CCA2; cells on the CCA embedding | `05.*.pdf` |
+| `06` | Figures of 04: depth profiles and in situ maps | `06.*.pdf` |
 
 ### 2. Development (NR)
 | Script | What it does | Figures |
 |---|---|---|
-| `01` | Per-cell A/B/C scores, archetype cells and archetype genes per age (NR and DR); checks the exact match to Table S4 | |
-| `02` | Cells in P8 / P21 PC space of the global HVGs; variance per age along the P21 archetype A-C and B axes | |
-| `03` | Archetype cell groups and pseudobulk counts, P6-P21 | |
-| `04` | Pseudobulk DESeq2: DR effect and its change with age (P12-P21) | |
-| `05` | Archetype gene modules M1-M5 over age, NR vs DR | |
+| `01` | Archetype scores per cell and archetype genes per age, NR and DR (reproduces Table S4) | |
+| `02` | PCA of the L2/3 cells of every age (fit at P8 and P21); spread of each age along the A-C and B axes | |
+| `03` | Archetype cell groups (top 20% of cells per age by each archetype score) and their pseudobulk counts per sample | |
+| `04` | Pseudobulk DESeq2: effect of dark rearing and its change with age (P12-P21) | |
+| `05` | Archetype gene modules (M1-M5) over age, NR vs DR | |
 | `06` | Archetype chromatin (ATAC) region modules over age, NR vs DR | |
-| `07` | Figures of 01 and 02: cells in P21 PC space by archetype score, variance along the A-C and B axes, number of archetype genes per age (NR vs DR) | `07.*.pdf` |
-| `08` | Figures of 05 (gene modules) and 06 (region modules) | `08.*.pdf` |
+| `07` | Figures of 01 and 02: archetype gene counts per age; cells in P21 PC space colored by score; spread along the axes over age | `07.*.pdf` |
+| `08` | Figures of 05 and 06 | `08.*.pdf` |
 
 ### 3. Regulon enrichment
 | Script | What it does | Figures |
 |---|---|---|
-| `01` | Expression-stratified regulon x archetype enrichment over the adult L2/3 gene universe (Cheng22 + Yoo25); enriched TFs | |
-| `02` | TF -> target network: edges and layout | |
-| `03` | AP-1/EGR regulon target activity over development, human (Wang25) and mouse (B' TFs) | |
-| `04`, `05` | Dot plot of enriched regulons; archetype-gene overlap bars | `04.*.pdf`, `05.*.pdf` |
-| `06` | Figure of 02 | `06.regulon_network_free.pdf` |
-| `07` | Figure of 03, mouse vs human | `07.*.pdf` |
+| `01` | Which Yoo25 L2/3 regulons (TF -> targets) are enriched in each archetype's genes, against an expression-matched null; the enriched TFs | |
+| `02` | Network of the enriched TFs and their archetype-gene targets | |
+| `03` | Target activity of the B-enriched AP-1 and EGR regulons over development, mouse (Yoo25) vs human (Wang25) | |
+| `04`, `05` | Figures of 01: enrichment dot plot; archetype-gene overlap bars | `04.*.pdf`, `05.*.pdf` |
+| `06` | Figure of 02: the network | `06.*.pdf` |
+| `07` | Figure of 03: mouse vs human | `07.*.pdf` |
 
 ### 4. Dark rearing
-Results 2's `04`, `05` and `06` also show NR vs DR.
+Folder 2's `04`-`06` also compare NR and DR, for genes and modules.
 
 | Script | What it does | Figures |
 |---|---|---|
-| `01` | Target activity of archetype-enriched regulons, NR vs DR | |
+| `01` | Target activity of the archetype-enriched regulons (3_regulon/01) over age, NR vs DR | |
 | `02` | Selected genes over age, NR vs DR, per archetype cell group | `02.*.pdf` |
 | `03` | Figures of 01 | `03.*.pdf` |
 
 ### 5. EASI-FISH
 | Script | What it does | Figures |
 |---|---|---|
-| `01` | Archetype scores along the Yoo25 P21 NR A'-C' axis (snRNA) and depth (P21 MERFISH); EASI-FISH LM vs RL, 3 samples: depth profiles, x-y projection bias, per x-y bin mean-depth difference vs a label-shuffle null | |
-| `02` | Figure of 01: score panels next to the EASI-FISH depth profiles | `02.*.pdf` |
-| `03` | Figures of 01: EASI-FISH cell maps, depth profiles, x-y maps, null histograms | `03.*.pdf` |
+| `01` | Archetype scores along the A-C axis (P21 snRNA) and along L2/3 depth (P21 MERFISH); EASI-FISH LM- vs RL-projecting cells: depth profiles and x-y distribution, against a label-shuffle null | |
+| `02` | Figure of 01: archetype scores next to the LM and RL depth profiles | `02.*.pdf` |
+| `03` | Figures of 01: EASI-FISH cell maps, depth profiles and x-y analyses | `03.*.pdf` |
 
 ## Layout
 ```

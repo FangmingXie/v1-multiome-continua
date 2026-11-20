@@ -1,5 +1,5 @@
 """Mouse vs human L2/3 axes: closed-form CCA on ortholog-paired Gate-A varimax loadings (top-2000 HVGs), and the
-mouse L2/3 archetype scores (A', B', C') along the conserved CCA1 and CCA2 axes, human vs mouse: binned profiles.
+mouse L2/3 archetype scores (A, B, C) along the conserved CCA1 and CCA2 axes, human vs mouse: binned profiles.
 
 CCA: genes are observations, Gate-A VX components the features: the human block X = 01's human loadings on
 HUMAN_VX, the mouse block Y = 01's mouse loadings on MOUSE_VX, rows paired by 1-to-1 orthology over the
@@ -10,8 +10,8 @@ PCHA subspace of script 02.
 
 Scores along CCA: a cell's CCA coordinate is `(VX coords - mean) . w` with the Gate-A canonical weights;
 human cells carry the mouse-derived scores, mouse cells the native scores (both script 02).
-Letters: 02's A/B/C are relabelled to the published primed letters (RELABEL). CCA axes are in their
-raw orientation. Panels (PANELS): A' along CCA1, B' along CCA2, C' along CCA1.
+Letters: 02's archetype_1-3 are relabelled to the paper's letters A, B, C (RELABEL). CCA axes are in their
+raw orientation. Panels (PANELS): A along CCA1, B along CCA2, C along CCA1.
 
 Profiles normalized for the cross-species comparison, per species:
   - x = CCA percentile within species (bin k is the same slice of each species' distribution);
@@ -20,7 +20,7 @@ Profiles normalized for the cross-species comparison, per species:
   - per panel, Pearson r between the N_BINS paired human and mouse bin means, with a one-sided
     permutation p (scores shuffled across cells within each species, N_PERM times; one RNG stream
     over the panels in PANELS order).
-Also written: every cell's CCA1, CCA2 and A', B', C' scores, and the mouse archetypes (02's PCHA
+Also written: every cell's CCA1, CCA2 and A, B, C scores, and the mouse archetypes (02's PCHA
 vertices in the VX space) projected the same way as the mouse cells.
 Figure: 05.
 
@@ -37,7 +37,7 @@ Outputs:
   results/1_mouse_human/03.l23_axis_cca_weights_mouse.tsv
   results/1_mouse_human/03.l23_abc_scores_along_cca_profiles.tsv   (axis, archetype, species, bin, pct, mean, sem)
   results/1_mouse_human/03.l23_abc_scores_along_cca_stats.tsv      (axis, archetype, r, p_perm, n_perm)
-  results/1_mouse_human/03.l23_cca_cells.tsv                       (species, cell, CCA1, CCA2, score_A', score_B', score_C')
+  results/1_mouse_human/03.l23_cca_cells.tsv                       (species, cell, CCA1, CCA2, score_A, score_B, score_C)
   results/1_mouse_human/03.l23_cca_mouse_archetypes.tsv            (archetype, CCA1, CCA2)
 """
 
@@ -68,9 +68,9 @@ OUT_M_AA      = os.path.join(RES_DIR, '03.l23_cca_mouse_archetypes.tsv')
 
 HUMAN_VX = ['VX2', 'VX6', 'VX7', 'VX8', 'VX9', 'VX10']   # Gate A, 01's human vx variance partition
 MOUSE_VX = ['VX1', 'VX2', 'VX5', 'VX7', 'VX8', 'VX9']    # Gate A, 01's mouse vx variance partition (= 02)
-RELABEL  = {'C': "A'", 'B': "B'", 'A': "C'"}             # 02's letters -> published letters
+RELABEL  = {'archetype_3': 'A', 'archetype_2': 'B', 'archetype_1': 'C'}   # 02's archetypes -> paper's letters
 CCA_AXES = ['CCA1', 'CCA2']
-PANELS   = [('CCA1', "A'"), ('CCA1', "C'"), ('CCA2', "B'")]   # (axis, archetype); the permutation order
+PANELS   = [('CCA1', 'A'), ('CCA1', 'C'), ('CCA2', 'B')]   # (axis, archetype); the permutation order
 N_BINS   = 20                                            # equal-count bins along each CCA axis
 N_PERM   = 1000                                          # permutations for the human-mouse r null
 SEED     = 0
@@ -110,7 +110,7 @@ h_scores = pd.read_csv(IN_H_SCORES, sep='\t', index_col=0)
 if list(h_scores.columns) != list(m_scores.columns):
     raise ValueError(f'Score columns differ between human ({list(h_scores.columns)}) '
                      f'and mouse ({list(m_scores.columns)}).')
-old_letter = {RELABEL[c.split('_')[1]]: c.split('_')[1] for c in m_scores.columns}
+score_col = {RELABEL[c.removeprefix('score_')]: c for c in m_scores.columns}   # paper's letter -> 02's column
 
 h_index, h_cca, r, _ = cca_coords(IN_H_COORDS, HUMAN_VX, weights['human'])
 m_index, m_cca, _, m_project = cca_coords(IN_M_COORDS, MOUSE_VX, weights['mouse'])
@@ -120,12 +120,12 @@ if not m_scores.index.equals(m_index):
     raise ValueError(f'Mouse scores ({IN_M_SCORES}) and coords ({IN_M_COORDS}) cover different cells/order.')
 species = [('human', h_cca, h_scores), ('mouse', m_cca, m_scores)]
 cells = pd.concat([pd.DataFrame({'species': name, 'cell': scores.index, 'CCA1': cca[:, 0], 'CCA2': cca[:, 1],
-                                 **{f'score_{d}': scores[f'score_{old_letter[d]}'].values for d in sorted(old_letter)}})
+                                 **{f'score_{d}': scores[score_col[d]].values for d in sorted(score_col)}})
                    for name, cca, scores in species], ignore_index=True)
 cells.to_csv(OUT_CELLS, sep='\t', index=False)
-aa_vx = pd.read_csv(IN_M_AA_VX, sep='\t', index_col=0)        # archetype_k = 02's letter ALPHABET[k-1]
+aa_vx = pd.read_csv(IN_M_AA_VX, sep='\t', index_col=0)        # rows archetype_1..3 (02)
 m_aa = pd.DataFrame(m_project(aa_vx[MOUSE_VX].values), columns=CCA_AXES)
-m_aa.insert(0, 'archetype', [RELABEL['ABC'[int(k.split('_')[1]) - 1]] for k in aa_vx.index])
+m_aa.insert(0, 'archetype', [RELABEL[k] for k in aa_vx.index])
 m_aa.to_csv(OUT_M_AA, sep='\t', index=False)
 print(f'--- L2/3; human cells {len(h_cca)}, mouse cells {len(m_cca)}; CCA r = {r[0]:.3f}, {r[1]:.3f} ---')
 
@@ -136,7 +136,7 @@ for axis, disp in PANELS:
     i = CCA_AXES.index(axis)
     prof, z_bins = {}, {}
     for name, cca, scores in species:
-        y = scores[f'score_{old_letter[disp]}'].values
+        y = scores[score_col[disp]].values
         z = (y - y.mean()) / y.std()
         bins = pd.qcut(cca[:, i], N_BINS, labels=False)
         g = pd.Series(z).groupby(bins)

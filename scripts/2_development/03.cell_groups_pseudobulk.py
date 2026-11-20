@@ -9,11 +9,11 @@ is scored with the same A, B and C gene sets: the union over all conditions of t
 Table S4 genes (2_development/01) (a gene listed under different archetypes in different conditions is in each of
 those sets, overlaps printed), as in 5_easifish/01 but within each Age (each NR / DR condition separately):
 per gene log2(CP10k+1) / its SCORE_MAX_PCTILE percentile over the Age's cells, capped at 1, mean over
-the set. A' / B' / C' cells of an Age = its cells in the top TOP_FRAC of that score (>= the Age's
+the set. A / B / C cells of an Age = its cells in the top TOP_FRAC of that score (>= the Age's
 1 - TOP_FRAC quantile); the three groups are picked independently, and cells in the top of more
 than one score are dropped from all of them (counts printed), so the groups are disjoint.
 Pseudobulk: raw counts of every gene summed per sample (the replicate) and cell group (all L2/3,
-A', B', C' cells), all Ages; lib = the unit's summed library sizes (= row sum of the counts).
+A, B, C cells), all Ages; lib = the unit's summed library sizes (= row sum of the counts).
 
 Reads:
   data/input/01.yoo25_l23.h5ad
@@ -41,7 +41,7 @@ OUT_CELLS      = os.path.join(REPO_ROOT, 'results', '2_development', '03.yoo25_l
 OUT_PB         = os.path.join(REPO_ROOT, 'results', '2_development', '03.yoo25_l23_pseudobulk_counts.tsv')
 OUT_PB_SAMPLES = os.path.join(REPO_ROOT, 'results', '2_development', '03.yoo25_l23_pseudobulk_samples.tsv')
 
-ARCHETYPES       = ["A'", "B'", "C'"]
+ARCHETYPES       = ['A', 'B', 'C']
 TOP_FRAC         = 0.20   # per Age, the top fraction of cells by each score
 SCORE_MAX_PCTILE = 98     # per-gene scale: 0 = no expression, this percentile = 1
 
@@ -56,7 +56,7 @@ mk = pd.read_csv(INPUT_MARKERS, sep='\t', usecols=['cond', 'archetype', 'gene'])
 missing = sorted(set(AGES) - set(mk['cond']))
 if missing:
     raise ValueError(f'Conditions {missing} absent from {INPUT_MARKERS}')
-sets = {f"{k}'": sorted(set(t['gene'])) for k, t in mk.groupby('archetype')}   # union over conditions
+sets = {k: sorted(set(t['gene'])) for k, t in mk.groupby('archetype')}   # union over conditions
 if sorted(sets) != ARCHETYPES:
     raise ValueError(f'expected archetypes {ARCHETYPES} in {INPUT_MARKERS}, got {sorted(sets)}')
 print(f'archetype genes per score (union of all conditions): { {k: len(v) for k, v in sets.items()} }; '

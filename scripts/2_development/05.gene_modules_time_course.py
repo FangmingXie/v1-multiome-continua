@@ -1,5 +1,5 @@
 """A/B/C archetype gene modules (M1-M5) over postnatal day in Yoo25 L2/3, NR vs DR, per cell group of
-2_development/03 (all L2/3, A', B', C' cells).
+2_development/03 (all L2/3, A, B, C cells).
 
 Modules: each archetype gene set (gene_sets_l23{a,b,c}_250423.csv; = the union of that archetype's
 Table S4 genes (2_development/01) over all conditions, checked) is split by its column clst 0-4, named M1-M5 here. A gene
@@ -46,7 +46,7 @@ OUT_GENES        = os.path.join(REPO_ROOT, 'results', '2_development', '05.yoo25
 OUT_SAMPLES      = os.path.join(REPO_ROOT, 'results', '2_development', '05.yoo25_l23_gene_modules_samples.tsv')
 OUT_STATS        = os.path.join(REPO_ROOT, 'results', '2_development', '05.yoo25_l23_gene_modules_stats.tsv')
 
-GROUPS         = ['all L2/3', "A' cells", "B' cells", "C' cells"]
+GROUPS         = ['all L2/3', 'A cells', 'B cells', 'C cells']
 ARCHETYPES     = ['A', 'B', 'C']
 MODULES        = ['M1', 'M2', 'M3', 'M4', 'M5']   # = clst 0-4
 REF            = ('all L2/3', 'NR', 21)   # (cells, condition, day) of the per-gene reference

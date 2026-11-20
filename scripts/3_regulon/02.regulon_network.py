@@ -13,8 +13,8 @@ Edges: TF -> gene for every SCENIC+ target (0_prep/03) that is an L2/3 marker of
 cross-archetype regulation is visible; self-regulation is a loop.
 Layout: free force-directed (every node moves), seeded from a fixed start -- TFs on a unit ring, each
 archetype on its own sector centred on ARCH_ANGLE, spread over TF_ARC_DEG in descending log2_enr; genes
-inside -- so the result is deterministic; then rotated so the A' -> C' TF centroids are horizontal (A'
-left) with B' below. Figure: 06.
+inside -- so the result is deterministic; then rotated so the A -> C TF centroids are horizontal (A
+left) with B below. Figure: 06.
 
 Reads:
   results/3_regulon/01.enriched_regulon_selection.tsv
@@ -43,7 +43,7 @@ OUT_EDGES = os.path.join(RES_DIR, '02.regulon_network_edges.tsv')
 OUT_NODES = os.path.join(RES_DIR, '02.regulon_network_nodes.tsv')
 
 # initial positions and free force-directed layout
-ARCH_ANGLE = {"A'": 90, "B'": 210, "C'": 330}
+ARCH_ANGLE = {'A': 90, 'B': 210, 'C': 330}
 TF_ARC_DEG = 100
 GENE_INIT_R = 0.6     # genes start inside the ring, near their own archetype's sector
 LAYOUT_SEED = 0
@@ -51,8 +51,8 @@ LAYOUT_K = None       # networkx default 1/sqrt(n_nodes); output rescaled to [-1
 LAYOUT_ITER = 500
 GRAVITY_NODE = '__gravity__'
 GRAVITY_W = 1.0       # pull of the invisible hub on each TF; 0 would reproduce plain FR
-# post-hoc orientation: A' -> C' TF centroids horizontal (A' left), B' centroid below that line
-ORIENT_LEFT, ORIENT_RIGHT, ORIENT_BELOW = "A'", "C'", "B'"
+# post-hoc orientation: A -> C TF centroids horizontal (A left), B centroid below that line
+ORIENT_LEFT, ORIENT_RIGHT, ORIENT_BELOW = 'A', 'C', 'B'
 
 os.makedirs(RES_DIR, exist_ok=True)
 

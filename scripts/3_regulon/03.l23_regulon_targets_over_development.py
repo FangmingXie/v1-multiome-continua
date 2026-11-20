@@ -10,8 +10,8 @@ magnitudes across stages are preserved).
          activating (+/+) eRegulons of 0_prep/04 for HUMAN_PANELS; cells pooled by developmental stage
          (second trimester -> third trimester -> infancy -> adolescence).
   mouse  Yoo25 L2/3, normally reared (NR) ages P6-P21 (0_prep/01); the AP-1 + EGR members of
-         01's B' TFs (developmental archetype genes, star rule) that have a +/+ regulon in
-         both species (human has no FOSB regulon); +/+ targets from 0_prep/03. Every B' TF of
+         01's B TFs (developmental archetype genes, star rule) that have a +/+ regulon in
+         both species (human has no FOSB regulon); +/+ targets from 0_prep/03. Every B TF of
          01 must land in exactly one of FAMILIES.
 Figure (mouse vs human, side by side): 07. NR vs DR in mouse is 4_dr/01.
 
@@ -55,8 +55,8 @@ KEEP_TYPE = 'EN-L2_3-IT'       # L2/3 excitatory neurons
 TYPE_COL  = 'Type'
 GROUP_COL = 'Group'
 STAGE_ORDER = ['Second_trimester', 'Third_trimester', 'Infancy', 'Adolescence']   # temporal order
-# mouse: B' TFs by family
-ARCH = "B'"
+# mouse: B TFs by family
+ARCH = 'B'
 FAMILIES = [('AP-1', ['Fos', 'Fosb', 'Fosl2', 'Junb']),
             ('EGR', ['Egr1', 'Egr2', 'Egr3', 'Egr4']),
             ('other', ['Smad3', 'Irf2', 'Mxi1', 'Etv5', 'Tfdp2'])]

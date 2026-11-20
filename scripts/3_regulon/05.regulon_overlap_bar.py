@@ -1,7 +1,7 @@
-"""Archetype-gene overlap of 01's enriched L2/3 regulons: one hbar panel per archetype (A', B', C').
+"""Archetype-gene overlap of 01's enriched L2/3 regulons: one hbar panel per archetype (A, B, C).
 
 Each enriched +/+ regulon of 01's selection (NR-union archetype genes, star rule) is drawn in the
-panel of the archetype it is enriched in. Its bar stacks the number of A', B' and C' marker genes
+panel of the archetype it is enriched in. Its bar stacks the number of A, B and C marker genes
 among the regulon's targets (01's `overlap` per archetype; the marker sets are disjoint), with the
 enriched archetype's segment first so it starts at 0. Bars are sorted by the enriched archetype's overlap, largest on top. Every
 selected TF is starred in exactly one archetype, so each appears once.
@@ -67,7 +67,7 @@ for ax, (arch, color) in zip(axes, ARCH_COLORS.items()):
 fig.supxlabel('# L2/3 archetype genes among regulon targets', fontsize=9)
 handles = [plt.Rectangle((0, 0), 1, 1, color=c) for c in ARCH_COLORS.values()]
 axes[-1].legend(handles, [f'{a} genes' for a in ARCH_COLORS], loc='lower right', fontsize=8,
-                frameon=False)                       # the short C' panel has room below its bars
+                frameon=False)                       # the short C panel has room below its bars
 fig.suptitle('Enriched L2/3 regulons: archetype genes among targets', fontsize=10)
 fig.savefig(OUT_PDF, bbox_inches='tight', dpi=300)
 plt.close(fig)

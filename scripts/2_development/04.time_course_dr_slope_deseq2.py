@@ -1,5 +1,5 @@
 """Does the dark-rearing (DR) effect change steadily with postnatal day? Yoo25 L2/3, P12-P21, per cell
-group of 2_development/03 (all L2/3, A', B', C' cells), pseudobulk DESeq2.
+group of 2_development/03 (all L2/3, A, B, C cells), pseudobulk DESeq2.
 
 Pseudobulk counts from 2_development/03 (raw counts summed per sample and cell group), restricted to the Ages with
 both NR and DR (P12, P14, P17, P21; 9 NR and 8 DR samples). Sex-linked genes (EXCLUDE_GENES) are
@@ -38,7 +38,7 @@ INPUT_PB_SAMPLES = os.path.join(REPO_ROOT, 'results', '2_development', '03.yoo25
 OUT_TSV          = os.path.join(REPO_ROOT, 'results', '2_development', '04.yoo25_l23_time_course_dr_by_day_slope_deseq2.tsv')
 
 GENES          = ['Cdh13', 'Robo1', 'Pcdh9', 'Baz1a']
-GROUPS         = ['all L2/3', "A' cells", "B' cells", "C' cells"]
+GROUPS         = ['all L2/3', 'A cells', 'B cells', 'C cells']
 DAYS           = TEST_DAYS   # Ages with both NR and DR; D0 = their mean DR day (checked below)
 MIN_PB_COUNTS  = 10
 MIN_PB_SAMPLES = 2

@@ -16,4 +16,4 @@ FDR = 0.05
 STARS = [(0.001, '***'), (0.01, '**'), (0.05, '*')]
 
 COND_COLORS = {'NR': 'C1', 'DR': 'black'}
-ARCH_COLORS = {"A'": 'C0', "B'": 'C1', "C'": 'C2'}
+ARCH_COLORS = {'A': 'C0', 'B': 'C1', 'C': 'C2'}

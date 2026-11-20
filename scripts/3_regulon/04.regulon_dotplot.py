@@ -1,4 +1,4 @@
-"""Dot matrix of 01's L2/3 enrichment: enriched +/+ TFs x A'/B'/C' (developmental archetype genes).
+"""Dot matrix of 01's L2/3 enrichment: enriched +/+ TFs x A/B/C (developmental archetype genes).
 
 Rows are 01's selected TFs (star rule in >= 1 archetype), grouped by peak archetype and ordered
 by log2_enr within each group. Encoding (src/l23/regulon_plot.py):
@@ -34,7 +34,7 @@ INPUT_ENRICHMENT = os.path.join(REPO_ROOT, 'results', '3_regulon', '01.l23_strat
 INPUT_SELECTION = os.path.join(REPO_ROOT, 'results', '3_regulon', '01.enriched_regulon_selection.tsv')
 OUT_PDF = os.path.join(REPO_ROOT, 'figures', '3_regulon', '04.regulon_dotplot.pdf')
 
-COLS = ["A'", "B'", "C'"]
+COLS = ['A', 'B', 'C']
 CELL_W, CELL_H = 0.50, 0.21      # inches per matrix cell
 
 os.makedirs(os.path.dirname(OUT_PDF), exist_ok=True)

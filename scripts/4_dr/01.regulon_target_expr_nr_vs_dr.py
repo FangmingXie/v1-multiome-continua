@@ -1,7 +1,7 @@
 """Archetype-enriched Yoo25 L2/3 regulons: target-gene activity over postnatal age, NR vs DR.
 
 Regulons: every +/+ TF of 3_regulon/01's selection (developmental archetype genes, star rule;
-A' 12, B' 13, C' 5), +/+ targets from 0_prep/03, in archetype order and by descending log2_enr. The
+A 12, B 13, C 5), +/+ targets from 0_prep/03, in archetype order and by descending log2_enr. The
 expression loader and the per-cell score are l23.regulon's (as 3_regulon/03): each target's
 log2(CP10k+1) divided by its NORM_MAX_PCTILE percentile over ALL Yoo25 L2/3 cells (every age, NR and DR
 pooled, so both share one scale), capped at 1, averaged over the regulon's targets.

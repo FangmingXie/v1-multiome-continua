@@ -15,7 +15,7 @@ Marker sets: the archetype genes of 2_development/01 (= Table S4), union per arc
 normally-reared timepoints P6..P21 (every DR condition excluded). A gene called for more than one
 archetype at different timepoints is dropped, so each marker belongs to exactly one archetype.
 Archetype letters are carried as the adult PCHA labels (A -> archetype_3, B -> archetype_2,
-C -> archetype_1; column archetype), whose display labels are A'/B'/C' (arch_letter).
+C -> archetype_1; column archetype), whose display labels are A/B/C (arch_letter).
 
 Selection: the star rule (fdr_strat < 0.05, log2_enr > 1, overlap >= 5) on the +/+ regulons;
 each TF is assigned to its max-log2_enr starred archetype.
@@ -57,7 +57,7 @@ NR_CONDITIONS = {'P6', 'P8', 'P10', 'P12', 'P14', 'P17', 'P21'}
 # archetype letter -> adult PCHA label; ARCH_RELABEL maps those to the display labels
 S4_TO_PCHA = {'A': 'archetype_3', 'B': 'archetype_2', 'C': 'archetype_1'}
 ARCH_LABELS = ['archetype_1', 'archetype_2', 'archetype_3']
-ARCH_RELABEL = {'archetype_1': "C'", 'archetype_2': "B'", 'archetype_3': "A'"}
+ARCH_RELABEL = {'archetype_1': 'C', 'archetype_2': 'B', 'archetype_3': 'A'}
 MIN_MARKERS_IN_UNIVERSE = 20
 SIGN = '+/+'
 # star rule
@@ -84,9 +84,8 @@ def build_markers():
           f'archetype ({multi.value_counts().to_dict()})')
     keep = nr[~nr['gene'].isin(multi.index)]
     mk = (keep.groupby(['gene', 'archetype']).size().rename('n_conditions').reset_index()
-              .rename(columns={'archetype': 'letter'}))
-    mk['archetype'] = mk['letter'].map(S4_TO_PCHA)
-    mk['arch_letter'] = mk['letter'] + "'"
+              .rename(columns={'archetype': 'arch_letter'}))
+    mk['archetype'] = mk['arch_letter'].map(S4_TO_PCHA)
     mk = mk[['gene', 'archetype', 'arch_letter', 'n_conditions']].sort_values(['arch_letter', 'gene'])
     mk.to_csv(OUT_MARKERS, sep='\t', index=False)
     print(f'  markers per archetype: {mk["arch_letter"].value_counts().sort_index().to_dict()}; '

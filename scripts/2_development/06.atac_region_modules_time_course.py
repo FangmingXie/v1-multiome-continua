@@ -1,9 +1,9 @@
 """A/B/C archetype chromatin region modules (M1-M5) over postnatal day in Yoo25 L2/3 ATAC, NR vs DR, per
-cell group of 2_development/03 (all L2/3, A', B', C' cells). The ATAC counterpart of 2_development/05.
+cell group of 2_development/03 (all L2/3, A, B, C cells). The ATAC counterpart of 2_development/05.
 
 Modules: L23{A,B,C}_regions_M{1-5}.bed; every region is one consensus peak of the peak matrices (checked).
 A region in modules of two archetypes is in each.
-Pseudobulk: peak counts summed per (cell group, Sample); cells, Sample, condition, day and A'/B'/C'
+Pseudobulk: peak counts summed per (cell group, Sample); cells, Sample, condition, day and A/B/C
 group from the 2_development/03 cell table (barcodes are the same strings; every ATAC cell must be there).
 lib = the unit's counts over all consensus peaks (CPM in peaks). Per region and sample:
 log2(counts / lib * 1e6 + 1) minus the region's reference REF (mean over the P21 NR samples, all L2/3
@@ -47,7 +47,7 @@ OUT_REGIONS  = os.path.join(REPO_ROOT, 'results', '2_development', '06.yoo25_l23
 OUT_SAMPLES  = os.path.join(REPO_ROOT, 'results', '2_development', '06.yoo25_l23_atac_region_modules_samples.tsv')
 OUT_STATS    = os.path.join(REPO_ROOT, 'results', '2_development', '06.yoo25_l23_atac_region_modules_stats.tsv')
 
-GROUPS         = {'all L2/3': None, "A' cells": "A'", "B' cells": "B'", "C' cells": "C'"}   # name -> 2_development/03 archetype
+GROUPS         = {'all L2/3': None, 'A cells': 'A', 'B cells': 'B', 'C cells': 'C'}   # name -> 2_development/03 archetype
 REF            = ('all L2/3', 'NR', 21)   # (cells, condition, day) of the per-region reference
 MIN_PB_COUNTS  = 10
 MIN_PB_SAMPLES = 2

@@ -1,4 +1,4 @@
-"""Figure of 03: B'-enriched AP-1 and EGR regulons, target-gene activity over normal development, mouse vs human.
+"""Figure of 03: B-enriched AP-1 and EGR regulons, target-gene activity over normal development, mouse vs human.
 
 Left: mouse Yoo25 L2/3 NR, per age; right: human Wang25 V1 L2/3, per developmental stage. Mean +/- SEM
 over cells, divided by the peak; one colour per TF in both panels (tab20 colour i for TF i, AP-1 then

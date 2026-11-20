@@ -1,6 +1,6 @@
 """Figures of 01: archetype-enriched Yoo25 L2/3 regulons, target-gene activity over postnatal age, NR vs DR.
 
-  lines:   the top TOP_N TFs per archetype by log2_enr (one row per archetype; C' has only 5), one
+  lines:   the top TOP_N TFs per archetype by log2_enr (one row per archetype; C has only 5), one
            panel per TF, NR (C1) vs DR (black), own y-axis; dots = replicates, line = replicate mean;
            title: OLS DR effect at day 16 and DR slope per day (padj); bracket right of P21: padj < FDR.
   barplot: every TF, height = rel_change_P21 = (P21 DR - P21 NR) / P21 NR of the replicate-mean score;

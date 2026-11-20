@@ -1,7 +1,7 @@
-"""Figures of 03: mouse L2/3 archetype scores A', B', C' along the conserved CCA axes, mouse vs human, and
+"""Figures of 03: mouse L2/3 archetype scores A, B, C along the conserved CCA axes, mouse vs human, and
 on the CCA1 x CCA2 embedding.
 
-05.l23_abc_normalized_compact.pdf: one panel per archetype (A' along CCA1, B' along CCA2, C' along CCA1):
+05.l23_abc_normalized_compact.pdf: one panel per archetype (A along CCA1, B along CCA2, C along CCA1):
 x = CCA percentile within species; y = score z-scored within species, mean +/- SEM per bin; mouse and human on twin y axes (mouse
 left, darker shade of the archetype color; human right, lighter shade), 0 centered on both. The human
 legend entry carries 03's human-mouse r and permutation p.
@@ -11,9 +11,9 @@ the mouse row, the human archetypes (18b's human PCHA vertices) are not shown.
 
 Cells at their CCA1, CCA2 coordinates (script 03, from its canonical weights): rows = species
 (human Jorstad23 cells with the mouse-derived scores of script 02; mouse Cheng22 cells with the native
-scores of script 02), columns = score B' and score C' - A'. CCA1 is reflected in both rows (CCA1') so the
+scores of script 02), columns = score B and score C - A. CCA1 is reflected in both rows (CCA1') so the
 two embeddings share one orientation; the canonical r of each axis is in the axis label. Color range per
-panel: B' = its 5th-95th percentile; C' - A' = +/- the 95th percentile of |C' - A'| (gray = 0).
+panel: B = its 5th-95th percentile; C - A = +/- the 95th percentile of |C - A| (gray = 0).
 Mouse row: the mouse PCHA archetypes (script 02) projected like the mouse cells (script 03), as a triangle.
 
 Reads:
@@ -46,19 +46,19 @@ IN_WEIGHTS  = os.path.join(RES_DIR, '03.l23_axis_cca_weights_human.tsv')
 OUT_PDF     = os.path.join(REPO_ROOT, 'figures', '1_mouse_human', '05.l23_abc_normalized_compact.pdf')
 OUT_EMBED   = os.path.join(REPO_ROOT, 'figures', '1_mouse_human', '05.l23_abc_scores_cca_embedding.pdf')
 
-PANELS  = [('CCA1', "A'"), ('CCA2', "B'"), ('CCA1', "C'")]   # (axis, archetype), left to right
+PANELS  = [('CCA1', 'A'), ('CCA2', 'B'), ('CCA1', 'C')]   # (axis, archetype), left to right
 MARKERS = {'mouse': 's', 'human': 'o'}
 SHADE   = {'mouse': ('black', 0.25), 'human': ('white', 0.45)}   # blend of the archetype color
 
 ROWS         = [('human', 'Human (Jorstad23), mouse scores'), ('mouse', 'Mouse (Cheng22)')]
-SCORE_PCTILE = (5, 95)   # color range of score B'
-DIFF_PCTILE  = 95        # color range of C' - A': +/- this percentile of |C' - A'|
+SCORE_PCTILE = (5, 95)   # color range of score B
+DIFF_PCTILE  = 95        # color range of C - A: +/- this percentile of |C - A|
 POINT_S      = 3
 FS_TITLE     = 10
 FS_LABEL     = 9
 FS_TICK      = 8
-CMAP_B    = LinearSegmentedColormap.from_list('b', ['gainsboro', 'lightgray', ARCH_COLORS["B'"]])
-CMAP_DIFF = LinearSegmentedColormap.from_list('ca', [ARCH_COLORS["A'"], 'lightgray', ARCH_COLORS["C'"]])
+CMAP_B    = LinearSegmentedColormap.from_list('b', ['gainsboro', 'lightgray', ARCH_COLORS['B']])
+CMAP_DIFF = LinearSegmentedColormap.from_list('ca', [ARCH_COLORS['A'], 'lightgray', ARCH_COLORS['C']])
 
 os.makedirs(os.path.dirname(OUT_PDF), exist_ok=True)
 plt.rcParams['pdf.fonttype'] = 42
@@ -72,11 +72,11 @@ def species_shade(color, name):
 
 def embedding_panels(c):
     """(title, values, cmap, (vmin, vmax), colorbar label) for one species."""
-    b = c["score_B'"].to_numpy()
-    ca = (c["score_C'"] - c["score_A'"]).to_numpy()
+    b = c["score_B"].to_numpy()
+    ca = (c["score_C"] - c["score_A"]).to_numpy()
     lim = np.percentile(np.abs(ca), DIFF_PCTILE)
-    return [("score B'", b, CMAP_B, tuple(np.percentile(b, SCORE_PCTILE)), 'archetype score'),
-            ("score C' − A'", ca, CMAP_DIFF, (-lim, lim), 'score difference')]
+    return [("score B", b, CMAP_B, tuple(np.percentile(b, SCORE_PCTILE)), 'archetype score'),
+            ("score C − A", ca, CMAP_DIFF, (-lim, lim), 'score difference')]
 
 
 def draw_triangle(ax, aa):
