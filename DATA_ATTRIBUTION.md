@@ -25,7 +25,7 @@ bundles; a copy of this file is in each bundle, as `ATTRIBUTION.md`.
 | `Cheng22_Xie25_L23_ABC_genes_n286.csv` | adult L2/3 archetype genes, the seed of the archetype genes | 2/01 | our lab | CC BY 4.0 |
 | `TableS4_L23_archetypal_genes.tsv` | L2/3 archetype genes per condition (Table S4 of this study); exact-match check only | 2/01 | this study (unpublished) | CC BY 4.0 |
 | `gene_sets_l23{a,b,c}_250423.csv` | module (M1-M5) of each archetype gene | 2/05 | our lab | CC BY 4.0 |
-| `human_mouse_orthologs.tsv` | 1-to-1 human-mouse ortholog pairs | 1/02, 1/03, 1/04 | upstream source not recorded | cite the source once it is identified |
+| `human_mouse_orthologs.tsv` | human-mouse ortholog pairs, every orthology type (the scripts keep 1-to-1 pairs) | 1/02, 1/03, 1/04 | Ensembl release 115 [6], BioMart: human genes with their mouse homologs (gene names) | no restrictions; cite [6] |
 
 ## External bundle
 
@@ -44,6 +44,7 @@ bundles; a copy of this file is in each bundle, as `ATTRIBUTION.md`.
   share, and use the data without restriction beyond providing attribution".
 - **GEO:** NCBI "places no restrictions on the use or distribution of the GEO data".
 - **Dryad** publishes every dataset under [CC0](https://creativecommons.org/publicdomain/zero/1.0/).
+- **Ensembl** data are free to use, with no restrictions.
 
 ## References
 
@@ -66,3 +67,8 @@ bundles; a copy of this file is in each bundle, as `ATTRIBUTION.md`.
 5. Fang R, et al. Conservation and divergence of cortical cell organization in human and mouse revealed by
    MERFISH. *Science* 377, 56-62 (2022). [doi:10.1126/science.abm1741](https://doi.org/10.1126/science.abm1741).
    Data: Dryad [doi:10.5061/dryad.x3ffbg7mw](https://doi.org/10.5061/dryad.x3ffbg7mw).
+6. Dyer SC, et al. Ensembl 2025. *Nucleic Acids Research* 53, D948-D957 (2025).
+   [doi:10.1093/nar/gkae1071](https://doi.org/10.1093/nar/gkae1071). Data: Ensembl release 115 (September
+   2025), [BioMart](https://sep2025.archive.ensembl.org/biomart/martview): dataset Human genes, attributes
+   "Gene name" and "Mouse gene name", unique rows with a mouse homolog; header renamed to `human_symbol`,
+   `mouse_symbol`.
