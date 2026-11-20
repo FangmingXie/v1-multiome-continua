@@ -8,6 +8,7 @@ set -euo pipefail
 cd "$(dirname "$0")"
 export PYTHONNOUSERSITE=1          # ignore ~/.local packages; use only the env's (numpy 1.26.4)
 export PYTHONPATH=src
+export SOURCE_DATE_EPOCH=0         # fixed PDF creation date, so unchanged figures stay byte-identical
 
 # Every folder reads only from itself, lower-numbered folders and data/input/.
 if [ $# -gt 0 ]; then FOLDERS=("$@"); else FOLDERS=(1_mouse_human 2_development 3_regulon 4_dr 5_easifish); fi
@@ -21,6 +22,6 @@ for f in "${FOLDERS[@]}"; do
         python -u "$s" > "$log" 2>&1 || { echo "FAILED: $s (see $log)"; tail -20 "$log"; exit 1; }
     done
 done
-# README.md is the figure report: every PDF in figures/ must be linked from it (skipped for 0_prep alone)
+# README.md is the figure report: warn about PDFs in figures/ it does not link (skipped for 0_prep alone)
 if [ "${FOLDERS[*]}" != "0_prep" ]; then python check_readme_figures.py; fi
 echo "$(date +%T) done"

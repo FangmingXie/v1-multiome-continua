@@ -51,7 +51,7 @@ Rebuilding `data/input/` from `data/raw/` (0_prep) and publishing new bundles (m
 
 ## Scripts and figures
 Each figure script's row links the PDFs it draws, so this section doubles as the figure report.
-`run_all.sh` ends with `check_readme_figures.py`, which fails if a PDF in `figures/` is not linked here
+`run_all.sh` ends with `check_readme_figures.py`, which warns if a PDF in `figures/` is not linked here
 or a link points to a missing file.
 
 ### 1. Mouse vs human L2/3
