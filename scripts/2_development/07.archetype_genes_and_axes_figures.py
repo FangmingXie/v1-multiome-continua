@@ -2,10 +2,10 @@
 variance of each Age along the A-C and B axes, and the number of archetype genes per condition, NR vs DR.
 
   07.pc_space_archetype_scores.pdf
-    one column per Age (NR P6-P21, then DR P12-P21); cells in the
-    P21 (PC1, PC2) with the P21 archetype triangle (dashed). Row 1
-    colored by score C - A, row 2 by score B (2_development/01); color
-    range = 5th-95th percentile over all cells.
+    one column per NR Age (P6-P21); cells in the P21 (PC1, PC2) with
+    the P21 archetype triangle (dashed). Row 1 colored by score C - A,
+    row 2 by score B (2_development/01); color range = 5th-95th
+    percentile over the NR cells.
   07.axis_variance_over_age.pdf
     variance over postnatal day of P8 PC1, the A-C axis and the B axis;
     lines = per Age, markers = per Sample, dashed = shuffled-gene null.
@@ -13,7 +13,7 @@ variance of each Age along the A-C and B axes, and the number of archetype genes
     B by the max B variance.
   07.archetype_gene_counts.pdf
     number of A/B/C genes per condition (2_development/01, = Table S4);
-    panels A and C, then B; solid = NR, dashed = DR.
+    panels A and C, then B; NR conditions only.
 
 Reads:
   results/2_development/02.yoo25_l23_hvg_pcs_cells.tsv
@@ -61,6 +61,7 @@ NULL_COLORS = {'NR': 'gray', 'DR': 'lightgray'}
 MARKERS     = {'NR': 'o', 'DR': 's'}
 COUNT_PANELS = ['AC', 'B']                        # archetypes per gene-count panel
 COUNT_COLORS = {'A': 'C0', 'B': 'C1', 'C': 'C2'}
+NR_AGES      = [age for age, (day, cond) in AGES.items() if cond == 'NR']
 
 
 def mix(c1, c2, w=0.5):
@@ -79,9 +80,9 @@ def b_cmap():
 
 
 def score_row(fig, axs, cells, aa, col, cmap, label):
-    """One row of PC1/PC2 panels, one per Age, colored by `col`, with a colorbar at the row's end."""
+    """One row of PC1/PC2 panels, one per NR Age, colored by `col`, with a colorbar at the row's end."""
     vmin, vmax = np.percentile(cells[col], PCTILES)
-    for ax, age in zip(axs, AGES):
+    for ax, age in zip(axs, NR_AGES):
         c = cells[cells['Age'] == age]
         sc = ax.scatter(c['pc_later1'], c['pc_later2'], c=c[col], cmap=cmap, vmin=vmin, vmax=vmax,
                         s=POINT_S, edgecolor='none', rasterized=True)
@@ -126,12 +127,13 @@ aa = arch[['pc_later1', 'pc_later2']].to_numpy().T
 var = pd.read_csv(INPUT_VAR, sep='\t')
 os.makedirs(os.path.dirname(OUT_PC12), exist_ok=True)
 
-# cells in P21 PC space, colored by archetype score
-n = len(AGES)
+# NR cells in P21 PC space, colored by archetype score
+nr_cells = cells[cells['Age'].isin(NR_AGES)]
+n = len(NR_AGES)
 fig, axs = plt.subplots(2, n, figsize=(1.75 * n, 3.7), sharex=True, sharey=True, layout='constrained')
-score_row(fig, axs[0], cells, aa, 'score_c_minus_a', ac_cmap(), 'score C − A')
-score_row(fig, axs[1], cells, aa, 'score_b', b_cmap(), 'score B')
-for ax, age in zip(axs[0], AGES):
+score_row(fig, axs[0], nr_cells, aa, 'score_c_minus_a', ac_cmap(), 'score C − A')
+score_row(fig, axs[1], nr_cells, aa, 'score_b', b_cmap(), 'score B')
+for ax, age in zip(axs[0], NR_AGES):
     ax.set_title(age, fontsize=FS_TITLE)
 axs[1, 0].set_xlabel('PC1 (P21)', fontsize=FS_LABEL)
 for ax in axs[:, 0]:
@@ -157,12 +159,10 @@ print(f'wrote {OUT_VAR}')
 genes = pd.read_csv(INPUT_GENES, sep='\t')
 n_genes = genes.groupby(['archetype', 'cond']).size()
 nr = {age: day for age, (day, cond) in AGES.items() if cond == 'NR'}
-dr = {age: day for age, (day, cond) in AGES.items() if cond == 'DR'}
 fig, axs = plt.subplots(1, len(COUNT_PANELS), figsize=(4 * len(COUNT_PANELS), 4))
 for ax, ks in zip(axs, COUNT_PANELS):
     for k in ks:
-        ax.plot(list(nr.values()), [n_genes.get((k, c), 0) for c in nr], '-o', fillstyle='none', c=COUNT_COLORS[k], label=f'{k} NR')
-        ax.plot(list(dr.values()), [n_genes.get((k, c), 0) for c in dr], '--s', fillstyle='none', c=COUNT_COLORS[k], label=f'{k} DR')
+        ax.plot(list(nr.values()), [n_genes.get((k, c), 0) for c in nr], '-o', fillstyle='none', c=COUNT_COLORS[k], label=k)
     ax.set(xticks=list(nr.values()), xlabel='time (P)', ylabel='num. of genes' if ks == COUNT_PANELS[0] else None)
     ax.set_ylim(bottom=0)
     ax.legend()

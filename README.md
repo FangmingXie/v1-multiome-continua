@@ -100,7 +100,7 @@ Folder 2's `04`-`06` also compare NR and DR, for genes and modules.
 |---|---|---|
 | `01` | Archetype scores along the A-C axis (P21 snRNA) and along L2/3 depth (P21 MERFISH); EASI-FISH LM- vs RL-projecting cells: depth profiles and x-y distribution, against a label-shuffle null | |
 | `02` | Figure of 01: archetype scores next to the LM and RL depth profiles | [02.archetype_scores_and_projection_depth.pdf](figures/5_easifish/02.archetype_scores_and_projection_depth.pdf) |
-| `03` | Figures of 01: EASI-FISH cell maps, depth profiles and x-y analyses | [03.easifish_cell_maps.pdf](figures/5_easifish/03.easifish_cell_maps.pdf)<br>[03.easifish_depth_profiles.pdf](figures/5_easifish/03.easifish_depth_profiles.pdf)<br>[03.easifish_xy_depth_difference_null.pdf](figures/5_easifish/03.easifish_xy_depth_difference_null.pdf)<br>[03.easifish_xy_projection_bias.pdf](figures/5_easifish/03.easifish_xy_projection_bias.pdf) |
+| `03` | Figures of 01: EASI-FISH cell maps; depth profiles and x-y analyses | [03.easifish_cell_maps.pdf](figures/5_easifish/03.easifish_cell_maps.pdf)<br>[03.easifish_depth_and_xy.pdf](figures/5_easifish/03.easifish_depth_and_xy.pdf) |
 
 ## Layout
 ```
