@@ -15,10 +15,10 @@ DOWNLOAD_DIR="$REPO_ROOT/data/downloads"
 
 VERSION="2026-11-20"
 CORE_ARCHIVE="v1-multiome-continua_input_core_${VERSION}.tar.gz"
-CORE_DRIVE_ID=""          # Google Drive file ID, set after upload
+CORE_DRIVE_ID="10kRY471qCVIJj3j6GRAzAmrYdjXbCWNS"
 CORE_SHA256="840c9af2b632a876f44c56b9ee2da55d62ae809130150d9826d820f801c4c693"
 EXTERNAL_ARCHIVE="v1-multiome-continua_input_external_${VERSION}.tar.gz"
-EXTERNAL_DRIVE_ID=""      # Google Drive file ID, set after upload
+EXTERNAL_DRIVE_ID="1yhkWYA0xS0GC7xOS-CQS1K3ZN45ALzog"
 EXTERNAL_SHA256="6dae15d06fd0143ede8fb34729e8d219322c299f749f32af99715da392bacf41"
 
 CORE_ONLY=0
