@@ -1,4 +1,4 @@
-"""Extract the L2/3 MERFISH cells, NR P28 (1_mouse_human/06) and NR P21 (5_easifish/02).
+"""Extract the L2/3 MERFISH cells, NR P28 (1_mouse_human/04) and NR P21 (5_easifish/01).
 
 Every later step that needs MERFISH L2/3 cells reads these extracts instead of the raw objects.
 L2/3 = gated_pred_subclass == 'L2/3' of the MERFISH cells (modality == 'merfish') of the combined objects.

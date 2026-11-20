@@ -1,4 +1,4 @@
-"""Figures of 06: conserved L2/3 A/C genes in mouse vs human MERFISH, on one relative L2/3 depth scale.
+"""Figures of 04: conserved L2/3 A/C genes in mouse vs human MERFISH, on one relative L2/3 depth scale.
 
   OUT_FIG_PROFILE  per gene (rows = A, C side): mean log expression per relative-depth bin divided by the
                    section's peak bin, mean +- SEM over sections, mouse vs human.
@@ -11,12 +11,12 @@
                    L2/3; right, the flattened cells without depth outliers on the relative scale.
 
 Reads:
-  results/1_mouse_human/06.l23_merfish_{genes,sections,top_fit_points,rel_depth_profiles}.tsv
-  results/1_mouse_human/06.l23_merfish_cells.parquet
+  results/1_mouse_human/04.l23_merfish_{genes,sections,top_fit_points,rel_depth_profiles}.tsv
+  results/1_mouse_human/04.l23_merfish_cells.parquet
 Outputs:
-  figures/1_mouse_human/08.l23_selected_genes_rel_depth_profiles.pdf
-  figures/1_mouse_human/08.l23_selected_genes_in_situ_all_sections.pdf
-  figures/1_mouse_human/08.l23_top_fit_all_sections.pdf
+  figures/1_mouse_human/06.l23_selected_genes_rel_depth_profiles.pdf
+  figures/1_mouse_human/06.l23_selected_genes_in_situ_all_sections.pdf
+  figures/1_mouse_human/06.l23_top_fit_all_sections.pdf
 """
 
 import os
@@ -32,14 +32,14 @@ REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fi
 
 RES_DIR      = os.path.join(REPO_ROOT, 'results', '1_mouse_human')
 FIG_DIR      = os.path.join(REPO_ROOT, 'figures', '1_mouse_human')
-IN_GENES     = os.path.join(RES_DIR, '06.l23_merfish_genes.tsv')
-IN_SECTIONS  = os.path.join(RES_DIR, '06.l23_merfish_sections.tsv')
-IN_POINTS    = os.path.join(RES_DIR, '06.l23_merfish_top_fit_points.tsv')
-IN_CELLS     = os.path.join(RES_DIR, '06.l23_merfish_cells.parquet')
-IN_PROFILES  = os.path.join(RES_DIR, '06.l23_merfish_rel_depth_profiles.tsv')
-OUT_FIG_PROFILE = os.path.join(FIG_DIR, '08.l23_selected_genes_rel_depth_profiles.pdf')
-OUT_FIG_ALLSEC  = os.path.join(FIG_DIR, '08.l23_selected_genes_in_situ_all_sections.pdf')
-OUT_FIG_CURVE   = os.path.join(FIG_DIR, '08.l23_top_fit_all_sections.pdf')
+IN_GENES     = os.path.join(RES_DIR, '04.l23_merfish_genes.tsv')
+IN_SECTIONS  = os.path.join(RES_DIR, '04.l23_merfish_sections.tsv')
+IN_POINTS    = os.path.join(RES_DIR, '04.l23_merfish_top_fit_points.tsv')
+IN_CELLS     = os.path.join(RES_DIR, '04.l23_merfish_cells.parquet')
+IN_PROFILES  = os.path.join(RES_DIR, '04.l23_merfish_rel_depth_profiles.tsv')
+OUT_FIG_PROFILE = os.path.join(FIG_DIR, '06.l23_selected_genes_rel_depth_profiles.pdf')
+OUT_FIG_ALLSEC  = os.path.join(FIG_DIR, '06.l23_selected_genes_in_situ_all_sections.pdf')
+OUT_FIG_CURVE   = os.path.join(FIG_DIR, '06.l23_top_fit_all_sections.pdf')
 
 ALLSEC_YLIM = (-0.35, 1.35)   # all-sections figure: same relative-depth window in every panel
 GENE_PCTILE = 98              # all-sections figure: per gene and section, log expression / this percentile, capped at 1

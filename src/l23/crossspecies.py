@@ -436,8 +436,10 @@ def write_spectrum(res, out_path):
 
 
 def write_weights(res, A, B, boot_h, boot_m, human_vx, mouse_vx, out_human, out_mouse):
-    """Unit-norm canonical weights per species (rows CCA1..CCAr), with bootstrap stability."""
+    """Unit-norm canonical weights per species (rows CCA1..CCAr), with bootstrap stability; written, and
+    returned as {'human': table, 'mouse': table} indexed by component."""
     r = res['r']
+    tables = {}
     for side, vx, boot, out in [('human', human_vx, boot_h, out_human), ('mouse', mouse_vx, boot_m, out_mouse)]:
         rows = []
         for i in range(r):
@@ -454,5 +456,7 @@ def write_weights(res, A, B, boot_h, boot_m, human_vx, mouse_vx, out_human, out_
             row['stable'] = (i in boot_h and i in boot_m
                              and boot_h[i][0] >= STABLE_THRESH and boot_m[i][0] >= STABLE_THRESH)
             rows.append(row)
-        pd.DataFrame(rows).to_csv(out, sep='\t', index=False)
+        tables[side] = pd.DataFrame(rows).set_index('component')
+        tables[side].to_csv(out, sep='\t')
         print(f'  saved {out}')
+    return tables

@@ -1,15 +1,15 @@
-"""Figure of 05: mouse L2/3 archetype scores A', B', C' along the conserved CCA axes, mouse vs human.
+"""Figure of 03: mouse L2/3 archetype scores A', B', C' along the conserved CCA axes, mouse vs human.
 
 One panel per archetype (A' along CCA1, B' along CCA2, C' along CCA1): x = CCA percentile within
 species; y = score z-scored within species, mean +/- SEM per bin; mouse and human on twin y axes (mouse
 left, darker shade of the archetype color; human right, lighter shade), 0 centered on both. The human
-legend entry carries 05's human-mouse r and permutation p.
+legend entry carries 03's human-mouse r and permutation p.
 
 Reads:
-  results/1_mouse_human/05.l23_abc_scores_along_cca_profiles.tsv
-  results/1_mouse_human/05.l23_abc_scores_along_cca_stats.tsv
+  results/1_mouse_human/03.l23_abc_scores_along_cca_profiles.tsv
+  results/1_mouse_human/03.l23_abc_scores_along_cca_stats.tsv
 Outputs:
-  figures/1_mouse_human/07.l23_abc_normalized_compact.pdf
+  figures/1_mouse_human/05.l23_abc_normalized_compact.pdf
 """
 
 import os
@@ -23,9 +23,9 @@ from l23.constants import ARCH_COLORS
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 RES_DIR     = os.path.join(REPO_ROOT, 'results', '1_mouse_human')
-IN_PROFILES = os.path.join(RES_DIR, '05.l23_abc_scores_along_cca_profiles.tsv')
-IN_STATS    = os.path.join(RES_DIR, '05.l23_abc_scores_along_cca_stats.tsv')
-OUT_PDF     = os.path.join(REPO_ROOT, 'figures', '1_mouse_human', '07.l23_abc_normalized_compact.pdf')
+IN_PROFILES = os.path.join(RES_DIR, '03.l23_abc_scores_along_cca_profiles.tsv')
+IN_STATS    = os.path.join(RES_DIR, '03.l23_abc_scores_along_cca_stats.tsv')
+OUT_PDF     = os.path.join(REPO_ROOT, 'figures', '1_mouse_human', '05.l23_abc_normalized_compact.pdf')
 
 PANELS  = [('CCA1', "A'"), ('CCA2', "B'"), ('CCA1', "C'")]   # (axis, archetype), left to right
 MARKERS = {'mouse': 's', 'human': 'o'}

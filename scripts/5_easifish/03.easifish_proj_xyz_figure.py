@@ -1,26 +1,26 @@
-"""Figures of 04: EASI-FISH LM vs RL retrograde labels in 3 samples (scomics revision/e00).
+"""Figures of 01: EASI-FISH LM vs RL retrograde labels in 3 samples (scomics revision/e00).
 
-  05.easifish_cells_xyz.pdf        rows = samples; x-y, x-z, y-z views of every cell (gray) with LM, RL and
+  03.easifish_cells_xyz.pdf        rows = samples; x-y, x-z, y-z views of every cell (gray) with LM, RL and
                                    both cells on top (n in the legend); depth (z) down.
-  05.easifish_depth_profiles.pdf   rows: cells per 20 um depth bin (LM, RL, both); fraction of the group's
+  03.easifish_depth_profiles.pdf   rows: cells per 20 um depth bin (LM, RL, both); fraction of the group's
                                    binned cells per bin (LM, RL); columns = samples; values at bin centers;
                                    dashed lines = L2/3 bounds (L23_BOUNDS).
-  05.easifish_xy_proj_bias.pdf     rows: log2((#RL + 1) / (#LM + 1)) per 100 um x-y bin; mean depth of RL minus
+  03.easifish_xy_proj_bias.pdf     rows: log2((#RL + 1) / (#LM + 1)) per 100 um x-y bin; mean depth of RL minus
                                    LM cells per bin (blank where either is absent); columns = samples.
-  05.easifish_xy_dz_null.pdf       per sample and pooled: density of the per-bin mean-depth difference
-                                   (RL - LM), data vs the label-shuffle null of 04.
+  03.easifish_xy_dz_null.pdf       per sample and pooled: density of the per-bin mean-depth difference
+                                   (RL - LM), data vs the label-shuffle null of 01.
 Display orientation per sample as e00 (ROTATE: sample 1 is shown rotated by 180 degrees in x-y); display only.
 
 Reads:
   data/input/easifish/easifish_sample{1,2,3}_res.csv   (cell positions and labels, for the dot maps)
-  results/5_easifish/04.easifish_depth_hist.tsv
-  results/5_easifish/04.easifish_xy_bins.tsv
-  results/5_easifish/04.easifish_xy_dz_null.tsv
+  results/5_easifish/01.easifish_depth_hist.tsv
+  results/5_easifish/01.easifish_xy_bins.tsv
+  results/5_easifish/01.easifish_xy_dz_null.tsv
 Outputs:
-  figures/5_easifish/05.easifish_cells_xyz.pdf
-  figures/5_easifish/05.easifish_depth_profiles.pdf
-  figures/5_easifish/05.easifish_xy_proj_bias.pdf
-  figures/5_easifish/05.easifish_xy_dz_null.pdf
+  figures/5_easifish/03.easifish_cells_xyz.pdf
+  figures/5_easifish/03.easifish_depth_profiles.pdf
+  figures/5_easifish/03.easifish_xy_proj_bias.pdf
+  figures/5_easifish/03.easifish_xy_dz_null.pdf
 """
 
 import os
@@ -37,14 +37,14 @@ SAMPLES        = (1, 2, 3)
 INPUT_EASIFISH = {s: os.path.join(REPO_ROOT, 'data', 'input', 'easifish', f'easifish_sample{s}_res.csv')
                   for s in SAMPLES}
 RES_DIR        = os.path.join(REPO_ROOT, 'results', '5_easifish')
-IN_DEPTH       = os.path.join(RES_DIR, '04.easifish_depth_hist.tsv')
-IN_XY          = os.path.join(RES_DIR, '04.easifish_xy_bins.tsv')
-IN_NULL        = os.path.join(RES_DIR, '04.easifish_xy_dz_null.tsv')
+IN_DEPTH       = os.path.join(RES_DIR, '01.easifish_depth_hist.tsv')
+IN_XY          = os.path.join(RES_DIR, '01.easifish_xy_bins.tsv')
+IN_NULL        = os.path.join(RES_DIR, '01.easifish_xy_dz_null.tsv')
 FIG_DIR        = os.path.join(REPO_ROOT, 'figures', '5_easifish')
-OUT_CELLS      = os.path.join(FIG_DIR, '05.easifish_cells_xyz.pdf')
-OUT_DEPTH      = os.path.join(FIG_DIR, '05.easifish_depth_profiles.pdf')
-OUT_XY         = os.path.join(FIG_DIR, '05.easifish_xy_proj_bias.pdf')
-OUT_NULL       = os.path.join(FIG_DIR, '05.easifish_xy_dz_null.pdf')
+OUT_CELLS      = os.path.join(FIG_DIR, '03.easifish_cells_xyz.pdf')
+OUT_DEPTH      = os.path.join(FIG_DIR, '03.easifish_depth_profiles.pdf')
+OUT_XY         = os.path.join(FIG_DIR, '03.easifish_xy_proj_bias.pdf')
+OUT_NULL       = os.path.join(FIG_DIR, '03.easifish_xy_dz_null.pdf')
 
 GROUP_COLORS = {'LM': 'magenta', 'RL': 'green', 'both': 'orange'}
 ROTATE       = {1: True, 2: False, 3: False}   # x-y view rotated by 180 degrees (as e00)

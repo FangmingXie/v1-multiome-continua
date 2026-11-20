@@ -2,19 +2,19 @@
 Ported from scomics it_evo/18b; the mouse archetype triangle is drawn on the mouse row, the human
 archetypes (18b's human PCHA vertices) are not shown.
 
-Cells at their CCA1, CCA2 coordinates (script 05, from script 04's canonical weights): rows = species
-(human Jorstad23 cells with the mouse-derived scores of script 03; mouse Cheng22 cells with the native
+Cells at their CCA1, CCA2 coordinates (script 03, from its canonical weights): rows = species
+(human Jorstad23 cells with the mouse-derived scores of script 02; mouse Cheng22 cells with the native
 scores of script 02), columns = score B' and score C' - A'. CCA1 is reflected in both rows (CCA1') so the
 two embeddings share one orientation; the canonical r of each axis is in the axis label. Color range per
 panel: B' = its 5th-95th percentile; C' - A' = +/- the 95th percentile of |C' - A'| (gray = 0).
-Mouse row: the mouse PCHA archetypes (script 02) projected like the mouse cells (script 05), as a triangle.
+Mouse row: the mouse PCHA archetypes (script 02) projected like the mouse cells (script 03), as a triangle.
 
 Reads:
-  results/1_mouse_human/05.l23_cca_cells.tsv
-  results/1_mouse_human/05.l23_cca_mouse_archetypes.tsv
-  results/1_mouse_human/04.l23_axis_cca_weights_human.tsv
+  results/1_mouse_human/03.l23_cca_cells.tsv
+  results/1_mouse_human/03.l23_cca_mouse_archetypes.tsv
+  results/1_mouse_human/03.l23_axis_cca_weights_human.tsv
 Outputs:
-  figures/1_mouse_human/09.l23_abc_scores_cca_embedding.pdf
+  figures/1_mouse_human/07.l23_abc_scores_cca_embedding.pdf
 """
 
 import os
@@ -27,10 +27,10 @@ from l23.constants import ARCH_COLORS
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-IN_CELLS   = os.path.join(REPO_ROOT, 'results', '1_mouse_human', '05.l23_cca_cells.tsv')
-IN_M_AA    = os.path.join(REPO_ROOT, 'results', '1_mouse_human', '05.l23_cca_mouse_archetypes.tsv')
-IN_WEIGHTS = os.path.join(REPO_ROOT, 'results', '1_mouse_human', '04.l23_axis_cca_weights_human.tsv')
-OUT_PDF    = os.path.join(REPO_ROOT, 'figures', '1_mouse_human', '09.l23_abc_scores_cca_embedding.pdf')
+IN_CELLS   = os.path.join(REPO_ROOT, 'results', '1_mouse_human', '03.l23_cca_cells.tsv')
+IN_M_AA    = os.path.join(REPO_ROOT, 'results', '1_mouse_human', '03.l23_cca_mouse_archetypes.tsv')
+IN_WEIGHTS = os.path.join(REPO_ROOT, 'results', '1_mouse_human', '03.l23_axis_cca_weights_human.tsv')
+OUT_PDF    = os.path.join(REPO_ROOT, 'figures', '1_mouse_human', '07.l23_abc_scores_cca_embedding.pdf')
 
 ROWS         = [('human', 'Human (Jorstad23), mouse scores'), ('mouse', 'Mouse (Cheng22)')]
 SCORE_PCTILE = (5, 95)   # color range of score B'

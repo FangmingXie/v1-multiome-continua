@@ -1,6 +1,6 @@
-"""Dot matrix of 02's L2/3 enrichment: enriched +/+ TFs x A'/B'/C' (developmental archetype genes).
+"""Dot matrix of 01's L2/3 enrichment: enriched +/+ TFs x A'/B'/C' (developmental archetype genes).
 
-Rows are 02's selected TFs (star rule in >= 1 archetype), grouped by peak archetype and ordered
+Rows are 01's selected TFs (star rule in >= 1 archetype), grouped by peak archetype and ordered
 by log2_enr within each group. Encoding (src/l23/regulon_plot.py):
   colour  = log2_enr
   area    = overlap / n_markers
@@ -8,10 +8,10 @@ by log2_enr within each group. Encoding (src/l23/regulon_plot.py):
   outline = star rule (fdr_strat < 0.05, log2_enr > 1, overlap >= 5)
 
 Reads:
-  results/3_regulon/02.l23_stratified_enrichment.tsv
-  results/3_regulon/02.enriched_regulon_selection.tsv
+  results/3_regulon/01.l23_stratified_enrichment.tsv
+  results/3_regulon/01.enriched_regulon_selection.tsv
 Outputs:
-  figures/3_regulon/05.regulon_dotplot.pdf
+  figures/3_regulon/04.regulon_dotplot.pdf
 """
 
 import os
@@ -30,9 +30,9 @@ from l23.regulon_plot import (SIGN, STAR_FDR, STAR_LOG2ENR, MASK_MIN_OVERLAP, MA
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-INPUT_ENRICHMENT = os.path.join(REPO_ROOT, 'results', '3_regulon', '02.l23_stratified_enrichment.tsv')
-INPUT_SELECTION = os.path.join(REPO_ROOT, 'results', '3_regulon', '02.enriched_regulon_selection.tsv')
-OUT_PDF = os.path.join(REPO_ROOT, 'figures', '3_regulon', '05.regulon_dotplot.pdf')
+INPUT_ENRICHMENT = os.path.join(REPO_ROOT, 'results', '3_regulon', '01.l23_stratified_enrichment.tsv')
+INPUT_SELECTION = os.path.join(REPO_ROOT, 'results', '3_regulon', '01.enriched_regulon_selection.tsv')
+OUT_PDF = os.path.join(REPO_ROOT, 'figures', '3_regulon', '04.regulon_dotplot.pdf')
 
 COLS = ["A'", "B'", "C'"]
 CELL_W, CELL_H = 0.50, 0.21      # inches per matrix cell

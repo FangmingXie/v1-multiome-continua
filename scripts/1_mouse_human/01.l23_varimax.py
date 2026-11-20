@@ -3,7 +3,7 @@
 Per species: HVGs = top N_HVG by raw variance of the log-normalized matrix; StandardScaler -> PCA(N_PCS)
 -> Kaiser varimax; VX components ordered by descending score variance (l23.crossspecies.pca_varimax).
 The post-varimax variance partition is what the Gate-A VX selection (VX dominated by cell type) of
-scripts 02 and 04 is read from.
+scripts 02 and 03 is read from.
   mouse  the integer raw counts of the 0_prep/01 Cheng22 L2/3 extract are normalized with
          log2(CP10k + 1). Factors: cell_type / sample / library_size.
   human  .X is already log-normalized (ln(CPM+1)) and is used directly. Gene identifiers are ENSG in

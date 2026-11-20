@@ -1,9 +1,9 @@
 """TF -> target-gene network of the L2/3-archetype-enriched Yoo25 regulons (activating, +/+): nodes, edges, layout.
 
 Nodes
-  - TF (square): every TF of 02's selection (+/+ regulon starred in at least one L2/3 archetype:
+  - TF (square): every TF of 01's selection (+/+ regulon starred in at least one L2/3 archetype:
     fdr_strat < 0.05, log2_enr > 1, overlap >= 5), coloured by its strongest archetype (max log2_enr).
-  - gene (circle): an L2/3 archetype marker (NR union, 02) that is a target of at least one selected TF,
+  - gene (circle): an L2/3 archetype marker (NR union, 01) that is a target of at least one selected TF,
     coloured by the archetype it marks. Markers are unique to one archetype. A target that is
     itself a selected TF is NOT a separate node: it is merged into that TF's square, so TF -> TF
     regulation lands on the square.
@@ -14,15 +14,15 @@ cross-archetype regulation is visible; self-regulation is a loop.
 Layout: free force-directed (every node moves), seeded from a fixed start -- TFs on a unit ring, each
 archetype on its own sector centred on ARCH_ANGLE, spread over TF_ARC_DEG in descending log2_enr; genes
 inside -- so the result is deterministic; then rotated so the A' -> C' TF centroids are horizontal (A'
-left) with B' below. Figure: 07.
+left) with B' below. Figure: 06.
 
 Reads:
-  results/3_regulon/02.enriched_regulon_selection.tsv
+  results/3_regulon/01.enriched_regulon_selection.tsv
   data/input/03.yoo25_l23_regulon_targets.tsv
-  results/3_regulon/02.l23_nr_union_markers.tsv
+  results/3_regulon/01.l23_nr_union_markers.tsv
 Outputs:
-  results/3_regulon/03.regulon_network_edges.tsv   (TF, Gene, tf_arch, gene_arch, target_is_tf)
-  results/3_regulon/03.regulon_network_nodes.tsv   (node, kind, arch, is_tf, x, y; in graph order)
+  results/3_regulon/02.regulon_network_edges.tsv   (TF, Gene, tf_arch, gene_arch, target_is_tf)
+  results/3_regulon/02.regulon_network_nodes.tsv   (node, kind, arch, is_tf, x, y; in graph order)
 """
 
 import os
@@ -36,11 +36,11 @@ from l23.constants import ARCH_COLORS
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 RES_DIR = os.path.join(REPO_ROOT, 'results', '3_regulon')
 
-INPUT_SELECTION = os.path.join(RES_DIR, '02.enriched_regulon_selection.tsv')
+INPUT_SELECTION = os.path.join(RES_DIR, '01.enriched_regulon_selection.tsv')
 INPUT_REGULONS = os.path.join(REPO_ROOT, 'data', 'input', '03.yoo25_l23_regulon_targets.tsv')
-INPUT_MARKERS = os.path.join(RES_DIR, '02.l23_nr_union_markers.tsv')
-OUT_EDGES = os.path.join(RES_DIR, '03.regulon_network_edges.tsv')
-OUT_NODES = os.path.join(RES_DIR, '03.regulon_network_nodes.tsv')
+INPUT_MARKERS = os.path.join(RES_DIR, '01.l23_nr_union_markers.tsv')
+OUT_EDGES = os.path.join(RES_DIR, '02.regulon_network_edges.tsv')
+OUT_NODES = os.path.join(RES_DIR, '02.regulon_network_nodes.tsv')
 
 # initial positions and free force-directed layout
 ARCH_ANGLE = {"A'": 90, "B'": 210, "C'": 330}

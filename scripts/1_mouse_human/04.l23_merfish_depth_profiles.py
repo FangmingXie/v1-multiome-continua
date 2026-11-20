@@ -2,7 +2,7 @@
 
 Genes: PROFILE_GENES (mouse symbol, a row per side; A = superficial, C = deep), mapped to human by 1-to-1
 orthologs (data/input/human_mouse_orthologs.tsv); every gene must be on both MERFISH panels (checked).
-INSITU_GENES (a subset) are drawn in situ by 08.
+INSITU_GENES (a subset) are drawn in situ by 06.
 Sections: every NR mouse section (PROFILE_MOUSE_SECTIONS) and the Fang22 human sections with >= 300
 eL2/3.IT cells in which every INSITU_GENES gene is detected in > H_MIN_DETECT of the L2/3 cells
 (PROFILE_HUMAN_SECTIONS; checked). Three other 4000-gene sections with >= 300 eL2/3.IT cells barely detect
@@ -21,7 +21,7 @@ Tukey's fences (Q1 - TUKEY_K IQR, Q3 + TUKEY_K IQR) are removed. Relative L2/3 d
 the same unit (L2/3 thicknesses), so mouse (~300 um band) and human (~1500 um band) share one scale.
 Profiles: per gene and section, mean log expression in N_REL_BINS equal-width relative-depth bins (cells
 outside [0, 1] left out), divided by its highest bin (peak = 1). Sections, not cells, are the replicates
-(08 plots mean +- SEM over sections): pooling cells first would weight sections by cell count and mix panels
+(06 plots mean +- SEM over sections): pooling cells first would weight sections by cell count and mix panels
 of different sensitivity (250 vs 4000 genes), whereas per-section peak normalization removes those offsets.
 
 Reads:
@@ -29,13 +29,13 @@ Reads:
   data/input/02.merfish_p28nr_l23.h5ad                                     (L2/3 cells, depth, expression)
   data/input/fang22_human_merfish/{section}.{features,genes,matrix}.csv          (every PROFILE_HUMAN_SECTIONS)
 Outputs:
-  results/1_mouse_human/06.l23_merfish_genes.tsv              (side, human_symbol, mouse_symbol, insitu)
-  results/1_mouse_human/06.l23_merfish_sections.tsv           (every section: cells, outliers, L2/3 thickness,
+  results/1_mouse_human/04.l23_merfish_genes.tsv              (side, human_symbol, mouse_symbol, insitu)
+  results/1_mouse_human/04.l23_merfish_sections.tsv           (every section: cells, outliers, L2/3 thickness,
                                                                top-of-L2/3 fit, INSITU_GENES detection)
-  results/1_mouse_human/06.l23_merfish_top_fit_points.tsv     (every section: the points the top was fit to)
-  results/1_mouse_human/06.l23_merfish_cells.parquet          (every section, every L2/3 cell: raw position,
+  results/1_mouse_human/04.l23_merfish_top_fit_points.tsv     (every section: the points the top was fit to)
+  results/1_mouse_human/04.l23_merfish_cells.parquet          (every section, every L2/3 cell: raw position,
                                                                outlier flag, relative position, log expression)
-  results/1_mouse_human/06.l23_merfish_rel_depth_profiles.tsv (every section: gene x bin profiles)
+  results/1_mouse_human/04.l23_merfish_rel_depth_profiles.tsv (every section: gene x bin profiles)
 """
 
 import os
@@ -50,17 +50,17 @@ RES_DIR    = os.path.join(REPO_ROOT, 'results', '1_mouse_human')
 IN_ORTHO   = os.path.join(REPO_ROOT, 'data', 'input', 'human_mouse_orthologs.tsv')
 IN_MOUSE   = os.path.join(REPO_ROOT, 'data', 'input', '02.merfish_p28nr_l23.h5ad')
 HUMAN_DIR  = os.path.join(REPO_ROOT, 'data', 'input', 'fang22_human_merfish')
-OUT_GENES    = os.path.join(RES_DIR, '06.l23_merfish_genes.tsv')
-OUT_SECTIONS = os.path.join(RES_DIR, '06.l23_merfish_sections.tsv')
-OUT_POINTS   = os.path.join(RES_DIR, '06.l23_merfish_top_fit_points.tsv')
-OUT_CELLS    = os.path.join(RES_DIR, '06.l23_merfish_cells.parquet')
-OUT_PROFILES = os.path.join(RES_DIR, '06.l23_merfish_rel_depth_profiles.tsv')
+OUT_GENES    = os.path.join(RES_DIR, '04.l23_merfish_genes.tsv')
+OUT_SECTIONS = os.path.join(RES_DIR, '04.l23_merfish_sections.tsv')
+OUT_POINTS   = os.path.join(RES_DIR, '04.l23_merfish_top_fit_points.tsv')
+OUT_CELLS    = os.path.join(RES_DIR, '04.l23_merfish_cells.parquet')
+OUT_PROFILES = os.path.join(RES_DIR, '04.l23_merfish_rel_depth_profiles.tsv')
 
 PROFILE_GENES = {   # mouse symbol, by side (A = superficial, C = deep); all on both MERFISH panels
     'A': ['Cdh13', 'Robo1', 'Epha6'],
     'C': ['Kcnh5', 'Tox', 'Lrp1b'],
 }
-INSITU_GENES = ['Cdh13', 'Kcnh5']   # drawn in situ (08); the human-section detection filter uses them
+INSITU_GENES = ['Cdh13', 'Kcnh5']   # drawn in situ (06); the human-section detection filter uses them
 H_MIN_DETECT = 0.10   # every human section must detect every INSITU_GENES gene in > this fraction of its
                       # L2/3 cells (checked)
 MOUSE_DEPTH_RANGE = (50, 450)      # um from pia; ~ the 5-95% depth range of L2/3 MERFISH cells

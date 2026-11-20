@@ -1,4 +1,5 @@
-"""Mouse L2/3 (Cheng22, P28 NR) archetypes: seeded PCHA on the Gate-A varimax subspace, markers and scores.
+"""Mouse L2/3 (Cheng22, P28 NR) archetypes: seeded PCHA on the Gate-A varimax subspace, markers and scores,
+and the mouse archetype scores on human L2/3 IT (Jorstad23) cells.
 
 PCHA (NOC archetypes) on the Gate-A mouse VX coordinates of script 01 (VX dominated by cell type in 01's
 post-varimax variance partition). Top N_TOP_CELLS cells per archetype by distance in VX space;
@@ -10,15 +11,21 @@ Expression is log2(CP10k + 1) from the integer raw counts, restricted to 01's HV
 loadings were fit on). log2FC is a difference of log2 values (no division by ln 2).
 Letters: archetype_k -> A, B, C (internal PCHA order); downstream relabel to the published primed
 letters: C -> A', B -> B', A -> C' (archetype_3 -> A', archetype_2 -> B', archetype_1 -> C').
+Human scores: each archetype's marker set is mapped through 1-to-1 human/mouse orthologs and scored on
+the human cells with the same recipe (per gene min-max clipped at SCORE_PCTILE_LO / SCORE_PCTILE_HI,
+mean over the archetype's ortholog list). Human .X is already log-normalized (ln(CPM+1)).
 
 Reads:
   results/1_mouse_human/01.mouse_l23_varimax_coords.tsv
   results/1_mouse_human/01.mouse_l23_varimax_loadings.tsv
   data/input/01.cheng22_p28nr_l23.h5ad
+  data/input/human_mouse_orthologs.tsv
+  data/input/jorstad23_human_WithinArea_L23IT.h5ad
 Outputs:
   results/1_mouse_human/02.mouse_l23_pcha_aa_vx.tsv      (the archetypes in the Gate-A VX space)
   results/1_mouse_human/02.mouse_l23_archetype_markers.tsv
   results/1_mouse_human/02.mouse_l23_archetype_scores.tsv
+  results/1_mouse_human/02.mouse_l23_archetype_scores_on_human_cells.tsv
 """
 
 import os
@@ -29,7 +36,7 @@ import scipy.stats
 from statsmodels.stats.multitest import multipletests
 
 from l23.archetype import SCA
-from l23.crossspecies import mouse_log2_cp10k
+from l23.crossspecies import load_orthologs, mouse_log2_cp10k
 from l23.expr import minmax_score
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -38,9 +45,12 @@ RES_DIR        = os.path.join(REPO_ROOT, 'results', '1_mouse_human')
 IN_VX_COORDS   = os.path.join(RES_DIR, '01.mouse_l23_varimax_coords.tsv')
 IN_VX_LOADINGS = os.path.join(RES_DIR, '01.mouse_l23_varimax_loadings.tsv')
 INPUT_MOUSE    = os.path.join(REPO_ROOT, 'data', 'input', '01.cheng22_p28nr_l23.h5ad')
+IN_ORTHOLOGS   = os.path.join(REPO_ROOT, 'data', 'input', 'human_mouse_orthologs.tsv')
+INPUT_HUMAN    = os.path.join(REPO_ROOT, 'data', 'input', 'jorstad23_human_WithinArea_L23IT.h5ad')
 OUT_PCHA_AA_VX = os.path.join(RES_DIR, '02.mouse_l23_pcha_aa_vx.tsv')
 OUT_MARKERS    = os.path.join(RES_DIR, '02.mouse_l23_archetype_markers.tsv')
 OUT_SCORES     = os.path.join(RES_DIR, '02.mouse_l23_archetype_scores.tsv')
+OUT_H_SCORES   = os.path.join(RES_DIR, '02.mouse_l23_archetype_scores_on_human_cells.tsv')
 
 VX_COLS          = ['VX1', 'VX2', 'VX5', 'VX7', 'VX8', 'VX9']   # Gate A (01's vx variance partition)
 NOC              = 3
@@ -54,6 +64,7 @@ SCORE_PCTILE_LO  = 2
 SCORE_PCTILE_HI  = 98
 TOP_CELL_FRAC_MAX = 0.25             # NOC * N_TOP_CELLS must stay under this fraction of cells
 ALPHABET         = ['A', 'B', 'C', 'D', 'E', 'F']
+GENE_NAME_COL    = 'feature_name'   # human gene symbols (var_names are ENSG)
 
 os.makedirs(RES_DIR, exist_ok=True)
 ndim = len(VX_COLS) - 1
@@ -131,5 +142,24 @@ for k, name in enumerate(archetype_names):
     print(f'  Score {name}: {len(genes)} genes')
 pd.DataFrame(scores, index=m_adata.obs_names.values,
              columns=[f'score_{n}' for n in archetype_names]).to_csv(OUT_SCORES, sep='\t')
-for p in (OUT_PCHA_AA_VX, OUT_MARKERS, OUT_SCORES):
+
+# --- the mouse archetype scores on human cells ---
+ortho = load_orthologs(IN_ORTHOLOGS)
+mouse_to_human = dict(zip(ortho['mouse_symbol'], ortho['human_symbol']))
+print(f'{len(mouse_to_human)} 1-to-1 orthologs')
+h_adata = ad.read_h5ad(INPUT_HUMAN)
+gene_to_idx = {g: i for i, g in enumerate(h_adata.var[GENE_NAME_COL].values)}
+h_scores = np.zeros((h_adata.n_obs, NOC), dtype=np.float32)
+for k, name in enumerate(archetype_names):
+    mouse_genes = markers_df.loc[markers_df['archetype'] == f'archetype_{k+1}', 'gene'].values
+    human_genes = [mouse_to_human[g] for g in mouse_genes
+                   if g in mouse_to_human and mouse_to_human[g] in gene_to_idx]
+    if not human_genes:
+        raise ValueError(f'no human orthologs of the archetype_{k+1} markers')
+    print(f'  Human score {name}: {len(human_genes)}/{len(mouse_genes)} mouse markers mapped')
+    mat = h_adata.X[:, [gene_to_idx[g] for g in human_genes]].toarray().astype(np.float32)
+    h_scores[:, k] = minmax_score(mat, SCORE_PCTILE_LO, SCORE_PCTILE_HI)
+pd.DataFrame(h_scores, index=h_adata.obs_names.values,
+             columns=[f'score_{n}' for n in archetype_names]).to_csv(OUT_H_SCORES, sep='\t')
+for p in (OUT_PCHA_AA_VX, OUT_MARKERS, OUT_SCORES, OUT_H_SCORES):
     print(f'Saved {p}')

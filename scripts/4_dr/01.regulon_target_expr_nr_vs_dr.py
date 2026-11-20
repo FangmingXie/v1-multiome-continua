@@ -1,8 +1,8 @@
 """Archetype-enriched Yoo25 L2/3 regulons: target-gene activity over postnatal age, NR vs DR.
 
-Regulons: every +/+ TF of 3_regulon/02's selection (developmental archetype genes, star rule;
+Regulons: every +/+ TF of 3_regulon/01's selection (developmental archetype genes, star rule;
 A' 12, B' 13, C' 5), +/+ targets from 0_prep/03, in archetype order and by descending log2_enr. The
-expression loader and the per-cell score are l23.regulon's (as 3_regulon/04): each target's
+expression loader and the per-cell score are l23.regulon's (as 3_regulon/03): each target's
 log2(CP10k+1) divided by its NORM_MAX_PCTILE percentile over ALL Yoo25 L2/3 cells (every age, NR and DR
 pooled, so both share one scale), capped at 1, averaged over the regulon's targets.
 
@@ -18,7 +18,7 @@ score. Figures: 03.
 Reads:
   data/input/01.yoo25_l23.h5ad
   data/input/03.yoo25_l23_regulon_targets.tsv
-  results/3_regulon/02.enriched_regulon_selection.tsv
+  results/3_regulon/01.enriched_regulon_selection.tsv
 Outputs:
   results/4_dr/01.regulon_target_expr_nr_vs_dr_replicates.tsv
   results/4_dr/01.regulon_target_expr_nr_vs_dr.tsv
@@ -37,7 +37,7 @@ REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fi
 RES_DIR = os.path.join(REPO_ROOT, 'results', '4_dr')
 INPUT_YOO25 = os.path.join(REPO_ROOT, 'data', 'input', '01.yoo25_l23.h5ad')
 INPUT_REGULONS = os.path.join(REPO_ROOT, 'data', 'input', '03.yoo25_l23_regulon_targets.tsv')
-INPUT_SELECTION = os.path.join(REPO_ROOT, 'results', '3_regulon', '02.enriched_regulon_selection.tsv')
+INPUT_SELECTION = os.path.join(REPO_ROOT, 'results', '3_regulon', '01.enriched_regulon_selection.tsv')
 OUT_REP_TSV = os.path.join(RES_DIR, '01.regulon_target_expr_nr_vs_dr_replicates.tsv')
 OUT_TSV = os.path.join(RES_DIR, '01.regulon_target_expr_nr_vs_dr.tsv')
 OUT_STATS = os.path.join(RES_DIR, '01.regulon_target_expr_nr_vs_dr_stats.tsv')

@@ -1,4 +1,4 @@
-"""Figure of 02: archetype scores along the A'-C' axis (snRNA) and depth (MERFISH), next to the EASI-FISH profiles.
+"""Figure of 01: archetype scores along the A'-C' axis (snRNA) and depth (MERFISH), next to the EASI-FISH profiles.
 
 Panels left to right: Yoo25 P21 NR snRNA along the normalized A'-C' axis; P21 NR MERFISH along normalized
 depth; EASI-FISH LM vs RL retrograde labels along normalized depth. Score panels: archetype score
@@ -6,9 +6,10 @@ z-scored within the dataset, mean +/- SEM per equal-count bin (dots on the snRNA
 fraction of cells per group, mean +/- SD across samples. y: 0 = A' end / superficial (top), 1 = C' end / deep.
 
 Reads:
-  results/5_easifish/02.l23_archetype_scores_and_easifish_proj_depth_{bins,easifish_bins,panels}.tsv
+  results/5_easifish/01.l23_archetype_scores_{bins,panels}.tsv
+  results/5_easifish/01.easifish_proj_depth_bins.tsv
 Outputs:
-  figures/5_easifish/03.l23_archetype_scores_and_easifish_proj_depth.pdf
+  figures/5_easifish/02.l23_archetype_scores_and_easifish_proj_depth.pdf
 """
 
 import os
@@ -22,16 +23,19 @@ matplotlib.rcParams['pdf.fonttype'] = 42
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-IN_PREFIX = os.path.join(REPO_ROOT, 'results', '5_easifish', '02.l23_archetype_scores_and_easifish_proj_depth')
-OUT_FIG   = os.path.join(REPO_ROOT, 'figures', '5_easifish', '03.l23_archetype_scores_and_easifish_proj_depth.pdf')
+RES_DIR   = os.path.join(REPO_ROOT, 'results', '5_easifish')
+IN_BINS   = os.path.join(RES_DIR, '01.l23_archetype_scores_bins.tsv')
+IN_PANELS = os.path.join(RES_DIR, '01.l23_archetype_scores_panels.tsv')
+IN_EASI   = os.path.join(RES_DIR, '01.easifish_proj_depth_bins.tsv')
+OUT_FIG   = os.path.join(REPO_ROOT, 'figures', '5_easifish', '02.l23_archetype_scores_and_easifish_proj_depth.pdf')
 
 PROJ_COLORS = {'LM': 'magenta', 'RL': 'green'}
 
 os.makedirs(os.path.dirname(OUT_FIG), exist_ok=True)
 
-bins = pd.read_csv(f'{IN_PREFIX}_bins.tsv', sep='\t')
-easi = pd.read_csv(f'{IN_PREFIX}_easifish_bins.tsv', sep='\t')
-pan = pd.read_csv(f'{IN_PREFIX}_panels.tsv', sep='\t').set_index('panel')
+bins = pd.read_csv(IN_BINS, sep='\t')
+easi = pd.read_csv(IN_EASI, sep='\t')
+pan = pd.read_csv(IN_PANELS, sep='\t').set_index('panel')
 score_panels = list(dict.fromkeys(bins['panel']))   # snRNA first, then the MERFISH datasets
 n_bins = bins.groupby(['panel', 'archetype']).size().iloc[0]
 cond = pan.loc[score_panels[0], 'marker_condition']

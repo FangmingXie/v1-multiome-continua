@@ -37,7 +37,7 @@ environment (numpy, OpenBLAS, DESeq2) are in [REPRODUCIBILITY.md](REPRODUCIBILIT
 | Script | What it does |
 |---|---|
 | `0_prep/01.extract_l23.py` | L2/3 neurons with raw counts: Yoo25 of every age (NR P6-P21, DR P12-P21) and Cheng22 P28 NR; every later step reads these extracts |
-| `0_prep/02.extract_merfish_l23.py` | L2/3 MERFISH cells, P28 NR (for 1/06) and P21 NR (for 5/02); later steps read these extracts |
+| `0_prep/02.extract_merfish_l23.py` | L2/3 MERFISH cells, P28 NR (for 1/04) and P21 NR (for 5/01); later steps read these extracts |
 | `0_prep/03.yoo25_l23_regulon_targets.py` | Yoo25 L2/3 SCENIC+ regulon -> target table |
 | `0_prep/04.human_wang25_regulon_targets.py` | Human (Wang25) regulon -> target table |
 
@@ -45,14 +45,12 @@ environment (numpy, OpenBLAS, DESeq2) are in [REPRODUCIBILITY.md](REPRODUCIBILIT
 | Script | What it does | Figures |
 |---|---|---|
 | `01` | Mouse (Cheng22 P28 NR) and human (Jorstad23) L2/3: PCA + varimax | |
-| `02` | Mouse L2/3 archetypes, markers and scores | |
-| `03` | Mouse archetype scores on human cells | |
-| `04` | Cross-species CCA of the varimax axes | |
-| `05` | A'/B'/C' scores along CCA1/CCA2, human vs mouse: binned profiles and human-mouse r; per-cell CCA coordinates | |
-| `06` | Conserved A vs C genes in situ, mouse P28 MERFISH vs human MERFISH (Fang22): relative L2/3 depth, profiles | |
-| `07` | Figure of 05 | `07.l23_abc_normalized_compact.pdf` |
-| `08` | Figures of 06 | `08.*.pdf` |
-| `09` | Mouse archetype scores (B', C' − A') of human and mouse cells on the CCA1 x CCA2 embedding, mouse archetype triangle (from 05) | `09.l23_abc_scores_cca_embedding.pdf` |
+| `02` | Mouse L2/3 archetypes, markers and scores; the mouse archetype scores on human cells | |
+| `03` | Cross-species CCA of the varimax axes; A'/B'/C' scores along CCA1/CCA2, human vs mouse: binned profiles and human-mouse r; per-cell CCA coordinates | |
+| `04` | Conserved A vs C genes in situ, mouse P28 MERFISH vs human MERFISH (Fang22): relative L2/3 depth, profiles | |
+| `05` | Figure of 03 | `05.l23_abc_normalized_compact.pdf` |
+| `06` | Figures of 04 | `06.*.pdf` |
+| `07` | Mouse archetype scores (B', C' − A') of human and mouse cells on the CCA1 x CCA2 embedding, mouse archetype triangle (from 03) | `07.l23_abc_scores_cca_embedding.pdf` |
 
 ### 2. Development (NR)
 | Script | What it does | Figures |
@@ -70,13 +68,12 @@ environment (numpy, OpenBLAS, DESeq2) are in [REPRODUCIBILITY.md](REPRODUCIBILIT
 ### 3. Regulon enrichment
 | Script | What it does | Figures |
 |---|---|---|
-| `01` | Gene universe: genes expressed in adult L2/3 (Cheng22 + Yoo25) and their expression stats | |
-| `02` | Expression-stratified regulon x archetype enrichment; enriched TFs | |
-| `03` | TF -> target network: edges and layout | |
-| `04` | AP-1/EGR regulon target activity over development, human (Wang25) and mouse (B' TFs) | |
-| `05`, `06` | Dot plot of enriched regulons; archetype-gene overlap bars | `05.*.pdf`, `06.*.pdf` |
-| `07` | Figure of 03 | `07.regulon_network_free.pdf` |
-| `08` | Figure of 04, mouse vs human | `08.*.pdf` |
+| `01` | Expression-stratified regulon x archetype enrichment over the adult L2/3 gene universe (Cheng22 + Yoo25); enriched TFs | |
+| `02` | TF -> target network: edges and layout | |
+| `03` | AP-1/EGR regulon target activity over development, human (Wang25) and mouse (B' TFs) | |
+| `04`, `05` | Dot plot of enriched regulons; archetype-gene overlap bars | `04.*.pdf`, `05.*.pdf` |
+| `06` | Figure of 02 | `06.regulon_network_free.pdf` |
+| `07` | Figure of 03, mouse vs human | `07.*.pdf` |
 
 ### 4. Dark rearing
 Results 2's `03`, `04` and `05` also show NR vs DR.
@@ -90,11 +87,9 @@ Results 2's `03`, `04` and `05` also show NR vs DR.
 ### 5. EASI-FISH
 | Script | What it does | Figures |
 |---|---|---|
-| `01` | Per-cell A'-C' axis, Yoo25 P21 NR | |
-| `02` | Archetype scores along the A'-C' axis (snRNA) and depth (P21 MERFISH); EASI-FISH LM vs RL depth profiles (3 samples) | |
-| `03` | Figure of 02 | `03.*.pdf` |
-| `04` | EASI-FISH LM vs RL, 3 samples: depth profiles, x-y projection bias, per x-y bin mean-depth difference vs a label-shuffle null | |
-| `05` | Figures of 04: cell maps, depth profiles, x-y maps, null histograms | `05.*.pdf` |
+| `01` | Archetype scores along the Yoo25 P21 NR A'-C' axis (snRNA) and depth (P21 MERFISH); EASI-FISH LM vs RL, 3 samples: depth profiles, x-y projection bias, per x-y bin mean-depth difference vs a label-shuffle null | |
+| `02` | Figure of 01: score panels next to the EASI-FISH depth profiles | `02.*.pdf` |
+| `03` | Figures of 01: EASI-FISH cell maps, depth profiles, x-y maps, null histograms | `03.*.pdf` |
 
 ## Inputs
 Inputs are split by the stage that reads them; neither folder is tracked.
@@ -121,23 +116,23 @@ Datasets:
 
 | File in `data/input/` | Content | Used by | Source |
 |---|---|---|---|
-| `01.yoo25_l23.h5ad` | Yoo25 mouse V1 L2/3 snRNA-seq, every age (NR P6-P21, DR P12-P21), raw counts | 2/01, 2/02, 2/06, 3/01, 3/04, 4/01, 5/01, 5/02 | 0_prep/01 |
+| `01.yoo25_l23.h5ad` | Yoo25 mouse V1 L2/3 snRNA-seq, every age (NR P6-P21, DR P12-P21), raw counts | 2/01, 2/02, 2/06, 3/01, 3/03, 4/01, 5/01 | 0_prep/01 |
 | `01.cheng22_p28nr_l23.h5ad` | Cheng22 mouse V1 L2/3 snRNA-seq, P28 NR, raw counts | 1/01, 1/02, 3/01 | 0_prep/01 |
-| `02.merfish_p28nr_l23.h5ad` | Mouse P28 NR V1 MERFISH, L2/3 cells (500 genes) | 1/06 | 0_prep/02 |
-| `02.merfish_p21nr_l23.h5ad` | Mouse P21 NR V1 MERFISH, L2/3 cells (361 genes) | 5/02 | 0_prep/02 |
-| `jorstad23_human_WithinArea_L23IT.h5ad` | Human L2/3 IT (Jorstad et al. 2023) | 1/01, 1/03 | TBD |
-| `fang22_human_merfish/*.csv` | Human cortex MERFISH, 6 sections (Fang et al. 2022) | 1/06 | TBD |
+| `02.merfish_p28nr_l23.h5ad` | Mouse P28 NR V1 MERFISH, L2/3 cells (500 genes) | 1/04 | 0_prep/02 |
+| `02.merfish_p21nr_l23.h5ad` | Mouse P21 NR V1 MERFISH, L2/3 cells (361 genes) | 5/01 | 0_prep/02 |
+| `jorstad23_human_WithinArea_L23IT.h5ad` | Human L2/3 IT (Jorstad et al. 2023) | 1/01, 1/02 | TBD |
+| `fang22_human_merfish/*.csv` | Human cortex MERFISH, 6 sections (Fang et al. 2022) | 1/04 | TBD |
 | `atac/pmat_l23concensus_{age}.h5ad` | Yoo25 L2/3 ATAC peak matrices, 11 conditions | 2/05 | TBD |
-| `wang25_human_multiome_gex_v1_l23.h5ad` | Human developing V1 L2/3, multiome GEX (Wang et al. 2025) | 3/04 | TBD |
-| `easifish/easifish_sample{1,2,3}_res.csv` | EASI-FISH retrograde labels (LM, RL), 3 samples | 5/02, 5/04, 5/05 | TBD |
+| `wang25_human_multiome_gex_v1_l23.h5ad` | Human developing V1 L2/3, multiome GEX (Wang et al. 2025) | 3/03 | TBD |
+| `easifish/easifish_sample{1,2,3}_res.csv` | EASI-FISH retrograde labels (LM, RL), 3 samples | 5/01, 5/03 | TBD |
 
 Small tables and annotations:
 
 | File in `data/input/` | Content | Used by | Source |
 |---|---|---|---|
-| `03.yoo25_l23_regulon_targets.tsv` | Yoo25 L2/3 SCENIC+ regulon -> target table | 3/02, 3/03, 3/04, 4/01 | 0_prep/03 |
-| `04.human_wang25_regulon_targets.tsv` | Wang25 human regulon -> target table | 3/04 | 0_prep/04 |
-| `human_mouse_orthologs.tsv` | Human-mouse ortholog pairs | 1/03, 1/04, 1/06 | TBD |
+| `03.yoo25_l23_regulon_targets.tsv` | Yoo25 L2/3 SCENIC+ regulon -> target table | 3/01, 3/02, 3/03, 4/01 | 0_prep/03 |
+| `04.human_wang25_regulon_targets.tsv` | Wang25 human regulon -> target table | 3/03 | 0_prep/04 |
+| `human_mouse_orthologs.tsv` | Human-mouse ortholog pairs | 1/02, 1/03, 1/04 | TBD |
 | `Cheng22_Xie25_L23_ABC_genes_n286.csv` | Adult L2/3 archetype genes, the seed of the archetype genes | 2/01 | TBD |
 | `TableS4_L23_archetypal_genes.tsv` | Published Table S4; exact-match check only | 2/01 | TBD |
 | `gene_sets_l23{a,b,c}_250423.csv` | Module (M1-M5) of each archetype gene | 2/04 | TBD |

@@ -1,7 +1,15 @@
-"""Mouse L2/3 archetype scores (A', B', C') along the conserved CCA1 and CCA2 axes, human vs mouse: binned profiles.
+"""Mouse vs human L2/3 axes: closed-form CCA on ortholog-paired Gate-A varimax loadings (top-2000 HVGs), and the
+mouse L2/3 archetype scores (A', B', C') along the conserved CCA1 and CCA2 axes, human vs mouse: binned profiles.
 
-A cell's CCA coordinate is `(VX coords - mean) . w` with the Gate-A canonical weights of script 04;
-human cells carry the mouse-derived scores (script 03), mouse cells the native scores (script 02).
+CCA: genes are observations, Gate-A VX components the features: the human block X = 01's human loadings on
+HUMAN_VX, the mouse block Y = 01's mouse loadings on MOUSE_VX, rows paired by 1-to-1 orthology over the
+genes that are HVGs in both species. Statistics (spectrum, permutation null, module-blocked CV,
+bootstrap weight stability) are described in l23.crossspecies. Gate A = the VX components whose
+largest variance-partition factor is cell type (01's post-varimax tables); the mouse set is the
+PCHA subspace of script 02.
+
+Scores along CCA: a cell's CCA coordinate is `(VX coords - mean) . w` with the Gate-A canonical weights;
+human cells carry the mouse-derived scores, mouse cells the native scores (both script 02).
 Letters: 02's A/B/C are relabelled to the published primed letters (RELABEL). CCA axes are in their
 raw orientation. Panels (PANELS): A' along CCA1, B' along CCA2, C' along CCA1.
 
@@ -13,43 +21,53 @@ Profiles normalized for the cross-species comparison, per species:
     permutation p (scores shuffled across cells within each species, N_PERM times; one RNG stream
     over the panels in PANELS order).
 Also written: every cell's CCA1, CCA2 and A', B', C' scores, and the mouse archetypes (02's PCHA
-vertices in the VX space) projected the same way as the mouse cells (figure 09).
-Figures: 07, 09.
+vertices in the VX space) projected the same way as the mouse cells (figure 07).
+Figures: 05, 07.
 
 Reads:
+  results/1_mouse_human/01.{mouse,human}_l23_varimax_loadings.tsv
   results/1_mouse_human/01.{mouse,human}_l23_varimax_coords.tsv
+  data/input/human_mouse_orthologs.tsv
   results/1_mouse_human/02.mouse_l23_archetype_scores.tsv
+  results/1_mouse_human/02.mouse_l23_archetype_scores_on_human_cells.tsv
   results/1_mouse_human/02.mouse_l23_pcha_aa_vx.tsv
-  results/1_mouse_human/03.mouse_l23_archetype_scores_on_human_cells.tsv
-  results/1_mouse_human/04.l23_axis_cca_weights_{human,mouse}.tsv
 Outputs:
-  results/1_mouse_human/05.l23_abc_scores_along_cca_profiles.tsv   (axis, archetype, species, bin, pct, mean, sem)
-  results/1_mouse_human/05.l23_abc_scores_along_cca_stats.tsv      (axis, archetype, r, p_perm, n_perm)
-  results/1_mouse_human/05.l23_cca_cells.tsv                       (species, cell, CCA1, CCA2, score_A', score_B', score_C')
-  results/1_mouse_human/05.l23_cca_mouse_archetypes.tsv            (archetype, CCA1, CCA2)
+  results/1_mouse_human/03.l23_axis_cca_spectrum.tsv
+  results/1_mouse_human/03.l23_axis_cca_weights_human.tsv
+  results/1_mouse_human/03.l23_axis_cca_weights_mouse.tsv
+  results/1_mouse_human/03.l23_abc_scores_along_cca_profiles.tsv   (axis, archetype, species, bin, pct, mean, sem)
+  results/1_mouse_human/03.l23_abc_scores_along_cca_stats.tsv      (axis, archetype, r, p_perm, n_perm)
+  results/1_mouse_human/03.l23_cca_cells.tsv                       (species, cell, CCA1, CCA2, score_A', score_B', score_C')
+  results/1_mouse_human/03.l23_cca_mouse_archetypes.tsv            (archetype, CCA1, CCA2)
 """
 
 import os
 import numpy as np
 import pandas as pd
 
+from l23.crossspecies import load_orthologs, run_cca, write_spectrum, write_weights
+
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-RES_DIR      = os.path.join(REPO_ROOT, 'results', '1_mouse_human')
-IN_M_COORDS  = os.path.join(RES_DIR, '01.mouse_l23_varimax_coords.tsv')
-IN_H_COORDS  = os.path.join(RES_DIR, '01.human_l23_varimax_coords.tsv')
-IN_M_SCORES  = os.path.join(RES_DIR, '02.mouse_l23_archetype_scores.tsv')
-IN_M_AA_VX   = os.path.join(RES_DIR, '02.mouse_l23_pcha_aa_vx.tsv')
-IN_H_SCORES  = os.path.join(RES_DIR, '03.mouse_l23_archetype_scores_on_human_cells.tsv')
-IN_H_WEIGHTS = os.path.join(RES_DIR, '04.l23_axis_cca_weights_human.tsv')
-IN_M_WEIGHTS = os.path.join(RES_DIR, '04.l23_axis_cca_weights_mouse.tsv')
-OUT_PROFILES = os.path.join(RES_DIR, '05.l23_abc_scores_along_cca_profiles.tsv')
-OUT_STATS    = os.path.join(RES_DIR, '05.l23_abc_scores_along_cca_stats.tsv')
-OUT_CELLS    = os.path.join(RES_DIR, '05.l23_cca_cells.tsv')
-OUT_M_AA     = os.path.join(RES_DIR, '05.l23_cca_mouse_archetypes.tsv')
+RES_DIR       = os.path.join(REPO_ROOT, 'results', '1_mouse_human')
+IN_H_LOADINGS = os.path.join(RES_DIR, '01.human_l23_varimax_loadings.tsv')
+IN_M_LOADINGS = os.path.join(RES_DIR, '01.mouse_l23_varimax_loadings.tsv')
+IN_H_COORDS   = os.path.join(RES_DIR, '01.human_l23_varimax_coords.tsv')
+IN_M_COORDS   = os.path.join(RES_DIR, '01.mouse_l23_varimax_coords.tsv')
+IN_ORTHOLOGS  = os.path.join(REPO_ROOT, 'data', 'input', 'human_mouse_orthologs.tsv')
+IN_M_SCORES   = os.path.join(RES_DIR, '02.mouse_l23_archetype_scores.tsv')
+IN_H_SCORES   = os.path.join(RES_DIR, '02.mouse_l23_archetype_scores_on_human_cells.tsv')
+IN_M_AA_VX    = os.path.join(RES_DIR, '02.mouse_l23_pcha_aa_vx.tsv')
+OUT_SPECTRUM  = os.path.join(RES_DIR, '03.l23_axis_cca_spectrum.tsv')
+OUT_W_HUMAN   = os.path.join(RES_DIR, '03.l23_axis_cca_weights_human.tsv')
+OUT_W_MOUSE   = os.path.join(RES_DIR, '03.l23_axis_cca_weights_mouse.tsv')
+OUT_PROFILES  = os.path.join(RES_DIR, '03.l23_abc_scores_along_cca_profiles.tsv')
+OUT_STATS     = os.path.join(RES_DIR, '03.l23_abc_scores_along_cca_stats.tsv')
+OUT_CELLS     = os.path.join(RES_DIR, '03.l23_cca_cells.tsv')
+OUT_M_AA      = os.path.join(RES_DIR, '03.l23_cca_mouse_archetypes.tsv')
 
-HUMAN_VX = ['VX2', 'VX6', 'VX7', 'VX8', 'VX9', 'VX10']   # Gate A, as script 04
-MOUSE_VX = ['VX1', 'VX2', 'VX5', 'VX7', 'VX8', 'VX9']
+HUMAN_VX = ['VX2', 'VX6', 'VX7', 'VX8', 'VX9', 'VX10']   # Gate A, 01's human vx variance partition
+MOUSE_VX = ['VX1', 'VX2', 'VX5', 'VX7', 'VX8', 'VX9']    # Gate A, 01's mouse vx variance partition (= 02)
 RELABEL  = {'C': "A'", 'B': "B'", 'A': "C'"}             # 02's letters -> published letters
 CCA_AXES = ['CCA1', 'CCA2']
 PANELS   = [('CCA1', "A'"), ('CCA1', "C'"), ('CCA2', "B'")]   # (axis, archetype); the permutation order
@@ -60,10 +78,9 @@ SEED     = 0
 os.makedirs(RES_DIR, exist_ok=True)
 
 
-def cca_coords(coords_path, vx_cols, weights_path):
+def cca_coords(coords_path, vx_cols, weights):
     """(cell index, cells x 2 CCA coordinates, [CCA1 r, CCA2 r], projection of VX points) for one species."""
-    vx_df   = pd.read_csv(coords_path, sep='\t', index_col=0)
-    weights = pd.read_csv(weights_path, sep='\t', index_col=0)
+    vx_df = pd.read_csv(coords_path, sep='\t', index_col=0)
     W = weights.loc[CCA_AXES, vx_cols].values.T
     C = vx_df[vx_cols].values
     project = lambda P: (P - C.mean(axis=0)) @ W
@@ -74,6 +91,20 @@ def bin_means(bins, y):
     return np.bincount(bins, weights=y, minlength=N_BINS) / np.bincount(bins, minlength=N_BINS)
 
 
+# --- CCA on the ortholog-paired loadings ---
+human = pd.read_csv(IN_H_LOADINGS, sep='\t', index_col=0)
+mouse = pd.read_csv(IN_M_LOADINGS, sep='\t', index_col=0)
+ortho = load_orthologs(IN_ORTHOLOGS)
+shared = ortho[ortho['human_symbol'].isin(human.index) & ortho['mouse_symbol'].isin(mouse.index)].reset_index(drop=True)
+X = human.loc[shared['human_symbol'].values, HUMAN_VX].values
+Y = mouse.loc[shared['mouse_symbol'].values, MOUSE_VX].values
+
+print(f'L2/3 CCA, HVGs in both species ({len(shared)} ortholog pairs)')
+res, A, B, boot_h, boot_m = run_cca(X, Y)
+write_spectrum(res, OUT_SPECTRUM)
+weights = write_weights(res, A, B, boot_h, boot_m, HUMAN_VX, MOUSE_VX, OUT_W_HUMAN, OUT_W_MOUSE)
+
+# --- archetype scores along CCA1 / CCA2 ---
 m_scores = pd.read_csv(IN_M_SCORES, sep='\t', index_col=0)
 h_scores = pd.read_csv(IN_H_SCORES, sep='\t', index_col=0)
 if list(h_scores.columns) != list(m_scores.columns):
@@ -81,8 +112,8 @@ if list(h_scores.columns) != list(m_scores.columns):
                      f'and mouse ({list(m_scores.columns)}).')
 old_letter = {RELABEL[c.split('_')[1]]: c.split('_')[1] for c in m_scores.columns}
 
-h_index, h_cca, r, _ = cca_coords(IN_H_COORDS, HUMAN_VX, IN_H_WEIGHTS)
-m_index, m_cca, _, m_project = cca_coords(IN_M_COORDS, MOUSE_VX, IN_M_WEIGHTS)
+h_index, h_cca, r, _ = cca_coords(IN_H_COORDS, HUMAN_VX, weights['human'])
+m_index, m_cca, _, m_project = cca_coords(IN_M_COORDS, MOUSE_VX, weights['mouse'])
 if not h_scores.index.equals(h_index):
     raise ValueError(f'Human scores ({IN_H_SCORES}) and coords ({IN_H_COORDS}) cover different cells/order.')
 if not m_scores.index.equals(m_index):
