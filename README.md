@@ -17,11 +17,11 @@ counts (`2_development/01`, identical to Table S4) and are also used by results 
 conda env create -f environment.yml
 conda activate v1-multiome-continua
 pip install --no-deps -e .     # shared code src/l23/, importable by every script
-pip install gdown              # for download_inputs.sh only
 bash download_inputs.sh        # data/input/ from the input bundles (see "Inputs")
 bash run_all.sh                # the analysis, folders 1-5
 ```
-`download_inputs.sh` fetches the input bundles, checks their sha256 and unpacks them into `data/input/`.
+`download_inputs.sh` downloads the input bundles from Google Drive with `curl` (about 1.9 GB), checks their
+sha256 and unpacks them into `data/input/`.
 Maintainers with `data/raw/` can instead rebuild 0_prep's part of `data/input/` with `run_input_prep.sh`.
 `run_input_prep.sh` runs 0_prep, which writes its outputs to `data/input/`. `run_all.sh` runs the
 analysis scripts in number order, folder by folder (1_mouse_human to 5_easifish); each folder reads
@@ -95,15 +95,17 @@ Results 2's `04`, `05` and `06` also show NR vs DR.
 Inputs are split by the stage that reads them; neither folder is tracked.
 
 ### Input bundles
-`download_inputs.sh` installs `data/input/` from two archives, made by `make_input_bundle.sh`:
+`download_inputs.sh` installs `data/input/` from two archives (version 2026-11-20), made by
+`make_input_bundle.sh` and hosted on Google Drive:
 
-| Bundle | Content | Size | Needed by |
+| Bundle | Content | Size (packed) | Needed by |
 |---|---|---|---|
-| core | every file of `data/input/` except the three external human datasets, 0_prep's outputs included | 1.7 GB | folders 2-5 |
-| external | `jorstad23_*.h5ad`, `wang25_*.h5ad`, `fang22_human_merfish/` | 4 GB | folder 1, 3_regulon/03 and its figure 07 |
+| [core](https://drive.google.com/file/d/10kRY471qCVIJj3j6GRAzAmrYdjXbCWNS/view?usp=sharing) | every file of `data/input/` except the three external human datasets, 0_prep's outputs included | 1.7 GB (741 MB) | folders 2-5 |
+| [external](https://drive.google.com/file/d/1yhkWYA0xS0GC7xOS-CQS1K3ZN45ALzog/view?usp=sharing) | `jorstad23_*.h5ad`, `wang25_*.h5ad`, `fang22_human_merfish/` | 4 GB (1.1 GB) | folder 1, 3_regulon/03 and its figure 07 |
 
 `bash download_inputs.sh --core-only` skips the external bundle; `--from <dir>` installs archives already
-downloaded (e.g. in a browser). Each bundle carries `MANIFEST_<bundle>.tsv` (path, size, sha256 of each
+downloaded (e.g. from the links above in a browser). To publish new bundles: `bash make_input_bundle.sh
+data/bundle`, upload the archives, then update the version, Drive IDs and sha256 in `download_inputs.sh`. Each bundle carries `MANIFEST_<bundle>.tsv` (path, size, sha256 of each
 file) and `ATTRIBUTION.md`. Sources and licences of every input: [DATA_ATTRIBUTION.md](DATA_ATTRIBUTION.md).
 
 ### `data/raw/`: sources of 0_prep

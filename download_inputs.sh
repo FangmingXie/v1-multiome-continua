@@ -3,7 +3,7 @@
 # data/raw/ and 0_prep. Bundles (made by make_input_bundle.sh; sources and licences in DATA_ATTRIBUTION.md):
 #   core      every input except the external human datasets            -> folders 2, 3 (but 03), 4, 5
 #   external  Jorstad23, Wang25, Fang22 human datasets (CC BY 4.0 / CC0)   -> folder 1, 3_regulon/03
-# Downloads use gdown (pip install gdown), which handles Google Drive's large-file confirmation.
+# Downloads use curl from Google Drive's direct-download URL (confirm=t skips the large-file virus-scan page).
 # Usage: bash download_inputs.sh [--core-only] [--from <dir>]
 #   --core-only  skip the external bundle
 #   --from DIR   use the archives already in DIR (e.g. downloaded in a browser) instead of downloading
@@ -12,6 +12,7 @@ set -euo pipefail
 REPO_ROOT="$(cd "$(dirname "$0")" && pwd)"
 INPUT_DIR="$REPO_ROOT/data/input"
 DOWNLOAD_DIR="$REPO_ROOT/data/downloads"
+DRIVE_URL="https://drive.usercontent.google.com/download?export=download&confirm=t&id="
 
 VERSION="2026-11-20"
 CORE_ARCHIVE="v1-multiome-continua_input_core_${VERSION}.tar.gz"
@@ -39,9 +40,8 @@ fetch() {   # fetch <archive> <drive id>: print the local path of the archive
         return
     fi
     [ -n "$id" ] || { echo "ERROR: no Google Drive ID set for $archive in $0" >&2; exit 1; }
-    command -v gdown > /dev/null || { echo "ERROR: gdown not found; run: pip install gdown" >&2; exit 1; }
     mkdir -p "$DOWNLOAD_DIR"
-    gdown "$id" -O "$DOWNLOAD_DIR/$archive" >&2
+    curl -fL --retry 3 -o "$DOWNLOAD_DIR/$archive" "$DRIVE_URL$id" >&2
     echo "$DOWNLOAD_DIR/$archive"
 }
 
