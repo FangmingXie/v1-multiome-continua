@@ -30,6 +30,23 @@ computing scripts come first and write tables; the figure scripts (`*figure*.py`
 with figures below) come after them and only read tables. Numerical notes on the pinned
 environment (numpy, OpenBLAS, DESeq2) are in [REPRODUCIBILITY.md](REPRODUCIBILITY.md).
 
+## Data
+`download_inputs.sh` installs `data/input/` from two archives (version 2026-11-20) on Google Drive:
+
+| Bundle | Content | Size (packed) | Needed by |
+|---|---|---|---|
+| [core](https://drive.google.com/file/d/10kRY471qCVIJj3j6GRAzAmrYdjXbCWNS/view?usp=sharing) | every input except the three external human datasets | 1.7 GB (741 MB) | folders 2-5 |
+| [external](https://drive.google.com/file/d/1yhkWYA0xS0GC7xOS-CQS1K3ZN45ALzog/view?usp=sharing) | Jorstad23, Wang25 and Fang22 human datasets | 4 GB (1.1 GB) | folder 1, 3_regulon/03 and its figure 07 |
+
+The script checks each archive against the sha256 recorded in `download_inputs.sh`, and that every file
+listed in the archive's `MANIFEST_<bundle>.tsv` (path, size and sha256 of each file) is unpacked with its
+size. `--core-only` skips the external bundle; `--from <dir>` installs archives already downloaded (e.g.
+from the links above in a browser).
+
+Each file's content, the scripts that read it, its source and licence: [DATA_ATTRIBUTION.md](DATA_ATTRIBUTION.md).
+Rebuilding `data/input/` from `data/raw/` (0_prep) and publishing new bundles (maintainers):
+[INPUT_PREP.md](INPUT_PREP.md).
+
 ## Scripts and figures
 
 ### 1. Mouse vs human L2/3
@@ -79,19 +96,6 @@ Results 2's `04`, `05` and `06` also show NR vs DR.
 | `01` | Archetype scores along the Yoo25 P21 NR A'-C' axis (snRNA) and depth (P21 MERFISH); EASI-FISH LM vs RL, 3 samples: depth profiles, x-y projection bias, per x-y bin mean-depth difference vs a label-shuffle null | |
 | `02` | Figure of 01: score panels next to the EASI-FISH depth profiles | `02.*.pdf` |
 | `03` | Figures of 01: EASI-FISH cell maps, depth profiles, x-y maps, null histograms | `03.*.pdf` |
-
-## Data
-`download_inputs.sh` installs `data/input/` from two archives (version 2026-11-20) on Google Drive:
-
-| Bundle | Content | Size (packed) | Needed by |
-|---|---|---|---|
-| [core](https://drive.google.com/file/d/10kRY471qCVIJj3j6GRAzAmrYdjXbCWNS/view?usp=sharing) | every input except the three external human datasets | 1.7 GB (741 MB) | folders 2-5 |
-| [external](https://drive.google.com/file/d/1yhkWYA0xS0GC7xOS-CQS1K3ZN45ALzog/view?usp=sharing) | Jorstad23, Wang25 and Fang22 human datasets | 4 GB (1.1 GB) | folder 1, 3_regulon/03 and its figure 07 |
-
-`--core-only` skips the external bundle; `--from <dir>` installs archives already downloaded (e.g. from
-the links above in a browser). Each file's content, the scripts that read it, its source and licence:
-[DATA_ATTRIBUTION.md](DATA_ATTRIBUTION.md). Rebuilding `data/input/` from `data/raw/` (0_prep) and
-publishing new bundles (maintainers): [INPUT_PREP.md](INPUT_PREP.md).
 
 ## Layout
 ```
