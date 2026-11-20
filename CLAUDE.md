@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Repository layout, inputs and the script index are in README.md.
+Repository layout and the script index are in README.md; the inputs (`data/input/`) in DATA_ATTRIBUTION.md; 0_prep and `data/raw/` in INPUT_PREP.md.
 
 ## Environment
 
