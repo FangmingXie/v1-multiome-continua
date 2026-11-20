@@ -18,7 +18,7 @@ left) with B' below. Figure: 07.
 
 Reads:
   results/3_regulon/02.enriched_regulon_selection.tsv
-  results/0_prep/03.yoo25_l23_regulon_targets.tsv
+  data/input/03.yoo25_l23_regulon_targets.tsv
   results/3_regulon/02.l23_nr_union_markers.tsv
 Outputs:
   results/3_regulon/03.regulon_network_edges.tsv   (TF, Gene, tf_arch, gene_arch, target_is_tf)
@@ -37,7 +37,7 @@ REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fi
 RES_DIR = os.path.join(REPO_ROOT, 'results', '3_regulon')
 
 INPUT_SELECTION = os.path.join(RES_DIR, '02.enriched_regulon_selection.tsv')
-INPUT_REGULONS = os.path.join(REPO_ROOT, 'results', '0_prep', '03.yoo25_l23_regulon_targets.tsv')
+INPUT_REGULONS = os.path.join(REPO_ROOT, 'data', 'input', '03.yoo25_l23_regulon_targets.tsv')
 INPUT_MARKERS = os.path.join(RES_DIR, '02.l23_nr_union_markers.tsv')
 OUT_EDGES = os.path.join(RES_DIR, '03.regulon_network_edges.tsv')
 OUT_NODES = os.path.join(RES_DIR, '03.regulon_network_nodes.tsv')

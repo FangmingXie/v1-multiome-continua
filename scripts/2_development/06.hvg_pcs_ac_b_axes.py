@@ -16,7 +16,7 @@ labeled A, C (ends of the A-C axis) and B (the third). Per cell: ac, b = (PC1, P
 (real and null PCs). Variance (ddof 1) of pc_early1, ac, b, ac_shuff, b_shuff per Age and per Sample.
 
 Reads:
-  results/0_prep/01.yoo25_l23.h5ad
+  data/input/01.yoo25_l23.h5ad
   results/2_development/01.yoo25_l23_abc_scores.tsv
 Outputs:
   results/2_development/06.yoo25_l23_hvg_pcs_cells.tsv        (per cell: PCs, ac, b, null ac, b)
@@ -37,7 +37,7 @@ from l23.utils import pcha, shuffle_rows_per_col
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-INPUT_YOO25  = os.path.join(REPO_ROOT, 'results', '0_prep', '01.yoo25_l23.h5ad')
+INPUT_YOO25  = os.path.join(REPO_ROOT, 'data', 'input', '01.yoo25_l23.h5ad')
 INPUT_SCORES = os.path.join(REPO_ROOT, 'results', '2_development', '01.yoo25_l23_abc_scores.tsv')
 OUT_CELLS    = os.path.join(REPO_ROOT, 'results', '2_development', '06.yoo25_l23_hvg_pcs_cells.tsv')
 OUT_ARCH     = os.path.join(REPO_ROOT, 'results', '2_development', '06.yoo25_l23_hvg_pcs_archetypes.tsv')

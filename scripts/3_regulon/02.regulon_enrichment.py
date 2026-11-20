@@ -15,7 +15,7 @@ each TF is assigned to its max-log2_enr starred archetype.
 
 Reads:
   results/2_development/01.yoo25_l23_abc_genes.tsv
-  results/0_prep/03.yoo25_l23_regulon_targets.tsv
+  data/input/03.yoo25_l23_regulon_targets.tsv
   results/3_regulon/01.l23_gene_universe_stats.tsv
 Outputs:
   results/3_regulon/02.l23_nr_union_markers.tsv
@@ -33,7 +33,7 @@ from l23.regulon import stratified_enrichment
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 INPUT_GENES    = os.path.join(REPO_ROOT, 'results', '2_development', '01.yoo25_l23_abc_genes.tsv')
-INPUT_REGULONS = os.path.join(REPO_ROOT, 'results', '0_prep', '03.yoo25_l23_regulon_targets.tsv')
+INPUT_REGULONS = os.path.join(REPO_ROOT, 'data', 'input', '03.yoo25_l23_regulon_targets.tsv')
 INPUT_UNIVERSE = os.path.join(REPO_ROOT, 'results', '3_regulon', '01.l23_gene_universe_stats.tsv')
 OUT_MARKERS    = os.path.join(REPO_ROOT, 'results', '3_regulon', '02.l23_nr_union_markers.tsv')
 OUT_ENRICHMENT = os.path.join(REPO_ROOT, 'results', '3_regulon', '02.l23_stratified_enrichment.tsv')

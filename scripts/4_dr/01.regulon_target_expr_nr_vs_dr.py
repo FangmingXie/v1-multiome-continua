@@ -16,8 +16,8 @@ p-values, BH padj over all tested TFs. rel_change_P21 = (P21 DR - P21 NR) / P21 
 score. Figures: 03.
 
 Reads:
-  results/0_prep/01.yoo25_l23.h5ad
-  results/0_prep/03.yoo25_l23_regulon_targets.tsv
+  data/input/01.yoo25_l23.h5ad
+  data/input/03.yoo25_l23_regulon_targets.tsv
   results/3_regulon/02.enriched_regulon_selection.tsv
 Outputs:
   results/4_dr/01.regulon_target_expr_nr_vs_dr_replicates.tsv
@@ -35,8 +35,8 @@ from l23.timecourse import dr_ols, bh
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 RES_DIR = os.path.join(REPO_ROOT, 'results', '4_dr')
-INPUT_YOO25 = os.path.join(REPO_ROOT, 'results', '0_prep', '01.yoo25_l23.h5ad')
-INPUT_REGULONS = os.path.join(REPO_ROOT, 'results', '0_prep', '03.yoo25_l23_regulon_targets.tsv')
+INPUT_YOO25 = os.path.join(REPO_ROOT, 'data', 'input', '01.yoo25_l23.h5ad')
+INPUT_REGULONS = os.path.join(REPO_ROOT, 'data', 'input', '03.yoo25_l23_regulon_targets.tsv')
 INPUT_SELECTION = os.path.join(REPO_ROOT, 'results', '3_regulon', '02.enriched_regulon_selection.tsv')
 OUT_REP_TSV = os.path.join(RES_DIR, '01.regulon_target_expr_nr_vs_dr_replicates.tsv')
 OUT_TSV = os.path.join(RES_DIR, '01.regulon_target_expr_nr_vs_dr.tsv')

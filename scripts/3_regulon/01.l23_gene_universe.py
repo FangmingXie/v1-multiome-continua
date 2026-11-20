@@ -8,8 +8,8 @@ raw counts with each dataset's validated library-size column (cheng22 'n_counts'
 mean / var / detection rate of log2(CP10k+1) are what 02's expression strata are built from.
 
 Reads:
-  results/0_prep/01.cheng22_p28nr_l23.h5ad
-  results/0_prep/01.yoo25_l23.h5ad
+  data/input/01.cheng22_p28nr_l23.h5ad
+  data/input/01.yoo25_l23.h5ad
 Outputs:
   results/3_regulon/01.l23_gene_universe_stats.tsv   (gene, mean, var, detect)
 """
@@ -22,8 +22,8 @@ import scipy.sparse as sp
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-INPUT_H5AD = {'cheng22': os.path.join(REPO_ROOT, 'results', '0_prep', '01.cheng22_p28nr_l23.h5ad'),
-              'yoo25': os.path.join(REPO_ROOT, 'results', '0_prep', '01.yoo25_l23.h5ad')}
+INPUT_H5AD = {'cheng22': os.path.join(REPO_ROOT, 'data', 'input', '01.cheng22_p28nr_l23.h5ad'),
+              'yoo25': os.path.join(REPO_ROOT, 'data', 'input', '01.yoo25_l23.h5ad')}
 OUT_STATS  = os.path.join(REPO_ROOT, 'results', '3_regulon', '01.l23_gene_universe_stats.tsv')
 
 YOO25_AGE    = 'P21'   # NR

@@ -12,7 +12,7 @@
 Display orientation per sample as e00 (ROTATE: sample 1 is shown rotated by 180 degrees in x-y); display only.
 
 Reads:
-  data/raw/easifish/easifish_sample{1,2,3}_res.csv   (cell positions and labels, for the dot maps)
+  data/input/easifish/easifish_sample{1,2,3}_res.csv   (cell positions and labels, for the dot maps)
   results/5_easifish/04.easifish_depth_hist.tsv
   results/5_easifish/04.easifish_xy_bins.tsv
   results/5_easifish/04.easifish_xy_dz_null.tsv
@@ -34,7 +34,7 @@ from matplotlib.colors import LinearSegmentedColormap
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 SAMPLES        = (1, 2, 3)
-INPUT_EASIFISH = {s: os.path.join(REPO_ROOT, 'data', 'raw', 'easifish', f'easifish_sample{s}_res.csv')
+INPUT_EASIFISH = {s: os.path.join(REPO_ROOT, 'data', 'input', 'easifish', f'easifish_sample{s}_res.csv')
                   for s in SAMPLES}
 RES_DIR        = os.path.join(REPO_ROOT, 'results', '5_easifish')
 IN_DEPTH       = os.path.join(RES_DIR, '04.easifish_depth_hist.tsv')

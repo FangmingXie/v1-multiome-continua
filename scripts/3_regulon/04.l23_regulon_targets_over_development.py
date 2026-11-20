@@ -16,10 +16,10 @@ magnitudes across stages are preserved).
 Figure (mouse vs human, side by side): 08. NR vs DR in mouse is 4_dr/01.
 
 Reads:
-  data/raw/wang25_human_multiome_gex_v1_l23.h5ad
-  results/0_prep/04.human_wang25_regulon_targets.tsv
-  results/0_prep/01.yoo25_l23.h5ad
-  results/0_prep/03.yoo25_l23_regulon_targets.tsv
+  data/input/wang25_human_multiome_gex_v1_l23.h5ad
+  data/input/04.human_wang25_regulon_targets.tsv
+  data/input/01.yoo25_l23.h5ad
+  data/input/03.yoo25_l23_regulon_targets.tsv
   results/3_regulon/02.enriched_regulon_selection.tsv
 Outputs:
   results/3_regulon/04.wang25_l23_ap1_egr_regulon_targets_over_stage.tsv
@@ -39,10 +39,10 @@ from l23.regulon import NORM_MAX_PCTILE, load_expression, regulon_score
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 RES_DIR   = os.path.join(REPO_ROOT, 'results', '3_regulon')
 
-IN_HUMAN_H5AD    = os.path.join(REPO_ROOT, 'data', 'raw', 'wang25_human_multiome_gex_v1_l23.h5ad')
-IN_HUMAN_REG     = os.path.join(REPO_ROOT, 'results', '0_prep', '04.human_wang25_regulon_targets.tsv')
-IN_MOUSE_H5AD    = os.path.join(REPO_ROOT, 'results', '0_prep', '01.yoo25_l23.h5ad')
-IN_MOUSE_REG     = os.path.join(REPO_ROOT, 'results', '0_prep', '03.yoo25_l23_regulon_targets.tsv')
+IN_HUMAN_H5AD    = os.path.join(REPO_ROOT, 'data', 'input', 'wang25_human_multiome_gex_v1_l23.h5ad')
+IN_HUMAN_REG     = os.path.join(REPO_ROOT, 'data', 'input', '04.human_wang25_regulon_targets.tsv')
+IN_MOUSE_H5AD    = os.path.join(REPO_ROOT, 'data', 'input', '01.yoo25_l23.h5ad')
+IN_MOUSE_REG     = os.path.join(REPO_ROOT, 'data', 'input', '03.yoo25_l23_regulon_targets.tsv')
 IN_SELECTION     = os.path.join(REPO_ROOT, 'results', '3_regulon', '02.enriched_regulon_selection.tsv')
 OUT_HUMAN        = os.path.join(RES_DIR, '04.wang25_l23_ap1_egr_regulon_targets_over_stage.tsv')
 OUT_MOUSE        = os.path.join(RES_DIR, '04.l23_b_regulon_targets_nr_mouse.tsv')

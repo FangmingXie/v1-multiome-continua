@@ -11,8 +11,8 @@ counts (source .raw.X) written to .X, every source obs column kept.
 Reads:
   data/raw/superdupermegaRNA_hasraw.h5ad
 Outputs:
-  results/0_prep/01.yoo25_l23.h5ad
-  results/0_prep/01.cheng22_p28nr_l23.h5ad
+  data/input/01.yoo25_l23.h5ad
+  data/input/01.cheng22_p28nr_l23.h5ad
 """
 
 import os
@@ -25,8 +25,8 @@ from l23.constants import YOO25_STUDY, CHENG22_AGE, L23_SUBCLASS, AGES
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 INPUT_SOURCE = os.path.join(REPO_ROOT, 'data', 'raw', 'superdupermegaRNA_hasraw.h5ad')
-OUT_H5AD     = os.path.join(REPO_ROOT, 'results', '0_prep', '01.yoo25_l23.h5ad')
-OUT_CHENG22  = os.path.join(REPO_ROOT, 'results', '0_prep', '01.cheng22_p28nr_l23.h5ad')
+OUT_H5AD     = os.path.join(REPO_ROOT, 'data', 'input', '01.yoo25_l23.h5ad')
+OUT_CHENG22  = os.path.join(REPO_ROOT, 'data', 'input', '01.cheng22_p28nr_l23.h5ad')
 
 os.makedirs(os.path.dirname(OUT_H5AD), exist_ok=True)
 

@@ -22,6 +22,7 @@ Repository layout, inputs and the script index are in README.md.
 ## Script conventions
 - Scripts are `scripts/<folder>/NN.name.py`, numbered in run order within a folder; `run_all.sh` runs every `[0-9][0-9].*.py` in each folder.
 - Each output file name starts with the number of the script that writes it: tables to `results/<folder>/`, figures to `figures/<folder>/`, the log to `results/logs/<folder>.NN.log`.
+- Data: 0_prep reads only `data/raw/` and writes its outputs to `data/input/`; scripts 1-5 read only `data/input/` and `results/`. In `data/input/`, a file with a number prefix was written by 0_prep; one without is external.
 - Computing scripts come first and write tables; figure scripts come after them and only read tables.
 - Each script starts with a docstring stating what it does, what it reads and what it writes.
 

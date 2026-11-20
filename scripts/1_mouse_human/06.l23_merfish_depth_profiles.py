@@ -1,7 +1,7 @@
 """Conserved L2/3 A/C genes in situ, mouse vs human MERFISH: L2/3 cells on one relative depth scale, and depth profiles.
 
 Genes: PROFILE_GENES (mouse symbol, a row per side; A = superficial, C = deep), mapped to human by 1-to-1
-orthologs (data/raw/human_mouse_orthologs.tsv); every gene must be on both MERFISH panels (checked).
+orthologs (data/input/human_mouse_orthologs.tsv); every gene must be on both MERFISH panels (checked).
 INSITU_GENES (a subset) are drawn in situ by 08.
 Sections: every NR mouse section (PROFILE_MOUSE_SECTIONS) and the Fang22 human sections with >= 300
 eL2/3.IT cells in which every INSITU_GENES gene is detected in > H_MIN_DETECT of the L2/3 cells
@@ -25,9 +25,9 @@ outside [0, 1] left out), divided by its highest bin (peak = 1). Sections, not c
 of different sensitivity (250 vs 4000 genes), whereas per-section peak normalization removes those offsets.
 
 Reads:
-  data/raw/human_mouse_orthologs.tsv
-  results/0_prep/02.merfish_p28nr_l23.h5ad                                     (L2/3 cells, depth, expression)
-  data/raw/fang22_human_merfish/{section}.{features,genes,matrix}.csv          (every PROFILE_HUMAN_SECTIONS)
+  data/input/human_mouse_orthologs.tsv
+  data/input/02.merfish_p28nr_l23.h5ad                                     (L2/3 cells, depth, expression)
+  data/input/fang22_human_merfish/{section}.{features,genes,matrix}.csv          (every PROFILE_HUMAN_SECTIONS)
 Outputs:
   results/1_mouse_human/06.l23_merfish_genes.tsv              (side, human_symbol, mouse_symbol, insitu)
   results/1_mouse_human/06.l23_merfish_sections.tsv           (every section: cells, outliers, L2/3 thickness,
@@ -47,9 +47,9 @@ from scipy.sparse import coo_matrix
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 RES_DIR    = os.path.join(REPO_ROOT, 'results', '1_mouse_human')
-IN_ORTHO   = os.path.join(REPO_ROOT, 'data', 'raw', 'human_mouse_orthologs.tsv')
-IN_MOUSE   = os.path.join(REPO_ROOT, 'results', '0_prep', '02.merfish_p28nr_l23.h5ad')
-HUMAN_DIR  = os.path.join(REPO_ROOT, 'data', 'raw', 'fang22_human_merfish')
+IN_ORTHO   = os.path.join(REPO_ROOT, 'data', 'input', 'human_mouse_orthologs.tsv')
+IN_MOUSE   = os.path.join(REPO_ROOT, 'data', 'input', '02.merfish_p28nr_l23.h5ad')
+HUMAN_DIR  = os.path.join(REPO_ROOT, 'data', 'input', 'fang22_human_merfish')
 OUT_GENES    = os.path.join(RES_DIR, '06.l23_merfish_genes.tsv')
 OUT_SECTIONS = os.path.join(RES_DIR, '06.l23_merfish_sections.tsv')
 OUT_POINTS   = os.path.join(RES_DIR, '06.l23_merfish_top_fit_points.tsv')

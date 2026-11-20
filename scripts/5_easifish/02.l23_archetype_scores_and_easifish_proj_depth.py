@@ -34,10 +34,10 @@ The um / axis bounds used are printed and in the panels TSV (y0, y1).
 
 Reads:
   results/5_easifish/01.yoo25_p21nr_ac_axis.tsv
-  results/0_prep/01.yoo25_l23.h5ad
+  data/input/01.yoo25_l23.h5ad
   results/2_development/01.yoo25_l23_abc_genes.tsv
-  results/0_prep/02.merfish_p21nr_l23.h5ad
-  data/raw/easifish/easifish_sample{1,2,3}_res.csv
+  data/input/02.merfish_p21nr_l23.h5ad
+  data/input/easifish/easifish_sample{1,2,3}_res.csv
 Outputs:
   results/5_easifish/02.l23_archetype_scores_and_easifish_proj_depth_bins.tsv            (snRNA and MERFISH)
   results/5_easifish/02.l23_archetype_scores_and_easifish_proj_depth_easifish_bins.tsv   (EASI-FISH)
@@ -57,12 +57,12 @@ from l23.expr import log2_cp10k, pctile_score
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 INPUT_AXIS    = os.path.join(REPO_ROOT, 'results', '5_easifish', '01.yoo25_p21nr_ac_axis.tsv')
-INPUT_YOO25   = os.path.join(REPO_ROOT, 'results', '0_prep', '01.yoo25_l23.h5ad')
+INPUT_YOO25   = os.path.join(REPO_ROOT, 'data', 'input', '01.yoo25_l23.h5ad')
 INPUT_MARKERS = os.path.join(REPO_ROOT, 'results', '2_development', '01.yoo25_l23_abc_genes.tsv')
 INPUT_MERFISH = {   # panel label -> L2/3 MERFISH cells (0_prep/02)
-    'P21 NR': os.path.join(REPO_ROOT, 'results', '0_prep', '02.merfish_p21nr_l23.h5ad'),
+    'P21 NR': os.path.join(REPO_ROOT, 'data', 'input', '02.merfish_p21nr_l23.h5ad'),
 }
-INPUT_EASIFISH = [os.path.join(REPO_ROOT, 'data', 'raw', 'easifish', f'easifish_sample{i}_res.csv') for i in (1, 2, 3)]
+INPUT_EASIFISH = [os.path.join(REPO_ROOT, 'data', 'input', 'easifish', f'easifish_sample{i}_res.csv') for i in (1, 2, 3)]
 OUT_PREFIX    = os.path.join(REPO_ROOT, 'results', '5_easifish', '02.l23_archetype_scores_and_easifish_proj_depth')
 OUT_TSV       = f'{OUT_PREFIX}_bins.tsv'
 OUT_EASI_TSV  = f'{OUT_PREFIX}_easifish_bins.tsv'

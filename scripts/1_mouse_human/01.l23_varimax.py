@@ -12,8 +12,8 @@ scripts 02 and 04 is read from.
          excluded: it is 1:1 with donor_id).
 
 Reads:
-  results/0_prep/01.cheng22_p28nr_l23.h5ad
-  data/raw/jorstad23_human_WithinArea_L23IT.h5ad
+  data/input/01.cheng22_p28nr_l23.h5ad
+  data/input/jorstad23_human_WithinArea_L23IT.h5ad
 Outputs (species = mouse, human):
   results/1_mouse_human/01.{species}_l23_varimax_coords.tsv
   results/1_mouse_human/01.{species}_l23_varimax_loadings.tsv
@@ -30,8 +30,8 @@ from l23.crossspecies import pca_varimax, variance_partition, dummies, library_s
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-INPUT_MOUSE = os.path.join(REPO_ROOT, 'results', '0_prep', '01.cheng22_p28nr_l23.h5ad')
-INPUT_HUMAN = os.path.join(REPO_ROOT, 'data', 'raw', 'jorstad23_human_WithinArea_L23IT.h5ad')
+INPUT_MOUSE = os.path.join(REPO_ROOT, 'data', 'input', '01.cheng22_p28nr_l23.h5ad')
+INPUT_HUMAN = os.path.join(REPO_ROOT, 'data', 'input', 'jorstad23_human_WithinArea_L23IT.h5ad')
 OUT_DIR     = os.path.join(REPO_ROOT, 'results', '1_mouse_human')
 OUT         = {k: os.path.join(OUT_DIR, f'01.{{}}_l23_{k}.tsv') for k in
                ['varimax_coords', 'varimax_loadings', 'pc_variance_partition', 'vx_variance_partition']}

@@ -15,7 +15,7 @@ Null: per sample, N_PERM times, the RL labels and the LM labels are each permute
 p_perm = (1 + #(|dz_null| >= |dz|)) / (1 + N_PERM) over the reps where dz_null is defined.
 
 Reads:
-  data/raw/easifish/easifish_sample{1,2,3}_res.csv
+  data/input/easifish/easifish_sample{1,2,3}_res.csv
 Outputs:
   results/5_easifish/04.easifish_depth_hist.tsv   (sample, group, z_lo, z_hi, n, frac)
   results/5_easifish/04.easifish_xy_bins.tsv      (sample, xbin, ybin, x_lo, y_lo, n_cells, n_LM, n_RL, log2_rl_lm,
@@ -31,7 +31,7 @@ import pandas as pd
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 SAMPLES        = (1, 2, 3)
-INPUT_EASIFISH = {s: os.path.join(REPO_ROOT, 'data', 'raw', 'easifish', f'easifish_sample{s}_res.csv')
+INPUT_EASIFISH = {s: os.path.join(REPO_ROOT, 'data', 'input', 'easifish', f'easifish_sample{s}_res.csv')
                   for s in SAMPLES}
 RES_DIR        = os.path.join(REPO_ROOT, 'results', '5_easifish')
 OUT_DEPTH      = os.path.join(RES_DIR, '04.easifish_depth_hist.tsv')

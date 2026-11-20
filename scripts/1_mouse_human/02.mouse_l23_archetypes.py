@@ -14,7 +14,7 @@ letters: C -> A', B -> B', A -> C' (archetype_3 -> A', archetype_2 -> B', archet
 Reads:
   results/1_mouse_human/01.mouse_l23_varimax_coords.tsv
   results/1_mouse_human/01.mouse_l23_varimax_loadings.tsv
-  results/0_prep/01.cheng22_p28nr_l23.h5ad
+  data/input/01.cheng22_p28nr_l23.h5ad
 Outputs:
   results/1_mouse_human/02.mouse_l23_pcha_aa_vx.tsv      (the archetypes in the Gate-A VX space)
   results/1_mouse_human/02.mouse_l23_archetype_markers.tsv
@@ -37,7 +37,7 @@ REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fi
 RES_DIR        = os.path.join(REPO_ROOT, 'results', '1_mouse_human')
 IN_VX_COORDS   = os.path.join(RES_DIR, '01.mouse_l23_varimax_coords.tsv')
 IN_VX_LOADINGS = os.path.join(RES_DIR, '01.mouse_l23_varimax_loadings.tsv')
-INPUT_MOUSE    = os.path.join(REPO_ROOT, 'results', '0_prep', '01.cheng22_p28nr_l23.h5ad')
+INPUT_MOUSE    = os.path.join(REPO_ROOT, 'data', 'input', '01.cheng22_p28nr_l23.h5ad')
 OUT_PCHA_AA_VX = os.path.join(RES_DIR, '02.mouse_l23_pcha_aa_vx.tsv')
 OUT_MARKERS    = os.path.join(RES_DIR, '02.mouse_l23_archetype_markers.tsv')
 OUT_SCORES     = os.path.join(RES_DIR, '02.mouse_l23_archetype_scores.tsv')

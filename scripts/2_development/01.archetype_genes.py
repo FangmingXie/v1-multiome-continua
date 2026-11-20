@@ -16,9 +16,9 @@ Steps (per condition unless noted):
 The archetype genes are checked against the published Table S4 (exact match per condition and archetype).
 
 Reads:
-  results/0_prep/01.yoo25_l23.h5ad              (Yoo25 L2/3 raw counts, all conditions)
-  data/raw/Cheng22_Xie25_L23_ABC_genes_n286.csv     (Cheng22 adult L2/3 A/B/C genes)
-  data/raw/TableS4_L23_archetypal_genes.tsv     (published Table S4; exact-match check only)
+  data/input/01.yoo25_l23.h5ad              (Yoo25 L2/3 raw counts, all conditions)
+  data/input/Cheng22_Xie25_L23_ABC_genes_n286.csv     (Cheng22 adult L2/3 A/B/C genes)
+  data/input/TableS4_L23_archetypal_genes.tsv     (published Table S4; exact-match check only)
 Outputs:
   results/2_development/01.yoo25_l23_abc_scores.tsv    (step 1; cell, cond, score_a, score_b, score_c)
   results/2_development/01.yoo25_l23_abc_genes.tsv     (step 3, = Table S4; cond, archetype, gene, l2fc_max/min/avg, q_min)
@@ -38,9 +38,9 @@ from l23.constants import AGES
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-INPUT_H5AD  = os.path.join(REPO_ROOT, 'results', '0_prep', '01.yoo25_l23.h5ad')
-INPUT_GENES = os.path.join(REPO_ROOT, 'data', 'raw', 'Cheng22_Xie25_L23_ABC_genes_n286.csv')
-INPUT_S4    = os.path.join(REPO_ROOT, 'data', 'raw', 'TableS4_L23_archetypal_genes.tsv')
+INPUT_H5AD  = os.path.join(REPO_ROOT, 'data', 'input', '01.yoo25_l23.h5ad')
+INPUT_GENES = os.path.join(REPO_ROOT, 'data', 'input', 'Cheng22_Xie25_L23_ABC_genes_n286.csv')
+INPUT_S4    = os.path.join(REPO_ROOT, 'data', 'input', 'TableS4_L23_archetypal_genes.tsv')
 OUT_SCORES  = os.path.join(REPO_ROOT, 'results', '2_development', '01.yoo25_l23_abc_scores.tsv')
 OUT_GENES   = os.path.join(REPO_ROOT, 'results', '2_development', '01.yoo25_l23_abc_genes.tsv')
 OUT_STATS   = os.path.join(REPO_ROOT, 'results', '2_development', '01.yoo25_l23_abc_gene_stats.parquet')

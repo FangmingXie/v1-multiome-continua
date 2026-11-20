@@ -16,7 +16,7 @@ Pseudobulk: raw counts of every gene summed per sample (the replicate) and cell 
 A', B', C' cells), all Ages; lib = the unit's summed library sizes (= row sum of the counts).
 
 Reads:
-  results/0_prep/01.yoo25_l23.h5ad
+  data/input/01.yoo25_l23.h5ad
   results/2_development/01.yoo25_l23_abc_genes.tsv
 Outputs:
   results/2_development/02.yoo25_l23_cell_groups.tsv            (per cell: archetype group, '' = none)
@@ -35,7 +35,7 @@ from l23.expr import log2_cp10k, pctile_score
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-INPUT_YOO25   = os.path.join(REPO_ROOT, 'results', '0_prep', '01.yoo25_l23.h5ad')
+INPUT_YOO25   = os.path.join(REPO_ROOT, 'data', 'input', '01.yoo25_l23.h5ad')
 INPUT_MARKERS = os.path.join(REPO_ROOT, 'results', '2_development', '01.yoo25_l23_abc_genes.tsv')
 OUT_CELLS      = os.path.join(REPO_ROOT, 'results', '2_development', '02.yoo25_l23_cell_groups.tsv')
 OUT_PB         = os.path.join(REPO_ROOT, 'results', '2_development', '02.yoo25_l23_pseudobulk_counts.tsv')

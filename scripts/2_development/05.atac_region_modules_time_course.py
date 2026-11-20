@@ -17,8 +17,8 @@ Sensitivity: the same scores and OLS with lib = summed obs n_fragment (*_nfrag c
 side by side). Figures: 2_development/08.
 
 Reads:
-  data/raw/atac/pmat_l23concensus_{Age}.h5ad
-  data/raw/atac_modules/L23{A,B,C}_regions_M{1-5}.bed
+  data/input/atac/pmat_l23concensus_{Age}.h5ad
+  data/input/atac_modules/L23{A,B,C}_regions_M{1-5}.bed
   results/2_development/02.yoo25_l23_cell_groups.tsv
 Outputs:
   results/2_development/05.yoo25_l23_atac_region_modules_regions.tsv   (region -> module, pass filter per cell group)
@@ -39,8 +39,8 @@ REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fi
 
 ARCHETYPES   = ['A', 'B', 'C']
 MODULES      = ['M1', 'M2', 'M3', 'M4', 'M5']
-INPUT_PMAT   = {a: os.path.join(REPO_ROOT, 'data', 'raw', 'atac', f'pmat_l23concensus_{a}.h5ad') for a in AGES}
-INPUT_BED    = {(k, m): os.path.join(REPO_ROOT, 'data', 'raw', 'atac_modules', f'L23{k}_regions_{m}.bed')
+INPUT_PMAT   = {a: os.path.join(REPO_ROOT, 'data', 'input', 'atac', f'pmat_l23concensus_{a}.h5ad') for a in AGES}
+INPUT_BED    = {(k, m): os.path.join(REPO_ROOT, 'data', 'input', 'atac_modules', f'L23{k}_regions_{m}.bed')
                 for k in ARCHETYPES for m in MODULES}
 INPUT_CELLS  = os.path.join(REPO_ROOT, 'results', '2_development', '02.yoo25_l23_cell_groups.tsv')
 OUT_REGIONS  = os.path.join(REPO_ROOT, 'results', '2_development', '05.yoo25_l23_atac_region_modules_regions.tsv')

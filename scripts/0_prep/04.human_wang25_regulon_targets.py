@@ -28,7 +28,7 @@ Same regulon model and dedup rule as the mouse script:
 Reads:
   data/raw/regulons/human_regulons_SuppTable13.xlsx
 Outputs:
-  results/0_prep/04.human_wang25_regulon_targets.tsv
+  data/input/04.human_wang25_regulon_targets.tsv
 """
 
 import os
@@ -42,7 +42,7 @@ from l23.regulon import REGULON_COLS, merge_direct_extended
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 XLSX = os.path.join(REPO_ROOT, "data", "raw", "regulons", "human_regulons_SuppTable13.xlsx")
-OUT_TSV = os.path.join(REPO_ROOT, "results", "0_prep", "04.human_wang25_regulon_targets.tsv")
+OUT_TSV = os.path.join(REPO_ROOT, "data", "input", "04.human_wang25_regulon_targets.tsv")
 
 GENE_SHEET = "xl/worksheets/sheet2.xml"  # "Supplementary Table 13b" — target genes
 
