@@ -21,4 +21,6 @@ for f in "${FOLDERS[@]}"; do
         python -u "$s" > "$log" 2>&1 || { echo "FAILED: $s (see $log)"; tail -20 "$log"; exit 1; }
     done
 done
+# README.md is the figure report: every PDF in figures/ must be linked from it (skipped for 0_prep alone)
+if [ "${FOLDERS[*]}" != "0_prep" ]; then python check_readme_figures.py; fi
 echo "$(date +%T) done"

@@ -25,6 +25,7 @@ Repository layout and the script index are in README.md; the inputs (`data/input
 - Data: 0_prep reads only `data/raw/` and writes its outputs to `data/input/`; scripts 1-5 read only `data/input/` and `results/`. In `data/input/`, a file with a number prefix was written by 0_prep; one without is external.
 - Computing scripts come first and write tables; figure scripts come after them and only read tables.
 - Each script starts with a docstring stating what it does, what it reads and what it writes.
+- README.md links every figure PDF from its script's row; when a figure is added, renamed or removed, update the link (`run_all.sh` fails otherwise, via `check_readme_figures.py`).
 
 ## Reproducibility
 - Do not change package versions in `environment.yml`; numerical notes on the pinned env (numpy, OpenBLAS, DESeq2) are in REPRODUCIBILITY.md.
