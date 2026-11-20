@@ -114,18 +114,25 @@ Needed only to rerun 0_prep.
 by 0_prep, one without is external. With `data/input/` complete (0_prep's outputs included), every
 figure can be reproduced without `data/raw/`: run the folders after 0_prep.
 
+Datasets:
+
 | File in `data/input/` | Content | Used by | Source |
 |---|---|---|---|
 | `jorstad23_human_WithinArea_L23IT.h5ad` | Human L2/3 IT (Jorstad et al. 2023) | 1/01, 1/03 | TBD |
-| `human_mouse_orthologs.tsv` | Human-mouse ortholog pairs | 1/03, 1/04, 1/06 | TBD |
 | `fang22_human_merfish/*.csv` | Human cortex MERFISH, 6 sections (Fang et al. 2022) | 1/06 | TBD |
+| `atac/pmat_l23concensus_{age}.h5ad` | Yoo25 L2/3 ATAC peak matrices, 11 conditions | 2/05 | TBD |
+| `wang25_human_multiome_gex_v1_l23.h5ad` | Human developing V1 L2/3, multiome GEX (Wang et al. 2025) | 3/04 | TBD |
+| `easifish/easifish_sample{1,2,3}_res.csv` | EASI-FISH retrograde labels (LM, RL), 3 samples | 5/02, 5/04, 5/05 | TBD |
+
+Small tables and annotations:
+
+| File in `data/input/` | Content | Used by | Source |
+|---|---|---|---|
+| `human_mouse_orthologs.tsv` | Human-mouse ortholog pairs | 1/03, 1/04, 1/06 | TBD |
 | `Cheng22_Xie25_L23_ABC_genes_n286.csv` | Adult L2/3 archetype genes, the seed of the archetype genes | 2/01 | TBD |
 | `TableS4_L23_archetypal_genes.tsv` | Published Table S4; exact-match check only | 2/01 | TBD |
 | `gene_sets_l23{a,b,c}_250423.csv` | Module (M1-M5) of each archetype gene | 2/04 | TBD |
-| `atac/pmat_l23concensus_{age}.h5ad` | Yoo25 L2/3 ATAC peak matrices, 11 conditions | 2/05 | TBD |
 | `atac_modules/L23{A,B,C}_regions_M{1-5}.bed` | Archetype chromatin region modules | 2/05 | TBD |
-| `wang25_human_multiome_gex_v1_l23.h5ad` | Human developing V1 L2/3, multiome GEX (Wang et al. 2025) | 3/04 | TBD |
-| `easifish/easifish_sample{1,2,3}_res.csv` | EASI-FISH retrograde labels (LM, RL), 3 samples | 5/02, 5/04, 5/05 | TBD |
 
 Written by 0_prep: `01.yoo25_l23.h5ad`, `01.cheng22_p28nr_l23.h5ad` (0_prep/01), `02.merfish_{p28nr,p21nr}_l23.h5ad` (0_prep/02),
 `03.yoo25_l23_regulon_targets.tsv` (0_prep/03), `04.human_wang25_regulon_targets.tsv` (0_prep/04).
