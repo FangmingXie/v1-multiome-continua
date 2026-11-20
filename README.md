@@ -17,10 +17,12 @@ counts (`2_development/01`, identical to Table S4) and are also used by results 
 conda env create -f environment.yml
 conda activate v1-multiome-continua
 pip install --no-deps -e .     # shared code src/l23/, importable by every script
-# put the inputs in data/raw/ and data/input/ (see "Inputs")
-bash run_input_prep.sh         # 0_prep: data/raw/ -> data/input/; skip if data/input/ is complete
+pip install gdown              # for download_inputs.sh only
+bash download_inputs.sh        # data/input/ from the input bundles (see "Inputs")
 bash run_all.sh                # the analysis, folders 1-5
 ```
+`download_inputs.sh` fetches the input bundles, checks their sha256 and unpacks them into `data/input/`.
+Maintainers with `data/raw/` can instead rebuild 0_prep's part of `data/input/` with `run_input_prep.sh`.
 `run_input_prep.sh` runs 0_prep, which writes its outputs to `data/input/`. `run_all.sh` runs the
 analysis scripts in number order, folder by folder (1_mouse_human to 5_easifish); each folder reads
 only from itself, lower-numbered folders and `data/input/`. They write tables to `results/<folder>/`,
@@ -92,6 +94,18 @@ Results 2's `04`, `05` and `06` also show NR vs DR.
 ## Inputs
 Inputs are split by the stage that reads them; neither folder is tracked.
 
+### Input bundles
+`download_inputs.sh` installs `data/input/` from two archives, made by `make_input_bundle.sh`:
+
+| Bundle | Content | Size | Needed by |
+|---|---|---|---|
+| core | every file of `data/input/` except the three external human datasets, 0_prep's outputs included | 1.7 GB | folders 2-5 |
+| external | `jorstad23_*.h5ad`, `wang25_*.h5ad`, `fang22_human_merfish/` | 4 GB | folder 1, 3_regulon/03 and its figure 07 |
+
+`bash download_inputs.sh --core-only` skips the external bundle; `--from <dir>` installs archives already
+downloaded (e.g. in a browser). Each bundle carries `MANIFEST_<bundle>.tsv` (path, size, sha256 of each
+file) and `ATTRIBUTION.md`. Sources and licences of every input: [DATA_ATTRIBUTION.md](DATA_ATTRIBUTION.md).
+
 ### `data/raw/`: sources of 0_prep
 Needed only to rerun 0_prep.
 
@@ -118,11 +132,11 @@ Datasets:
 | `01.cheng22_p28nr_l23.h5ad` | Cheng22 mouse V1 L2/3 snRNA-seq, P28 NR, raw counts | 1/01, 1/02, 3/01 | 0_prep/01 |
 | `02.merfish_p28nr_l23.h5ad` | Mouse P28 NR V1 MERFISH, L2/3 cells (500 genes) | 1/04 | 0_prep/02 |
 | `02.merfish_p21nr_l23.h5ad` | Mouse P21 NR V1 MERFISH, L2/3 cells (361 genes) | 5/01 | 0_prep/02 |
-| `jorstad23_human_WithinArea_L23IT.h5ad` | Human L2/3 IT (Jorstad et al. 2023) | 1/01, 1/02 | TBD |
-| `fang22_human_merfish/*.csv` | Human cortex MERFISH, 6 sections (Fang et al. 2022) | 1/04 | TBD |
-| `atac/pmat_l23concensus_{age}.h5ad` | Yoo25 L2/3 ATAC peak matrices, 11 conditions | 2/06 | TBD |
-| `wang25_human_multiome_gex_v1_l23.h5ad` | Human developing V1 L2/3, multiome GEX (Wang et al. 2025) | 3/03 | TBD |
-| `easifish/easifish_sample{1,2,3}_res.csv` | EASI-FISH retrograde labels (LM, RL), 3 samples | 5/01, 5/03 | TBD |
+| `jorstad23_human_WithinArea_L23IT.h5ad` | Human L2/3 IT (Jorstad et al. 2023) | 1/01, 1/02 | CELLxGENE (CC BY 4.0), L2/3 IT subset |
+| `fang22_human_merfish/*.csv` | Human cortex MERFISH, 6 sections (Fang et al. 2022) | 1/04 | Dryad (CC0) |
+| `atac/pmat_l23concensus_{age}.h5ad` | Yoo25 L2/3 ATAC peak matrices, 11 conditions | 2/06 | this study |
+| `wang25_human_multiome_gex_v1_l23.h5ad` | Human developing V1 L2/3, multiome GEX (Wang et al. 2025) | 3/03 | CELLxGENE (CC BY 4.0), V1 L2/3 subset |
+| `easifish/easifish_sample{1,2,3}_res.csv` | EASI-FISH retrograde labels (LM, RL), 3 samples | 5/01, 5/03 | this study |
 
 Small tables and annotations:
 
@@ -130,17 +144,20 @@ Small tables and annotations:
 |---|---|---|---|
 | `03.yoo25_l23_regulon_targets.tsv` | Yoo25 L2/3 SCENIC+ regulon -> target table | 3/01, 3/02, 3/03, 4/01 | 0_prep/03 |
 | `04.human_wang25_regulon_targets.tsv` | Wang25 human regulon -> target table | 3/03 | 0_prep/04 |
-| `human_mouse_orthologs.tsv` | Human-mouse ortholog pairs | 1/02, 1/03, 1/04 | TBD |
-| `Cheng22_Xie25_L23_ABC_genes_n286.csv` | Adult L2/3 archetype genes, the seed of the archetype genes | 2/01 | TBD |
-| `TableS4_L23_archetypal_genes.tsv` | Published Table S4; exact-match check only | 2/01 | TBD |
-| `gene_sets_l23{a,b,c}_250423.csv` | Module (M1-M5) of each archetype gene | 2/05 | TBD |
-| `atac_modules/L23{A,B,C}_regions_M{1-5}.bed` | Archetype chromatin region modules | 2/06 | TBD |
+| `human_mouse_orthologs.tsv` | Human-mouse ortholog pairs | 1/02, 1/03, 1/04 | not recorded |
+| `Cheng22_Xie25_L23_ABC_genes_n286.csv` | Adult L2/3 archetype genes, the seed of the archetype genes | 2/01 | our lab |
+| `TableS4_L23_archetypal_genes.tsv` | Table S4 of this study; exact-match check only | 2/01 | this study |
+| `gene_sets_l23{a,b,c}_250423.csv` | Module (M1-M5) of each archetype gene | 2/05 | our lab |
+| `atac_modules/L23{A,B,C}_regions_M{1-5}.bed` | Archetype chromatin region modules | 2/06 | this study |
 
 ## Layout
 ```
 v1-multiome-continua/
 ├── README.md
 ├── REPRODUCIBILITY.md      numerical notes on the pinned environment
+├── DATA_ATTRIBUTION.md     sources and licences of the inputs
+├── download_inputs.sh      installs data/input/ from the input bundles
+├── make_input_bundle.sh    (maintainers) packs data/input/ into the input bundles
 ├── run_input_prep.sh       runs 0_prep (data/raw/ -> data/input/)
 ├── run_all.sh              runs the analysis, folders 1-5, in dependency order
 ├── environment.yml         pinned conda env (see REPRODUCIBILITY.md)

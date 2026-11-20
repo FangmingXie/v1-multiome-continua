@@ -6,6 +6,7 @@ __pycache__/
 # large inputs (symlinks for development; downloaded for release)
 data/raw/
 data/input/
+data/downloads/
 
 # outputs
 results/
