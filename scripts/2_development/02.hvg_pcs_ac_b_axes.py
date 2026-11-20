@@ -19,9 +19,9 @@ Reads:
   data/input/01.yoo25_l23.h5ad
   results/2_development/01.yoo25_l23_abc_scores.tsv
 Outputs:
-  results/2_development/06.yoo25_l23_hvg_pcs_cells.tsv        (per cell: PCs, ac, b, null ac, b)
-  results/2_development/06.yoo25_l23_hvg_pcs_archetypes.tsv   (A, B, C vertices in P_LATER (PC1, PC2))
-  results/2_development/06.yoo25_l23_hvg_pcs_variance.tsv     (variances per Age and per Sample)
+  results/2_development/02.yoo25_l23_hvg_pcs_cells.tsv        (per cell: PCs, ac, b, null ac, b)
+  results/2_development/02.yoo25_l23_hvg_pcs_archetypes.tsv   (A, B, C vertices in P_LATER (PC1, PC2))
+  results/2_development/02.yoo25_l23_hvg_pcs_variance.tsv     (variances per Age and per Sample)
 """
 
 import os
@@ -39,9 +39,9 @@ REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fi
 
 INPUT_YOO25  = os.path.join(REPO_ROOT, 'data', 'input', '01.yoo25_l23.h5ad')
 INPUT_SCORES = os.path.join(REPO_ROOT, 'results', '2_development', '01.yoo25_l23_abc_scores.tsv')
-OUT_CELLS    = os.path.join(REPO_ROOT, 'results', '2_development', '06.yoo25_l23_hvg_pcs_cells.tsv')
-OUT_ARCH     = os.path.join(REPO_ROOT, 'results', '2_development', '06.yoo25_l23_hvg_pcs_archetypes.tsv')
-OUT_VAR      = os.path.join(REPO_ROOT, 'results', '2_development', '06.yoo25_l23_hvg_pcs_variance.tsv')
+OUT_CELLS    = os.path.join(REPO_ROOT, 'results', '2_development', '02.yoo25_l23_hvg_pcs_cells.tsv')
+OUT_ARCH     = os.path.join(REPO_ROOT, 'results', '2_development', '02.yoo25_l23_hvg_pcs_archetypes.tsv')
+OUT_VAR      = os.path.join(REPO_ROOT, 'results', '2_development', '02.yoo25_l23_hvg_pcs_variance.tsv')
 
 MIN_CELLS = 10       # keep genes detected in more than this many cells
 N_BIN     = 20       # mean-expression bins for HVG selection

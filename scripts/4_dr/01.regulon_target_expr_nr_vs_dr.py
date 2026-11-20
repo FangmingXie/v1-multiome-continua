@@ -9,7 +9,7 @@ pooled, so both share one scale), capped at 1, averaged over the regulon's targe
 Replicates: per (condition, Age, Sample) the mean score over the sample's cells; per age, the mean over
 replicates. Each TF is divided by its largest NR replicate-mean, so 1 = the NR peak (DR can exceed 1).
 
-Statistics (l23.timecourse.dr_ols, as 2_development/04): per TF, OLS of the replicate scores (mean_norm)
+Statistics (l23.timecourse.dr_ols, as 2_development/05): per TF, OLS of the replicate scores (mean_norm)
 over the P12-P21 samples, score ~ age (factor) + DR + DR*(day - D0), D0 = 16 = mean DR day: b_DR =
 average DR effect at day 16 (in NR-peak units), b_slope = change in the DR effect per day; t-test
 p-values, BH padj over all tested TFs. rel_change_P21 = (P21 DR - P21 NR) / P21 NR of the replicate-mean

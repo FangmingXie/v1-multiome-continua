@@ -1,30 +1,30 @@
 """A/B/C archetype gene modules (M1-M5) over postnatal day in Yoo25 L2/3, NR vs DR, per cell group of
-2_development/02 (all L2/3, A', B', C' cells).
+2_development/03 (all L2/3, A', B', C' cells).
 
 Modules: each archetype gene set (gene_sets_l23{a,b,c}_250423.csv; = the union of that archetype's
 Table S4 genes (2_development/01) over all conditions, checked) is split by its column clst 0-4, named M1-M5 here. A gene
 in two archetype sets is in a module of each.
-Per gene and sample (2_development/02 pseudobulk): log2(CPM+1) = log2(counts / lib * 1e6 + 1) minus the gene's
+Per gene and sample (2_development/03 pseudobulk): log2(CPM+1) = log2(counts / lib * 1e6 + 1) minus the gene's
 reference REF (mean over the P21 NR samples, all L2/3 cells), as in 4_dr/02. Module score per sample =
 mean of that value over the module's genes that pass the filter in the cell group (>= MIN_PB_COUNTS
 counts in >= MIN_PB_SAMPLES of the group's samples, all Ages).
 Statistics per module and cell group (l23.timecourse.dr_ols): OLS of the module score over the P12-P21
-samples (9 NR, 8 DR) with the 2_development/03 model, score ~ age (factor) + DR + DR*(day - D0), D0 = 16:
+samples (9 NR, 8 DR) with the 2_development/04 model, score ~ age (factor) + DR + DR*(day - D0), D0 = 16:
 b_DR = average DR effect (at day 16), b_int = change in the DR effect per day; t-test p-values, BH padj
 over the 15 modules of the cell group. Context: fraction of the module's genes with padj < FDR in
-2_development/03 (DR, slope; columns *_14).
+2_development/04 (DR, slope; columns *_14).
 Figures: 2_development/08.
 
 Reads:
-  results/2_development/02.yoo25_l23_pseudobulk_counts.tsv
-  results/2_development/02.yoo25_l23_pseudobulk_samples.tsv
-  results/2_development/03.yoo25_l23_time_course_dr_by_day_slope_deseq2.tsv
+  results/2_development/03.yoo25_l23_pseudobulk_counts.tsv
+  results/2_development/03.yoo25_l23_pseudobulk_samples.tsv
+  results/2_development/04.yoo25_l23_time_course_dr_by_day_slope_deseq2.tsv
   data/input/gene_sets_l23{a,b,c}_250423.csv
   results/2_development/01.yoo25_l23_abc_genes.tsv
 Outputs:
-  results/2_development/04.yoo25_l23_gene_modules_genes.tsv     (gene -> module, pass filter per cell group)
-  results/2_development/04.yoo25_l23_gene_modules_samples.tsv   (module score per sample)
-  results/2_development/04.yoo25_l23_gene_modules_stats.tsv     (OLS DR and slope per module)
+  results/2_development/05.yoo25_l23_gene_modules_genes.tsv     (gene -> module, pass filter per cell group)
+  results/2_development/05.yoo25_l23_gene_modules_samples.tsv   (module score per sample)
+  results/2_development/05.yoo25_l23_gene_modules_stats.tsv     (OLS DR and slope per module)
 """
 
 import os
@@ -36,15 +36,15 @@ from l23.timecourse import dr_ols, bh
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-INPUT_PB         = os.path.join(REPO_ROOT, 'results', '2_development', '02.yoo25_l23_pseudobulk_counts.tsv')
-INPUT_PB_SAMPLES = os.path.join(REPO_ROOT, 'results', '2_development', '02.yoo25_l23_pseudobulk_samples.tsv')
-INPUT_STATS      = os.path.join(REPO_ROOT, 'results', '2_development', '03.yoo25_l23_time_course_dr_by_day_slope_deseq2.tsv')
+INPUT_PB         = os.path.join(REPO_ROOT, 'results', '2_development', '03.yoo25_l23_pseudobulk_counts.tsv')
+INPUT_PB_SAMPLES = os.path.join(REPO_ROOT, 'results', '2_development', '03.yoo25_l23_pseudobulk_samples.tsv')
+INPUT_STATS      = os.path.join(REPO_ROOT, 'results', '2_development', '04.yoo25_l23_time_course_dr_by_day_slope_deseq2.tsv')
 INPUT_SETS       = {k: os.path.join(REPO_ROOT, 'data', 'input', f'gene_sets_l23{k.lower()}_250423.csv')
                     for k in ['A', 'B', 'C']}
 INPUT_MARKERS    = os.path.join(REPO_ROOT, 'results', '2_development', '01.yoo25_l23_abc_genes.tsv')
-OUT_GENES        = os.path.join(REPO_ROOT, 'results', '2_development', '04.yoo25_l23_gene_modules_genes.tsv')
-OUT_SAMPLES      = os.path.join(REPO_ROOT, 'results', '2_development', '04.yoo25_l23_gene_modules_samples.tsv')
-OUT_STATS        = os.path.join(REPO_ROOT, 'results', '2_development', '04.yoo25_l23_gene_modules_stats.tsv')
+OUT_GENES        = os.path.join(REPO_ROOT, 'results', '2_development', '05.yoo25_l23_gene_modules_genes.tsv')
+OUT_SAMPLES      = os.path.join(REPO_ROOT, 'results', '2_development', '05.yoo25_l23_gene_modules_samples.tsv')
+OUT_STATS        = os.path.join(REPO_ROOT, 'results', '2_development', '05.yoo25_l23_gene_modules_stats.tsv')
 
 GROUPS         = ['all L2/3', "A' cells", "B' cells", "C' cells"]
 ARCHETYPES     = ['A', 'B', 'C']
@@ -106,7 +106,7 @@ samp = pd.concat(rows, ignore_index=True)[['cells', 'archetype', 'module', 'Samp
 samp.to_csv(OUT_SAMPLES, sep='\t', index=False)
 print(f'wrote {OUT_SAMPLES}')
 
-# OLS per module and cell group (2_development/03 model), P12-P21
+# OLS per module and cell group (2_development/04 model), P12-P21
 deg = pd.read_csv(INPUT_STATS, sep='\t').set_index(['cells', 'gene'])
 stats = []
 for (grp, k, m), t in samp[samp['day'].isin(TEST_DAYS)].groupby(['cells', 'archetype', 'module']):

@@ -1,10 +1,10 @@
 """NR vs DR over postnatal day: the per-sample OLS test and the time-course panel.
 
-Test (2_development/04-05, 4_dr/01): over the P12-P21 samples (TEST_DAYS; NR and DR at each),
+Test (2_development/05-06, 4_dr/01): over the P12-P21 samples (TEST_DAYS; NR and DR at each),
   y ~ age (factor) + DR + DR * (day - D0)
 D0 = 16 = the mean day of the DR samples, so b_DR is the average DR effect (the effect at day 16) and
 b_int is the change in the DR effect per day; t-test p-values. The same design as the per-gene DESeq2
-of 2_development/03.
+of 2_development/04.
 """
 
 import numpy as np

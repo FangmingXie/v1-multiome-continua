@@ -1,23 +1,27 @@
-"""Figures of 2_development/06: Yoo25 L2/3 cells in P21 PC space colored by archetype score, and the
-variance of each Age along the A-C and B axes, NR vs DR.
+"""Figures of 2_development/01 and 02: Yoo25 L2/3 cells in P21 PC space colored by archetype score, the
+variance of each Age along the A-C and B axes, and the number of archetype genes per condition, NR vs DR.
 
-  08.yoo25_l23_pc12_abc_scores.pdf      one column per Age (NR P6-P21, then DR P12-P21); cells in the
+  07.yoo25_l23_pc12_abc_scores.pdf      one column per Age (NR P6-P21, then DR P12-P21); cells in the
                                         P21 (PC1, PC2) with the P21 archetype triangle (dashed). Row 1
                                         colored by score C - A, row 2 by score B (2_development/01); color
                                         range = 5th-95th percentile over all cells.
-  08.yoo25_l23_ac_b_variance_over_age.pdf  variance over postnatal day of P8 PC1, the A-C axis and the B axis;
+  07.yoo25_l23_ac_b_variance_over_age.pdf  variance over postnatal day of P8 PC1, the A-C axis and the B axis;
                                         lines = per Age, markers = per Sample, dashed = shuffled-gene null.
                                         P8 PC1 and A-C are divided by the max A-C variance over Ages,
                                         B by the max B variance.
+  07.yoo25_l23_abc_gene_counts.pdf      number of A/B/C genes per condition (2_development/01, = Table S4);
+                                        panels A and C, then B; solid = NR, dashed = DR.
 
 Reads:
-  results/2_development/06.yoo25_l23_hvg_pcs_cells.tsv
-  results/2_development/06.yoo25_l23_hvg_pcs_archetypes.tsv
-  results/2_development/06.yoo25_l23_hvg_pcs_variance.tsv
+  results/2_development/02.yoo25_l23_hvg_pcs_cells.tsv
+  results/2_development/02.yoo25_l23_hvg_pcs_archetypes.tsv
+  results/2_development/02.yoo25_l23_hvg_pcs_variance.tsv
   results/2_development/01.yoo25_l23_abc_scores.tsv
+  results/2_development/01.yoo25_l23_abc_genes.tsv
 Outputs:
-  figures/2_development/09.yoo25_l23_pc12_abc_scores.pdf
-  figures/2_development/09.yoo25_l23_ac_b_variance_over_age.pdf
+  figures/2_development/07.yoo25_l23_pc12_abc_scores.pdf
+  figures/2_development/07.yoo25_l23_ac_b_variance_over_age.pdf
+  figures/2_development/07.yoo25_l23_abc_gene_counts.pdf
 """
 
 import os
@@ -36,12 +40,14 @@ matplotlib.rcParams['pdf.fonttype'] = 42
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-INPUT_CELLS  = os.path.join(REPO_ROOT, 'results', '2_development', '06.yoo25_l23_hvg_pcs_cells.tsv')
-INPUT_ARCH   = os.path.join(REPO_ROOT, 'results', '2_development', '06.yoo25_l23_hvg_pcs_archetypes.tsv')
-INPUT_VAR    = os.path.join(REPO_ROOT, 'results', '2_development', '06.yoo25_l23_hvg_pcs_variance.tsv')
+INPUT_CELLS  = os.path.join(REPO_ROOT, 'results', '2_development', '02.yoo25_l23_hvg_pcs_cells.tsv')
+INPUT_ARCH   = os.path.join(REPO_ROOT, 'results', '2_development', '02.yoo25_l23_hvg_pcs_archetypes.tsv')
+INPUT_VAR    = os.path.join(REPO_ROOT, 'results', '2_development', '02.yoo25_l23_hvg_pcs_variance.tsv')
 INPUT_SCORES = os.path.join(REPO_ROOT, 'results', '2_development', '01.yoo25_l23_abc_scores.tsv')
-OUT_PC12     = os.path.join(REPO_ROOT, 'figures', '2_development', '09.yoo25_l23_pc12_abc_scores.pdf')
-OUT_VAR      = os.path.join(REPO_ROOT, 'figures', '2_development', '09.yoo25_l23_ac_b_variance_over_age.pdf')
+INPUT_GENES  = os.path.join(REPO_ROOT, 'results', '2_development', '01.yoo25_l23_abc_genes.tsv')
+OUT_PC12     = os.path.join(REPO_ROOT, 'figures', '2_development', '07.yoo25_l23_pc12_abc_scores.pdf')
+OUT_VAR      = os.path.join(REPO_ROOT, 'figures', '2_development', '07.yoo25_l23_ac_b_variance_over_age.pdf')
+OUT_COUNTS   = os.path.join(REPO_ROOT, 'figures', '2_development', '07.yoo25_l23_abc_gene_counts.pdf')
 
 PCTILES   = (5, 95)      # color range of the scores
 POINT_S   = 4
@@ -50,6 +56,8 @@ FS_LABEL  = 9
 FS_TICK   = 8
 NULL_COLORS = {'NR': 'gray', 'DR': 'lightgray'}
 MARKERS     = {'NR': 'o', 'DR': 's'}
+COUNT_PANELS = ['AC', 'B']                        # archetypes per gene-count panel
+COUNT_COLORS = {'A': 'C0', 'B': 'C1', 'C': 'C2'}
 
 
 def mix(c1, c2, w=0.5):
@@ -141,3 +149,21 @@ axs[0].set_ylabel('norm. variance', fontsize=FS_LABEL)
 axs[0].set_ylim(bottom=0)
 fig.savefig(OUT_VAR)
 print(f'wrote {OUT_VAR}')
+
+# number of archetype genes per condition
+genes = pd.read_csv(INPUT_GENES, sep='\t')
+n_genes = genes.groupby(['archetype', 'cond']).size()
+nr = {age: day for age, (day, cond) in AGES.items() if cond == 'NR'}
+dr = {age: day for age, (day, cond) in AGES.items() if cond == 'DR'}
+fig, axs = plt.subplots(1, len(COUNT_PANELS), figsize=(4 * len(COUNT_PANELS), 4))
+for ax, ks in zip(axs, COUNT_PANELS):
+    for k in ks:
+        ax.plot(list(nr.values()), [n_genes.get((k, c), 0) for c in nr], '-o', fillstyle='none', c=COUNT_COLORS[k], label=f'{k} NR')
+        ax.plot(list(dr.values()), [n_genes.get((k, c), 0) for c in dr], '--s', fillstyle='none', c=COUNT_COLORS[k], label=f'{k} DR')
+    ax.set(xticks=list(nr.values()), xlabel='time (P)', ylabel='num. of genes' if ks == COUNT_PANELS[0] else None)
+    ax.set_ylim(bottom=0)
+    ax.legend()
+    ax.spines[['top', 'right']].set_visible(False)
+fig.tight_layout()
+fig.savefig(OUT_COUNTS, bbox_inches='tight')
+print(f'wrote {OUT_COUNTS}')

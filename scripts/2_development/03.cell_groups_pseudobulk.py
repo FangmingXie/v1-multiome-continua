@@ -1,5 +1,5 @@
 """Yoo25 L2/3 neurons over postnatal development, normally reared (NR) vs dark reared (DR): archetype
-cell groups and the pseudobulk counts (all genes, all Ages) used by 2_development/03-05 and 4_dr/02.
+cell groups and the pseudobulk counts (all genes, all Ages) used by 2_development/04-06 and 4_dr/02.
 
 Cells: the Yoo25 L2/3 neurons of every Age (0_prep/01). NR is sampled at P6-P21; DR only at P12-P21
 (P6-P10 NR are the shared pre-DR baseline).
@@ -19,9 +19,9 @@ Reads:
   data/input/01.yoo25_l23.h5ad
   results/2_development/01.yoo25_l23_abc_genes.tsv
 Outputs:
-  results/2_development/02.yoo25_l23_cell_groups.tsv            (per cell: archetype group, '' = none)
-  results/2_development/02.yoo25_l23_pseudobulk_counts.tsv      ((cells, Sample) rows x all genes)
-  results/2_development/02.yoo25_l23_pseudobulk_samples.tsv     ((cells, Sample): Age, condition, day, n_cells, lib)
+  results/2_development/03.yoo25_l23_cell_groups.tsv            (per cell: archetype group, '' = none)
+  results/2_development/03.yoo25_l23_pseudobulk_counts.tsv      ((cells, Sample) rows x all genes)
+  results/2_development/03.yoo25_l23_pseudobulk_samples.tsv     ((cells, Sample): Age, condition, day, n_cells, lib)
 """
 
 import os
@@ -37,9 +37,9 @@ REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fi
 
 INPUT_YOO25   = os.path.join(REPO_ROOT, 'data', 'input', '01.yoo25_l23.h5ad')
 INPUT_MARKERS = os.path.join(REPO_ROOT, 'results', '2_development', '01.yoo25_l23_abc_genes.tsv')
-OUT_CELLS      = os.path.join(REPO_ROOT, 'results', '2_development', '02.yoo25_l23_cell_groups.tsv')
-OUT_PB         = os.path.join(REPO_ROOT, 'results', '2_development', '02.yoo25_l23_pseudobulk_counts.tsv')
-OUT_PB_SAMPLES = os.path.join(REPO_ROOT, 'results', '2_development', '02.yoo25_l23_pseudobulk_samples.tsv')
+OUT_CELLS      = os.path.join(REPO_ROOT, 'results', '2_development', '03.yoo25_l23_cell_groups.tsv')
+OUT_PB         = os.path.join(REPO_ROOT, 'results', '2_development', '03.yoo25_l23_pseudobulk_counts.tsv')
+OUT_PB_SAMPLES = os.path.join(REPO_ROOT, 'results', '2_development', '03.yoo25_l23_pseudobulk_samples.tsv')
 
 ARCHETYPES       = ["A'", "B'", "C'"]
 TOP_FRAC         = 0.20   # per Age, the top fraction of cells by each score

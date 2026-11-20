@@ -1,15 +1,15 @@
-"""GENES (rows) x cell groups (all L2/3, A', B', C' cells; columns) of 2_development/02 over postnatal day, NR vs DR,
-with the 2_development/03 statistics. A'/B'/C' cells = top 20% per Age by A/B/C scores from all
-Table S4 conditions' genes merged, cells in more than one group dropped (see 2_development/02).
-y = per-sample pseudobulk log2(CPM+1) = log2(counts / lib * 1e6 + 1) (2_development/02: counts and library sizes
+"""GENES (rows) x cell groups (all L2/3, A', B', C' cells; columns) of 2_development/03 over postnatal day, NR vs DR,
+with the 2_development/04 statistics. A'/B'/C' cells = top 20% per Age by A/B/C scores from all
+Table S4 conditions' genes merged, cells in more than one group dropped (see 2_development/03).
+y = per-sample pseudobulk log2(CPM+1) = log2(counts / lib * 1e6 + 1) (2_development/03: counts and library sizes
 summed over the cells) minus the gene's reference REF (mean over the P21 NR samples, all L2/3 cells;
 dashed line at 0), labeled 'log2(CPM+1) - P21 NR mean' (= a log2FC vs P21 NR L2/3 where CPM >> 1);
-the scale DESeq2 tests in 2_development/03, so NR-DR gaps match the log2FCs in the titles; archetype panels show
+the scale DESeq2 tests in 2_development/04, so NR-DR gaps match the log2FCs in the titles; archetype panels show
 enrichment relative to all L2/3. Row label = gene; one shared y-axis label on the left.
 Lines pass through the mean across samples per age x condition; dots are samples. y is shared within
 a row.
 
-Statistics (2_development/03: pseudobulk DESeq2 over P12-P21, 9 NR vs 8 DR samples, ~ age + condition + DR*(day - 16)):
+Statistics (2_development/04: pseudobulk DESeq2 over P12-P21, 9 NR vs 8 DR samples, ~ age + condition + DR*(day - 16)):
   DR     b_DR, the average DR vs NR log2FC over the DR samples (the DR effect at day 16)
   slope  b_int, change in the DR log2FC per day
 Each panel title gives both (estimate, padj; padj NA = removed by DESeq2 independent filtering).
@@ -18,9 +18,9 @@ test, a bracket right of P21 spans the NR and DR line ends, labeled 'DR' and / o
 * < 0.05, ** < 0.01, *** < 0.001 (padj).
 
 Reads:
-  results/2_development/02.yoo25_l23_pseudobulk_counts.tsv
-  results/2_development/02.yoo25_l23_pseudobulk_samples.tsv
-  results/2_development/03.yoo25_l23_time_course_dr_by_day_slope_deseq2.tsv
+  results/2_development/03.yoo25_l23_pseudobulk_counts.tsv
+  results/2_development/03.yoo25_l23_pseudobulk_samples.tsv
+  results/2_development/04.yoo25_l23_time_course_dr_by_day_slope_deseq2.tsv
 Outputs:
   figures/4_dr/02.yoo25_l23_genes_time_course_pseudobulk_log2fc.pdf
 """
@@ -38,9 +38,9 @@ matplotlib.rcParams['pdf.fonttype'] = 42
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-INPUT_PB         = os.path.join(REPO_ROOT, 'results', '2_development', '02.yoo25_l23_pseudobulk_counts.tsv')
-INPUT_PB_SAMPLES = os.path.join(REPO_ROOT, 'results', '2_development', '02.yoo25_l23_pseudobulk_samples.tsv')
-INPUT_STATS      = os.path.join(REPO_ROOT, 'results', '2_development', '03.yoo25_l23_time_course_dr_by_day_slope_deseq2.tsv')
+INPUT_PB         = os.path.join(REPO_ROOT, 'results', '2_development', '03.yoo25_l23_pseudobulk_counts.tsv')
+INPUT_PB_SAMPLES = os.path.join(REPO_ROOT, 'results', '2_development', '03.yoo25_l23_pseudobulk_samples.tsv')
+INPUT_STATS      = os.path.join(REPO_ROOT, 'results', '2_development', '04.yoo25_l23_time_course_dr_by_day_slope_deseq2.tsv')
 OUT_FIG          = os.path.join(REPO_ROOT, 'figures', '4_dr', '02.yoo25_l23_genes_time_course_pseudobulk_log2fc.pdf')
 
 GENES       = ['Cdh13', 'Robo1', 'Pcdh9', 'Baz1a']
@@ -76,7 +76,7 @@ if absent:
 
 
 def marks(k):
-    """Labels of the significant tests of one panel: DR and slope (2_development/03)."""
+    """Labels of the significant tests of one panel: DR and slope (2_development/04)."""
     out = []
     if abs(k['log2FC_DR_d16']) > MIN_ABS_LOG2FC and stars(k['padj_DR_d16']):
         out.append(f"DR {stars(k['padj_DR_d16'])}")
