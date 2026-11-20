@@ -1,12 +1,12 @@
 """Figures of 03: mouse L2/3 archetype scores A, B, C along the conserved CCA axes, mouse vs human, and
 on the CCA1 x CCA2 embedding.
 
-05.l23_abc_normalized_compact.pdf: one panel per archetype (A along CCA1, B along CCA2, C along CCA1):
+05.archetype_scores_along_cca.pdf: one panel per archetype (A along CCA1, B along CCA2, C along CCA1):
 x = CCA percentile within species; y = score z-scored within species, mean +/- SEM per bin; mouse and human on twin y axes (mouse
 left, darker shade of the archetype color; human right, lighter shade), 0 centered on both. The human
 legend entry carries 03's human-mouse r and permutation p.
 
-05.l23_abc_scores_cca_embedding.pdf: ported from scomics it_evo/18b; the mouse archetype triangle is drawn on
+05.archetype_scores_cca_embedding.pdf: ported from scomics it_evo/18b; the mouse archetype triangle is drawn on
 the mouse row, the human archetypes (18b's human PCHA vertices) are not shown.
 
 Cells at their CCA1, CCA2 coordinates (script 03, from its canonical weights): rows = species
@@ -23,8 +23,8 @@ Reads:
   results/1_mouse_human/03.l23_cca_mouse_archetypes.tsv
   results/1_mouse_human/03.l23_axis_cca_weights_human.tsv
 Outputs:
-  figures/1_mouse_human/05.l23_abc_normalized_compact.pdf
-  figures/1_mouse_human/05.l23_abc_scores_cca_embedding.pdf
+  figures/1_mouse_human/05.archetype_scores_along_cca.pdf
+  figures/1_mouse_human/05.archetype_scores_cca_embedding.pdf
 """
 
 import os
@@ -43,8 +43,8 @@ IN_STATS    = os.path.join(RES_DIR, '03.l23_abc_scores_along_cca_stats.tsv')
 IN_CELLS    = os.path.join(RES_DIR, '03.l23_cca_cells.tsv')
 IN_M_AA     = os.path.join(RES_DIR, '03.l23_cca_mouse_archetypes.tsv')
 IN_WEIGHTS  = os.path.join(RES_DIR, '03.l23_axis_cca_weights_human.tsv')
-OUT_PDF     = os.path.join(REPO_ROOT, 'figures', '1_mouse_human', '05.l23_abc_normalized_compact.pdf')
-OUT_EMBED   = os.path.join(REPO_ROOT, 'figures', '1_mouse_human', '05.l23_abc_scores_cca_embedding.pdf')
+OUT_PDF     = os.path.join(REPO_ROOT, 'figures', '1_mouse_human', '05.archetype_scores_along_cca.pdf')
+OUT_EMBED   = os.path.join(REPO_ROOT, 'figures', '1_mouse_human', '05.archetype_scores_cca_embedding.pdf')
 
 PANELS  = [('CCA1', 'A'), ('CCA2', 'B'), ('CCA1', 'C')]   # (axis, archetype), left to right
 MARKERS = {'mouse': 's', 'human': 'o'}

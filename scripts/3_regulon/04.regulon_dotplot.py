@@ -11,7 +11,7 @@ Reads:
   results/3_regulon/01.l23_stratified_enrichment.tsv
   results/3_regulon/01.enriched_regulon_selection.tsv
 Outputs:
-  figures/3_regulon/04.regulon_dotplot.pdf
+  figures/3_regulon/04.regulon_enrichment_dotplot.pdf
 """
 
 import os
@@ -32,7 +32,7 @@ REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fi
 
 INPUT_ENRICHMENT = os.path.join(REPO_ROOT, 'results', '3_regulon', '01.l23_stratified_enrichment.tsv')
 INPUT_SELECTION = os.path.join(REPO_ROOT, 'results', '3_regulon', '01.enriched_regulon_selection.tsv')
-OUT_PDF = os.path.join(REPO_ROOT, 'figures', '3_regulon', '04.regulon_dotplot.pdf')
+OUT_PDF = os.path.join(REPO_ROOT, 'figures', '3_regulon', '04.regulon_enrichment_dotplot.pdf')
 
 COLS = ['A', 'B', 'C']
 CELL_W, CELL_H = 0.50, 0.21      # inches per matrix cell

@@ -12,8 +12,8 @@ Reads:
   results/4_dr/01.regulon_target_expr_nr_vs_dr.tsv
   results/4_dr/01.regulon_target_expr_nr_vs_dr_stats.tsv
 Outputs:
-  figures/4_dr/03.regulon_target_expr_nr_vs_dr.pdf
-  figures/4_dr/03.regulon_target_expr_p21_dr_change_barplot.pdf
+  figures/4_dr/03.regulon_activity_nr_vs_dr.pdf
+  figures/4_dr/03.regulon_activity_p21_dr_change.pdf
 """
 
 import os
@@ -33,8 +33,8 @@ FIG_DIR = os.path.join(REPO_ROOT, 'figures', '4_dr')
 IN_REP = os.path.join(RES_DIR, '01.regulon_target_expr_nr_vs_dr_replicates.tsv')
 IN_AGE = os.path.join(RES_DIR, '01.regulon_target_expr_nr_vs_dr.tsv')
 IN_STATS = os.path.join(RES_DIR, '01.regulon_target_expr_nr_vs_dr_stats.tsv')
-OUT_PDF = os.path.join(FIG_DIR, '03.regulon_target_expr_nr_vs_dr.pdf')
-OUT_PDF_BAR = os.path.join(FIG_DIR, '03.regulon_target_expr_p21_dr_change_barplot.pdf')
+OUT_PDF = os.path.join(FIG_DIR, '03.regulon_activity_nr_vs_dr.pdf')
+OUT_PDF_BAR = os.path.join(FIG_DIR, '03.regulon_activity_p21_dr_change.pdf')
 
 ARCHS = list(ARCH_COLORS)
 TOP_N = 8                      # TFs per archetype row = panels per row

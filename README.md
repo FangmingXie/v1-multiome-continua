@@ -61,8 +61,8 @@ or a link points to a missing file.
 | `02` | Mouse archetypes (PCHA on the varimax axes), their marker genes, and archetype scores of mouse and human cells (via orthologs) | |
 | `03` | CCA aligning the mouse and human varimax axes; archetype scores along CCA1 and CCA2 in both species, with the human-mouse correlation | |
 | `04` | L2/3 depth profiles of conserved archetype genes, mouse P28 MERFISH vs human MERFISH (Fang22) | |
-| `05` | Figures of 03: score profiles along CCA1 and CCA2; cells on the CCA embedding | [05.l23_abc_normalized_compact.pdf](figures/1_mouse_human/05.l23_abc_normalized_compact.pdf)<br>[05.l23_abc_scores_cca_embedding.pdf](figures/1_mouse_human/05.l23_abc_scores_cca_embedding.pdf) |
-| `06` | Figures of 04: depth profiles and in situ maps | [06.l23_selected_genes_in_situ_all_sections.pdf](figures/1_mouse_human/06.l23_selected_genes_in_situ_all_sections.pdf)<br>[06.l23_selected_genes_rel_depth_profiles.pdf](figures/1_mouse_human/06.l23_selected_genes_rel_depth_profiles.pdf)<br>[06.l23_top_fit_all_sections.pdf](figures/1_mouse_human/06.l23_top_fit_all_sections.pdf) |
+| `05` | Figures of 03: score profiles along CCA1 and CCA2; cells on the CCA embedding | [05.archetype_scores_along_cca.pdf](figures/1_mouse_human/05.archetype_scores_along_cca.pdf)<br>[05.archetype_scores_cca_embedding.pdf](figures/1_mouse_human/05.archetype_scores_cca_embedding.pdf) |
+| `06` | Figures of 04: depth profiles and in situ maps | [06.merfish_gene_in_situ_maps.pdf](figures/1_mouse_human/06.merfish_gene_in_situ_maps.pdf)<br>[06.merfish_gene_depth_profiles.pdf](figures/1_mouse_human/06.merfish_gene_depth_profiles.pdf)<br>[06.merfish_l23_top_fit.pdf](figures/1_mouse_human/06.merfish_l23_top_fit.pdf) |
 
 ### 2. Development (NR)
 | Script | What it does | Figures |
@@ -73,8 +73,8 @@ or a link points to a missing file.
 | `04` | Pseudobulk DESeq2: effect of dark rearing and its change with age (P12-P21) | |
 | `05` | Archetype gene modules (M1-M5) over age, NR vs DR | |
 | `06` | Archetype chromatin (ATAC) region modules over age, NR vs DR | |
-| `07` | Figures of 01 and 02: archetype gene counts per age; cells in P21 PC space colored by score; spread along the axes over age | [07.yoo25_l23_abc_gene_counts.pdf](figures/2_development/07.yoo25_l23_abc_gene_counts.pdf)<br>[07.yoo25_l23_ac_b_variance_over_age.pdf](figures/2_development/07.yoo25_l23_ac_b_variance_over_age.pdf)<br>[07.yoo25_l23_pc12_abc_scores.pdf](figures/2_development/07.yoo25_l23_pc12_abc_scores.pdf) |
-| `08` | Figures of 05 and 06 | [08.yoo25_l23_atac_region_modules_time_course_by_cells.pdf](figures/2_development/08.yoo25_l23_atac_region_modules_time_course_by_cells.pdf)<br>[08.yoo25_l23_atac_region_modules_time_course_by_module.pdf](figures/2_development/08.yoo25_l23_atac_region_modules_time_course_by_module.pdf)<br>[08.yoo25_l23_gene_modules_time_course_by_cells.pdf](figures/2_development/08.yoo25_l23_gene_modules_time_course_by_cells.pdf)<br>[08.yoo25_l23_gene_modules_time_course_by_module.pdf](figures/2_development/08.yoo25_l23_gene_modules_time_course_by_module.pdf) |
+| `07` | Figures of 01 and 02: archetype gene counts per age; cells in P21 PC space colored by score; spread along the axes over age | [07.archetype_gene_counts.pdf](figures/2_development/07.archetype_gene_counts.pdf)<br>[07.axis_variance_over_age.pdf](figures/2_development/07.axis_variance_over_age.pdf)<br>[07.pc_space_archetype_scores.pdf](figures/2_development/07.pc_space_archetype_scores.pdf) |
+| `08` | Figures of 05 and 06 | [08.atac_modules_by_cell_group.pdf](figures/2_development/08.atac_modules_by_cell_group.pdf)<br>[08.atac_modules_by_module.pdf](figures/2_development/08.atac_modules_by_module.pdf)<br>[08.gene_modules_by_cell_group.pdf](figures/2_development/08.gene_modules_by_cell_group.pdf)<br>[08.gene_modules_by_module.pdf](figures/2_development/08.gene_modules_by_module.pdf) |
 
 ### 3. Regulon enrichment
 | Script | What it does | Figures |
@@ -82,9 +82,9 @@ or a link points to a missing file.
 | `01` | Which Yoo25 L2/3 regulons (TF -> targets) are enriched in each archetype's genes, against an expression-matched null; the enriched TFs | |
 | `02` | Network of the enriched TFs and their archetype-gene targets | |
 | `03` | Target activity of the B-enriched AP-1 and EGR regulons over development, mouse (Yoo25) vs human (Wang25) | |
-| `04`, `05` | Figures of 01: enrichment dot plot; archetype-gene overlap bars | [04.regulon_dotplot.pdf](figures/3_regulon/04.regulon_dotplot.pdf)<br>[05.regulon_overlap_bar.pdf](figures/3_regulon/05.regulon_overlap_bar.pdf) |
-| `06` | Figure of 02: the network | [06.regulon_network_free.pdf](figures/3_regulon/06.regulon_network_free.pdf) |
-| `07` | Figure of 03: mouse vs human | [07.l23_b_regulon_targets_mouse_vs_human.pdf](figures/3_regulon/07.l23_b_regulon_targets_mouse_vs_human.pdf) |
+| `04`, `05` | Figures of 01: enrichment dot plot; archetype-gene overlap bars | [04.regulon_enrichment_dotplot.pdf](figures/3_regulon/04.regulon_enrichment_dotplot.pdf)<br>[05.regulon_archetype_gene_overlap.pdf](figures/3_regulon/05.regulon_archetype_gene_overlap.pdf) |
+| `06` | Figure of 02: the network | [06.regulon_network.pdf](figures/3_regulon/06.regulon_network.pdf) |
+| `07` | Figure of 03: mouse vs human | [07.b_regulon_activity_mouse_vs_human.pdf](figures/3_regulon/07.b_regulon_activity_mouse_vs_human.pdf) |
 
 ### 4. Dark rearing
 Folder 2's `04`-`06` also compare NR and DR, for genes and modules.
@@ -92,15 +92,15 @@ Folder 2's `04`-`06` also compare NR and DR, for genes and modules.
 | Script | What it does | Figures |
 |---|---|---|
 | `01` | Target activity of the archetype-enriched regulons (3_regulon/01) over age, NR vs DR | |
-| `02` | Selected genes over age, NR vs DR, per archetype cell group | [02.yoo25_l23_genes_time_course_pseudobulk_log2fc.pdf](figures/4_dr/02.yoo25_l23_genes_time_course_pseudobulk_log2fc.pdf) |
-| `03` | Figures of 01 | [03.regulon_target_expr_nr_vs_dr.pdf](figures/4_dr/03.regulon_target_expr_nr_vs_dr.pdf)<br>[03.regulon_target_expr_p21_dr_change_barplot.pdf](figures/4_dr/03.regulon_target_expr_p21_dr_change_barplot.pdf) |
+| `02` | Selected genes over age, NR vs DR, per archetype cell group | [02.selected_genes_nr_vs_dr.pdf](figures/4_dr/02.selected_genes_nr_vs_dr.pdf) |
+| `03` | Figures of 01 | [03.regulon_activity_nr_vs_dr.pdf](figures/4_dr/03.regulon_activity_nr_vs_dr.pdf)<br>[03.regulon_activity_p21_dr_change.pdf](figures/4_dr/03.regulon_activity_p21_dr_change.pdf) |
 
 ### 5. EASI-FISH
 | Script | What it does | Figures |
 |---|---|---|
 | `01` | Archetype scores along the A-C axis (P21 snRNA) and along L2/3 depth (P21 MERFISH); EASI-FISH LM- vs RL-projecting cells: depth profiles and x-y distribution, against a label-shuffle null | |
-| `02` | Figure of 01: archetype scores next to the LM and RL depth profiles | [02.l23_archetype_scores_and_easifish_proj_depth.pdf](figures/5_easifish/02.l23_archetype_scores_and_easifish_proj_depth.pdf) |
-| `03` | Figures of 01: EASI-FISH cell maps, depth profiles and x-y analyses | [03.easifish_cells_xyz.pdf](figures/5_easifish/03.easifish_cells_xyz.pdf)<br>[03.easifish_depth_profiles.pdf](figures/5_easifish/03.easifish_depth_profiles.pdf)<br>[03.easifish_xy_dz_null.pdf](figures/5_easifish/03.easifish_xy_dz_null.pdf)<br>[03.easifish_xy_proj_bias.pdf](figures/5_easifish/03.easifish_xy_proj_bias.pdf) |
+| `02` | Figure of 01: archetype scores next to the LM and RL depth profiles | [02.archetype_scores_and_projection_depth.pdf](figures/5_easifish/02.archetype_scores_and_projection_depth.pdf) |
+| `03` | Figures of 01: EASI-FISH cell maps, depth profiles and x-y analyses | [03.easifish_cell_maps.pdf](figures/5_easifish/03.easifish_cell_maps.pdf)<br>[03.easifish_depth_profiles.pdf](figures/5_easifish/03.easifish_depth_profiles.pdf)<br>[03.easifish_xy_depth_difference_null.pdf](figures/5_easifish/03.easifish_xy_depth_difference_null.pdf)<br>[03.easifish_xy_projection_bias.pdf](figures/5_easifish/03.easifish_xy_projection_bias.pdf) |
 
 ## Layout
 ```

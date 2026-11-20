@@ -8,7 +8,7 @@ Reads:
   results/3_regulon/03.l23_b_regulon_targets_nr_mouse.tsv
   results/3_regulon/03.wang25_l23_ap1_egr_regulon_targets_over_stage.tsv
 Outputs:
-  figures/3_regulon/07.l23_b_regulon_targets_mouse_vs_human.pdf
+  figures/3_regulon/07.b_regulon_activity_mouse_vs_human.pdf
 """
 
 import os
@@ -23,7 +23,7 @@ REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fi
 RES_DIR   = os.path.join(REPO_ROOT, 'results', '3_regulon')
 IN_MOUSE  = os.path.join(RES_DIR, '03.l23_b_regulon_targets_nr_mouse.tsv')
 IN_HUMAN  = os.path.join(RES_DIR, '03.wang25_l23_ap1_egr_regulon_targets_over_stage.tsv')
-OUT_PDF   = os.path.join(REPO_ROOT, 'figures', '3_regulon', '07.l23_b_regulon_targets_mouse_vs_human.pdf')
+OUT_PDF   = os.path.join(REPO_ROOT, 'figures', '3_regulon', '07.b_regulon_activity_mouse_vs_human.pdf')
 
 SIGN = '+/+'
 HUMAN_STAGES = {'Second_trimester': '2nd trim.', 'Third_trimester': '3rd trim.',

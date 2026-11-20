@@ -22,7 +22,7 @@ Reads:
   results/2_development/03.yoo25_l23_pseudobulk_samples.tsv
   results/2_development/04.yoo25_l23_time_course_dr_by_day_slope_deseq2.tsv
 Outputs:
-  figures/4_dr/02.yoo25_l23_genes_time_course_pseudobulk_log2fc.pdf
+  figures/4_dr/02.selected_genes_nr_vs_dr.pdf
 """
 
 import os
@@ -41,7 +41,7 @@ REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fi
 INPUT_PB         = os.path.join(REPO_ROOT, 'results', '2_development', '03.yoo25_l23_pseudobulk_counts.tsv')
 INPUT_PB_SAMPLES = os.path.join(REPO_ROOT, 'results', '2_development', '03.yoo25_l23_pseudobulk_samples.tsv')
 INPUT_STATS      = os.path.join(REPO_ROOT, 'results', '2_development', '04.yoo25_l23_time_course_dr_by_day_slope_deseq2.tsv')
-OUT_FIG          = os.path.join(REPO_ROOT, 'figures', '4_dr', '02.yoo25_l23_genes_time_course_pseudobulk_log2fc.pdf')
+OUT_FIG          = os.path.join(REPO_ROOT, 'figures', '4_dr', '02.selected_genes_nr_vs_dr.pdf')
 
 GENES       = ['Cdh13', 'Robo1', 'Pcdh9', 'Baz1a']
 GROUPS      = ['all L2/3', 'A cells', 'B cells', 'C cells']

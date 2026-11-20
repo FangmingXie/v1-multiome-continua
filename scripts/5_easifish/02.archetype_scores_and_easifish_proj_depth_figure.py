@@ -9,7 +9,7 @@ Reads:
   results/5_easifish/01.l23_archetype_scores_{bins,panels}.tsv
   results/5_easifish/01.easifish_proj_depth_bins.tsv
 Outputs:
-  figures/5_easifish/02.l23_archetype_scores_and_easifish_proj_depth.pdf
+  figures/5_easifish/02.archetype_scores_and_projection_depth.pdf
 """
 
 import os
@@ -27,7 +27,7 @@ RES_DIR   = os.path.join(REPO_ROOT, 'results', '5_easifish')
 IN_BINS   = os.path.join(RES_DIR, '01.l23_archetype_scores_bins.tsv')
 IN_PANELS = os.path.join(RES_DIR, '01.l23_archetype_scores_panels.tsv')
 IN_EASI   = os.path.join(RES_DIR, '01.easifish_proj_depth_bins.tsv')
-OUT_FIG   = os.path.join(REPO_ROOT, 'figures', '5_easifish', '02.l23_archetype_scores_and_easifish_proj_depth.pdf')
+OUT_FIG   = os.path.join(REPO_ROOT, 'figures', '5_easifish', '02.archetype_scores_and_projection_depth.pdf')
 
 PROJ_COLORS = {'LM': 'magenta', 'RL': 'green'}
 

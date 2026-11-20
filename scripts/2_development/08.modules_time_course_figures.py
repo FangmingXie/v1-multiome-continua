@@ -7,15 +7,15 @@ mean across samples per age x condition, dots = samples. Title: n = module genes
 filter (genes: per-gene = fraction of them with per-gene DESeq2 padj < FDR, DR and slope); DR and slope =
 OLS estimate (padj, BH over the 15 modules of the cell group). Marked (bracket right of P21): padj < FDR,
 no effect-size cutoff. y is shared within a row. Per modality, the same panels in two layouts:
-  *_by_cells    one page per cell group; rows = A/B/C sets, columns = M1-M5
-  *_by_module   one page per set (A, B, C); rows = M1-M5, columns = cell groups
+  *_by_cell_group  one page per cell group; rows = A/B/C sets, columns = M1-M5
+  *_by_module      one page per set (A, B, C); rows = M1-M5, columns = cell groups
 
 Reads:
   results/2_development/05.yoo25_l23_gene_modules_{samples,stats}.tsv
   results/2_development/06.yoo25_l23_atac_region_modules_{samples,stats}.tsv
 Outputs:
-  figures/2_development/08.yoo25_l23_gene_modules_time_course_by_{cells,module}.pdf
-  figures/2_development/08.yoo25_l23_atac_region_modules_time_course_by_{cells,module}.pdf
+  figures/2_development/08.gene_modules_by_{cell_group,module}.pdf
+  figures/2_development/08.atac_modules_by_{cell_group,module}.pdf
 """
 
 import os
@@ -41,7 +41,7 @@ PANEL_W    = 2.5   # inches
 KINDS = {
     'genes': dict(
         samples='05.yoo25_l23_gene_modules_samples.tsv', stats='05.yoo25_l23_gene_modules_stats.tsv',
-        out='08.yoo25_l23_gene_modules_time_course_by_{}.pdf', panel_h=3.2,
+        out='08.gene_modules_by_{}.pdf', panel_h=3.2,
         n_title=lambda r: (f'n = {int(r["n_genes"])}; per-gene: DR {r["frac_genes_DR_14"]:.0%}, '
                            f'slope {r["frac_genes_slope_14"]:.0%}'),
         row='{} genes', page_cells='{}: A/B/C gene modules (clst 0-4 = M1-M5)',
@@ -50,7 +50,7 @@ KINDS = {
         n_note=f'n = module genes passing the filter; per-gene = fraction of genes with DESeq2 padj < {FDR}'),
     'atac': dict(
         samples='06.yoo25_l23_atac_region_modules_samples.tsv', stats='06.yoo25_l23_atac_region_modules_stats.tsv',
-        out='08.yoo25_l23_atac_region_modules_time_course_by_{}.pdf', panel_h=3.0,
+        out='08.atac_modules_by_{}.pdf', panel_h=3.0,
         n_title=lambda r: f'n = {int(r["n_regions"])} regions',
         row='{} regions', page_cells='{}: A/B/C ATAC region modules (M1-M5)',
         page_module='{} ATAC region modules (M1-M5) by cell group',
@@ -106,7 +106,7 @@ for kind in KINDS.values():
     days = sorted(samp['day'].unique())
     args = (kind, samp, st, days)
 
-    out = os.path.join(FIG_DIR, kind['out'].format('cells'))
+    out = os.path.join(FIG_DIR, kind['out'].format('cell_group'))
     with PdfPages(out) as pdf:
         for grp in GROUPS:
             draw_page(pdf, *args, kind['page_cells'].format(grp), [kind['row'].format(k) for k in ARCHETYPES], MODULES,

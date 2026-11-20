@@ -1,16 +1,19 @@
 """Figures of 2_development/01 and 02: Yoo25 L2/3 cells in P21 PC space colored by archetype score, the
 variance of each Age along the A-C and B axes, and the number of archetype genes per condition, NR vs DR.
 
-  07.yoo25_l23_pc12_abc_scores.pdf      one column per Age (NR P6-P21, then DR P12-P21); cells in the
-                                        P21 (PC1, PC2) with the P21 archetype triangle (dashed). Row 1
-                                        colored by score C - A, row 2 by score B (2_development/01); color
-                                        range = 5th-95th percentile over all cells.
-  07.yoo25_l23_ac_b_variance_over_age.pdf  variance over postnatal day of P8 PC1, the A-C axis and the B axis;
-                                        lines = per Age, markers = per Sample, dashed = shuffled-gene null.
-                                        P8 PC1 and A-C are divided by the max A-C variance over Ages,
-                                        B by the max B variance.
-  07.yoo25_l23_abc_gene_counts.pdf      number of A/B/C genes per condition (2_development/01, = Table S4);
-                                        panels A and C, then B; solid = NR, dashed = DR.
+  07.pc_space_archetype_scores.pdf
+    one column per Age (NR P6-P21, then DR P12-P21); cells in the
+    P21 (PC1, PC2) with the P21 archetype triangle (dashed). Row 1
+    colored by score C - A, row 2 by score B (2_development/01); color
+    range = 5th-95th percentile over all cells.
+  07.axis_variance_over_age.pdf
+    variance over postnatal day of P8 PC1, the A-C axis and the B axis;
+    lines = per Age, markers = per Sample, dashed = shuffled-gene null.
+    P8 PC1 and A-C are divided by the max A-C variance over Ages,
+    B by the max B variance.
+  07.archetype_gene_counts.pdf
+    number of A/B/C genes per condition (2_development/01, = Table S4);
+    panels A and C, then B; solid = NR, dashed = DR.
 
 Reads:
   results/2_development/02.yoo25_l23_hvg_pcs_cells.tsv
@@ -19,9 +22,9 @@ Reads:
   results/2_development/01.yoo25_l23_abc_scores.tsv
   results/2_development/01.yoo25_l23_abc_genes.tsv
 Outputs:
-  figures/2_development/07.yoo25_l23_pc12_abc_scores.pdf
-  figures/2_development/07.yoo25_l23_ac_b_variance_over_age.pdf
-  figures/2_development/07.yoo25_l23_abc_gene_counts.pdf
+  figures/2_development/07.pc_space_archetype_scores.pdf
+  figures/2_development/07.axis_variance_over_age.pdf
+  figures/2_development/07.archetype_gene_counts.pdf
 """
 
 import os
@@ -45,9 +48,9 @@ INPUT_ARCH   = os.path.join(REPO_ROOT, 'results', '2_development', '02.yoo25_l23
 INPUT_VAR    = os.path.join(REPO_ROOT, 'results', '2_development', '02.yoo25_l23_hvg_pcs_variance.tsv')
 INPUT_SCORES = os.path.join(REPO_ROOT, 'results', '2_development', '01.yoo25_l23_abc_scores.tsv')
 INPUT_GENES  = os.path.join(REPO_ROOT, 'results', '2_development', '01.yoo25_l23_abc_genes.tsv')
-OUT_PC12     = os.path.join(REPO_ROOT, 'figures', '2_development', '07.yoo25_l23_pc12_abc_scores.pdf')
-OUT_VAR      = os.path.join(REPO_ROOT, 'figures', '2_development', '07.yoo25_l23_ac_b_variance_over_age.pdf')
-OUT_COUNTS   = os.path.join(REPO_ROOT, 'figures', '2_development', '07.yoo25_l23_abc_gene_counts.pdf')
+OUT_PC12     = os.path.join(REPO_ROOT, 'figures', '2_development', '07.pc_space_archetype_scores.pdf')
+OUT_VAR      = os.path.join(REPO_ROOT, 'figures', '2_development', '07.axis_variance_over_age.pdf')
+OUT_COUNTS   = os.path.join(REPO_ROOT, 'figures', '2_development', '07.archetype_gene_counts.pdf')
 
 PCTILES   = (5, 95)      # color range of the scores
 POINT_S   = 4
