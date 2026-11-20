@@ -1,8 +1,7 @@
 # v1-multiome-continua
 
 Code to reproduce the L2/3 archetype analyses of mouse primary visual cortex (V1). L2/3 neurons
-vary along continua between archetypes A', B' and C'. The archetype genes are rebuilt from raw
-counts (`2_development/01`, identical to Table S4) and are also used by results 3-5. Five results:
+vary along continua between archetypes A', B' and C'. Five results:
 
 | # | Result | Folder |
 |---|---|---|
@@ -21,13 +20,17 @@ bash download_inputs.sh        # data/input/ from the input bundles (see "Data")
 bash run_all.sh                # the analysis, folders 1-5
 ```
 `download_inputs.sh` downloads the input bundles from Google Drive with `curl` (about 1.9 GB), checks their
-sha256 and unpacks them into `data/input/`. `run_all.sh` runs the analysis scripts in number order,
+sha256 and unpacks them into `data/input/`. 
+
+`run_all.sh` runs the analysis scripts in number order,
 folder by folder (1_mouse_human to 5_easifish); each folder reads only from itself, lower-numbered
 folders and `data/input/`. They write tables to `results/<folder>/`,
 figures to `figures/<folder>/`, and one log per script to `results/logs/`. It takes about 4 minutes.
 Each output file name starts with the number of the script that writes it. Within a folder, the
 computing scripts come first and write tables; the figure scripts (`*figure*.py`, and those listed
-with figures below) come after them and only read tables. Numerical notes on the pinned
+with figures below) come after them and only read tables. 
+
+Numerical notes on the pinned
 environment (numpy, OpenBLAS, DESeq2) are in [REPRODUCIBILITY.md](REPRODUCIBILITY.md).
 
 ## Data
