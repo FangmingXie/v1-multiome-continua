@@ -9,3 +9,6 @@ data/input/
 
 # outputs
 results/
+
+# development plans (local only)
+plan/

@@ -165,5 +165,5 @@ v1-multiome-continua/
 │   └── 5_easifish/
 ├── results/<folder>/       tables (not tracked); results/logs/ = one log per script
 ├── figures/<folder>/       figures (tracked)
-└── plan/                   development plans
+└── plan/                   development plans (not tracked)
 ```
