@@ -18,12 +18,14 @@ conda env create -f environment.yml
 conda activate v1-multiome-continua
 pip install --no-deps -e .     # shared code src/l23/, importable by every script
 # put the inputs in data/raw/ and data/input/ (see "Inputs")
-bash run_all.sh
+bash run_input_prep.sh         # 0_prep: data/raw/ -> data/input/; skip if data/input/ is complete
+bash run_all.sh                # the analysis, folders 1-5
 ```
-`run_all.sh` runs every script in number order, folder by folder (0_prep, then 1_mouse_human to
-5_easifish); each folder reads only from itself and lower-numbered folders. 0_prep writes its outputs to
-`data/input/`; the other folders write tables to `results/<folder>/`, figures to
-`figures/<folder>/` and one log per script to `results/logs/`. The whole run takes about 3 minutes.
+`run_input_prep.sh` runs 0_prep, which writes its outputs to `data/input/`. `run_all.sh` runs the
+analysis scripts in number order, folder by folder (1_mouse_human to 5_easifish); each folder reads
+only from itself, lower-numbered folders and `data/input/`. They write tables to `results/<folder>/`,
+figures to `figures/<folder>/`, and both runners write one log per script to `results/logs/`.
+`run_all.sh` takes about 4 minutes; `run_input_prep.sh` well under one once `data/raw/` is cached.
 Each output file name starts with the number of the script that writes it. Within a folder, the
 computing scripts come first and write tables; the figure scripts (`*figure*.py`, and those listed
 with figures below) come after them and only read tables. Numerical notes on the pinned
@@ -110,14 +112,19 @@ Needed only to rerun 0_prep.
 | `regulons/human_regulons_SuppTable13.xlsx` | Wang25 human eRegulons (Supp. Table 13) | 0_prep/04 | TBD |
 
 ### `data/input/`: everything scripts 1-5 read
-0_prep writes its outputs here; the files below are external. A file with a number prefix was written
-by 0_prep, one without is external. With `data/input/` complete (0_prep's outputs included), every
-figure can be reproduced without `data/raw/`: run the folders after 0_prep.
+0_prep writes its outputs here (Source = the 0_prep script); the other files are external. A file
+with a number prefix was written by 0_prep, one without is external. With `data/input/` complete
+(0_prep's outputs included), every figure can be reproduced without `data/raw/`: run the folders
+after 0_prep.
 
 Datasets:
 
 | File in `data/input/` | Content | Used by | Source |
 |---|---|---|---|
+| `01.yoo25_l23.h5ad` | Yoo25 mouse V1 L2/3 snRNA-seq, every age (NR P6-P21, DR P12-P21), raw counts | 2/01, 2/02, 2/06, 3/01, 3/04, 4/01, 5/01, 5/02 | 0_prep/01 |
+| `01.cheng22_p28nr_l23.h5ad` | Cheng22 mouse V1 L2/3 snRNA-seq, P28 NR, raw counts | 1/01, 1/02, 3/01 | 0_prep/01 |
+| `02.merfish_p28nr_l23.h5ad` | Mouse P28 NR V1 MERFISH, L2/3 cells (500 genes) | 1/06 | 0_prep/02 |
+| `02.merfish_p21nr_l23.h5ad` | Mouse P21 NR V1 MERFISH, L2/3 cells (361 genes) | 5/02 | 0_prep/02 |
 | `jorstad23_human_WithinArea_L23IT.h5ad` | Human L2/3 IT (Jorstad et al. 2023) | 1/01, 1/03 | TBD |
 | `fang22_human_merfish/*.csv` | Human cortex MERFISH, 6 sections (Fang et al. 2022) | 1/06 | TBD |
 | `atac/pmat_l23concensus_{age}.h5ad` | Yoo25 L2/3 ATAC peak matrices, 11 conditions | 2/05 | TBD |
@@ -128,24 +135,25 @@ Small tables and annotations:
 
 | File in `data/input/` | Content | Used by | Source |
 |---|---|---|---|
+| `03.yoo25_l23_regulon_targets.tsv` | Yoo25 L2/3 SCENIC+ regulon -> target table | 3/02, 3/03, 3/04, 4/01 | 0_prep/03 |
+| `04.human_wang25_regulon_targets.tsv` | Wang25 human regulon -> target table | 3/04 | 0_prep/04 |
 | `human_mouse_orthologs.tsv` | Human-mouse ortholog pairs | 1/03, 1/04, 1/06 | TBD |
 | `Cheng22_Xie25_L23_ABC_genes_n286.csv` | Adult L2/3 archetype genes, the seed of the archetype genes | 2/01 | TBD |
 | `TableS4_L23_archetypal_genes.tsv` | Published Table S4; exact-match check only | 2/01 | TBD |
 | `gene_sets_l23{a,b,c}_250423.csv` | Module (M1-M5) of each archetype gene | 2/04 | TBD |
 | `atac_modules/L23{A,B,C}_regions_M{1-5}.bed` | Archetype chromatin region modules | 2/05 | TBD |
 
-Written by 0_prep: `01.yoo25_l23.h5ad`, `01.cheng22_p28nr_l23.h5ad` (0_prep/01), `02.merfish_{p28nr,p21nr}_l23.h5ad` (0_prep/02),
-`03.yoo25_l23_regulon_targets.tsv` (0_prep/03), `04.human_wang25_regulon_targets.tsv` (0_prep/04).
-
 ## Layout
 ```
 v1-multiome-continua/
 ├── README.md
 ├── REPRODUCIBILITY.md      numerical notes on the pinned environment
-├── run_all.sh              runs every script in dependency order
+├── run_input_prep.sh       runs 0_prep (data/raw/ -> data/input/)
+├── run_all.sh              runs the analysis, folders 1-5, in dependency order
 ├── environment.yml         pinned conda env (see REPRODUCIBILITY.md)
-├── data/raw/               sources of 0_prep (not tracked; see "Inputs")
-├── data/input/             inputs of scripts 1-5, incl. 0_prep's outputs (not tracked)
+├── data/                   not tracked; see "Inputs"
+│   ├── raw/                sources of 0_prep
+│   └── input/              inputs of scripts 1-5, incl. 0_prep's outputs
 ├── src/l23/                shared code, imported by the scripts
 │   ├── constants.py        Yoo25 ages, NR vs DR test days, colours
 │   ├── expr.py             log2(CP10k+1), percentile-scaled gene-set scores
