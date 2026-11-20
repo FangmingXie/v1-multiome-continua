@@ -3,7 +3,8 @@ variance of each Age along the A-C and B axes, and the number of archetype genes
 
   07.pc_space_archetype_scores.pdf
     one column per NR Age (P6-P21); cells in the P21 (PC1, PC2) with
-    the P21 archetype triangle (dashed). Row 1 colored by score C - A,
+    the P21 archetype triangle (dashed); PC1 sign set so that A is on
+    the left and C on the right. Row 1 colored by score C - A,
     row 2 by score B (2_development/01); color range = 5th-95th
     percentile over the NR cells.
   07.axis_variance_over_age.pdf
@@ -124,6 +125,9 @@ cells['score_c_minus_a'] = scores['score_c'] - scores['score_a']
 cells['score_b'] = scores['score_b']
 arch = pd.read_csv(INPUT_ARCH, sep='\t').set_index('archetype').loc[['A', 'B', 'C']]
 aa = arch[['pc_later1', 'pc_later2']].to_numpy().T
+pc1_sign = -1 if arch.loc['A', 'pc_later1'] > arch.loc['C', 'pc_later1'] else 1   # A left, C right
+cells['pc_later1'] *= pc1_sign
+aa[0] *= pc1_sign
 var = pd.read_csv(INPUT_VAR, sep='\t')
 os.makedirs(os.path.dirname(OUT_PC12), exist_ok=True)
 

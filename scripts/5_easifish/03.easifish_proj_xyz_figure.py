@@ -7,7 +7,8 @@
     columns = samples; rows: (1) cells per 20 um depth bin (LM, RL, both), values
     at bin centers, dashed lines = L2/3 bounds (L23_BOUNDS); (2) log2((#RL + 1) /
     (#LM + 1)) per 100 um x-y bin; (3) mean depth of RL minus LM cells per bin
-    (blank where either is absent); (4) density of the per-bin mean-depth
+    (blank where either is absent), same x and y spans in every sample so the
+    maps share one scale; (4) density of the per-bin mean-depth
     difference (RL - LM), data vs the label-shuffle null of 01.
 Display orientation per sample as e00 (ROTATE: sample 1 is shown rotated by 180 degrees in x-y); display only.
 
@@ -48,6 +49,7 @@ VIEWS        = [('x', 'y'), ('x', 'z'), ('y', 'z')]
 L23_BOUNDS   = (100, 400)                       # um
 LOG2_LIM     = 3
 DZ_LIM       = 100                              # um
+XY_BIN       = 100                              # um, x-y bin size of 01
 NULL_BINS    = np.linspace(-150, 150, 50)
 FS_TITLE     = 10
 FS_LABEL     = 9
@@ -74,22 +76,24 @@ def orient(ax, sample, view):
             ax.invert_yaxis()
 
 
-def xy_map(fig, axs, xy, col, cmap, lim, label):
-    """One row of x-y heatmaps (one per sample) of `col`, shared color range, one colorbar."""
+def xy_map(fig, axs, cax, xy, col, cmap, lim, label):
+    """One row of x-y heatmaps (one per sample) of `col`, shared color range and x-y scale, colorbar in `cax`."""
+    span_x = (xy.groupby('sample')['x_lo'].agg(np.ptp) + XY_BIN).max()
+    span_y = (xy.groupby('sample')['y_lo'].agg(np.ptp) + XY_BIN).max()
     for ax, s in zip(axs, SAMPLES):
         t = xy[xy['sample'] == s]
         grid = t.pivot(index='ybin', columns='xbin', values=col)
         xe = t.drop_duplicates('xbin').sort_values('xbin')['x_lo'].to_numpy()
         ye = t.drop_duplicates('ybin').sort_values('ybin')['y_lo'].to_numpy()
-        xe, ye = np.r_[xe, xe[-1] + np.diff(xe[:2])], np.r_[ye, ye[-1] + np.diff(ye[:2])]
+        xe, ye = np.r_[xe, xe[-1] + XY_BIN], np.r_[ye, ye[-1] + XY_BIN]
         m = ax.pcolormesh(xe, ye, np.ma.masked_invalid(grid.to_numpy()), cmap=cmap, vmin=-lim, vmax=lim)
-        ax.set_aspect('equal')
+        ax.set(xlim=(xe[0], xe[0] + span_x), ylim=(ye[0], ye[0] + span_y), aspect='equal')
         ax.set_title(f'sample {s}', fontsize=FS_TITLE)
         ax.set_xlabel('x (um)', fontsize=FS_LABEL)
         style(ax)
         orient(ax, s, ('x', 'y'))
     axs[0].set_ylabel('y (um)', fontsize=FS_LABEL)
-    cb = fig.colorbar(m, ax=axs, shrink=0.8)
+    cb = fig.colorbar(m, cax=cax)
     cb.set_label(label, fontsize=FS_LABEL)
     cb.ax.tick_params(labelsize=FS_TICK)
 
@@ -98,6 +102,10 @@ cells = {s: pd.read_csv(INPUT_EASIFISH[s]) for s in SAMPLES}
 depth = pd.read_csv(IN_DEPTH, sep='\t')
 xy = pd.read_csv(IN_XY, sep='\t')
 null = pd.read_csv(IN_NULL, sep='\t')
+for c in ['x_lo', 'y_lo']:
+    steps = xy.groupby('sample')[c].apply(lambda v: np.diff(np.sort(v.unique()))).explode().astype(float)
+    if not np.allclose(steps, XY_BIN):
+        raise ValueError(f'{IN_XY}: {c} steps are not XY_BIN = {XY_BIN} um')
 
 # cells in x-y, x-z, y-z
 fig, axs = plt.subplots(len(SAMPLES), len(VIEWS), figsize=(15, 4.2 * len(SAMPLES)), layout='constrained')
@@ -121,11 +129,16 @@ print(f'wrote {OUT_CELLS}')
 
 # depth profiles, x-y projection bias and mean-depth difference, and its null; one row each
 xy['log2_rl_lm'] = xy['log2_rl_lm'].where(xy['n_cells'] > 0)
-fig = plt.figure(figsize=(4.2 * len(SAMPLES), 17), layout='constrained')
-sf_depth, sf_log2, sf_dz, sf_null = fig.subfigures(4, 1, height_ratios=[4, 3.5, 3.5, 3])
+# one grid so that the columns align across rows; the last, narrow column holds the colorbars
+fig = plt.figure(figsize=(4.2 * len(SAMPLES), 15), layout='constrained')
+gs = fig.add_gridspec(4, len(SAMPLES) + 1, height_ratios=[4, 3.5, 3.5, 3], width_ratios=[1] * len(SAMPLES) + [0.05])
+row_axs = lambda i, **kw: [fig.add_subplot(gs[i, j], **kw) for j in range(len(SAMPLES))]
 
 # depth profiles
-axs = sf_depth.subplots(1, len(SAMPLES), sharey=True)
+axs = row_axs(0)
+for ax in axs[1:]:
+    ax.sharey(axs[0])
+    ax.tick_params(labelleft=False)
 for ax, s in zip(axs, SAMPLES):
     d = depth[depth['sample'] == s]
     for g in ['LM', 'RL', 'both']:
@@ -144,11 +157,12 @@ axs[0].set_ylabel('cortical depth (um)', fontsize=FS_LABEL)
 axs[0].invert_yaxis()
 
 # x-y projection bias and mean-depth difference
-xy_map(sf_log2, sf_log2.subplots(1, len(SAMPLES)), xy, 'log2_rl_lm', CMAP_LOG2, LOG2_LIM, 'log2((#RL + 1) / (#LM + 1))')
-xy_map(sf_dz, sf_dz.subplots(1, len(SAMPLES)), xy, 'dz', CMAP_DZ, DZ_LIM, 'mean depth RL − LM (um)')
+xy_map(fig, row_axs(1), fig.add_subplot(gs[1, -1]), xy, 'log2_rl_lm', CMAP_LOG2, LOG2_LIM,
+       'log2((#RL + 1) / (#LM + 1))')
+xy_map(fig, row_axs(2), fig.add_subplot(gs[2, -1]), xy, 'dz', CMAP_DZ, DZ_LIM, 'mean depth RL − LM (um)')
 
 # mean-depth difference per bin: data vs shuffled labels
-axs = sf_null.subplots(1, len(SAMPLES))
+axs = row_axs(3)
 for ax, s in zip(axs, SAMPLES):
     ax.hist(null.loc[null['sample'] == s, 'dz'], bins=NULL_BINS, density=True, histtype='step', color='gray',
             label='shuffled labels')
