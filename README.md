@@ -19,7 +19,7 @@ pip install --no-deps -e .     # shared code src/l23/, importable by every scrip
 bash download_inputs.sh        # data/input/ from the input bundles (see "Data")
 bash run_all.sh                # the analysis, folders 1-5
 ```
-Setting up the environment (`conda env create` plus `pip install`) took 37 s on a fresh Linux server
+Setting up the environment (`conda env create` plus `pip install`) took 37 seconds on a fresh Linux server
 (empty conda cache, conda 26.1 with the libmamba solver), downloading about 200 MB of packages plus
 about 1 GB of conda-forge channel index; expect a few minutes on a slower connection. Older conda
 versions with the classic solver can take much longer. The env takes about 1 GB on disk.
